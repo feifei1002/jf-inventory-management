@@ -1,0 +1,47 @@
+[
+    {
+        "purchaseId": "PO-2501002",
+        "productId": "31-052",
+        "productName": "平頭內六角",
+        "productSpecification": "1/2-13UNC*3",
+        "quantity": 60,
+        "productUnit": "pcs",
+        "productPrice": 0.64,
+        "totalPrice": 38.40,
+        "deliveryDate": "2025-01-20",
+        "requisitionId": "PR-2501003",
+        "deliveryPlace": "J&F"
+
+    },
+
+    {
+        "purchaseId": "PO-2501002",
+        "productId": "31-054",
+        "productName": "輸送軸承",
+        "productSpecification": "B6021",
+        "quantity": 30,
+        "productUnit": "pcs",
+        "productPrice": 3.39,
+        "totalPrice": 101.70,
+        "deliveryDate": "2025-01-20",
+        "requisitionId": "PR-2501003",
+        "deliveryPlace": "J&F"
+
+    },
+
+    {
+        "purchaseId": "PO-1703001",
+        "productId": "19-D004",
+        "productName": "Máy vi tính",
+        "productSpecification": "Cấu hình mạnh 繪圖等級",
+        "quantity": 1,
+        "productUnit": "set",
+        "productPrice": 21870000,
+        "VAT": 2430000,
+        "totalPrice": 24300000,
+        "deliveryDate": "2026-04-10",
+        "requisitionId": "PR-1703005",
+        "deliveryPlace": "J&F"
+
+    }
+]

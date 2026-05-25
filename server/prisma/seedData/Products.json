@@ -1,0 +1,57 @@
+[
+    {
+        "productId": "19-D004",
+        "name": "Máy vi tính",
+        "specification": "Cấu hình mạnh 繪圖等級",
+        "unit": "set",
+        "price": 24300000,
+        "lastPurchaseDate": "2017-03-03",
+        "supplierId": "VB03012",
+        "supplierName": "CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CÔNG NGHỆ THÔNG TIN TUU72NG PHÁT 祥發科技責任有限公司"
+    },
+
+    {
+        "productId": "22110-E1810002000T",
+        "name": "Ván Ép - 2 mặt DEP 夾板 (足18mm) 兩面都是好的",
+        "specification": "18mm*1000*2000",
+        "unit": "tấm",
+        "price": 295000,
+        "lastPurchaseDate": "2015-11-25",
+        "supplierId": "VC02006",
+        "supplierName": "CTY MINH HƯNG"
+
+    },
+
+    {
+        "productId": "31-035-3",
+        "name": "Mica ( new blance) 有印刷",
+        "specification": "3mm*900mm*1700mm",
+        "unit": "cây",
+        "price": 1200000,
+        "lastPurchaseDate": "2015-01-31",
+        "supplierId": "VD01114",
+        "supplierName": "CÔNG TY TNHH MTV TM-DV QuẢNG CÁO TRƯỜNG TỒN"
+    },
+
+    {
+        "productId": "31-052",
+        "name": "平頭內六角",
+        "specification": "1/2-13UNC*3",
+        "unit": "pcs",
+        "price": 0.64,
+        "lastPurchaseDate": "2025-01-10",
+        "supplierId": "TD01002",
+        "supplierName": "鈦鈿工業股份有限公司"
+    },
+
+    {
+        "productId": "31-054",
+        "name": "輸送軸承",
+        "specification": "B6021",
+        "unit": "pcs",
+        "price": 3.39,
+        "lastPurchaseDate": "2025-01-10",
+        "supplierId": "TD01002",
+        "supplierName": "鈦鈿工業股份有限公司"
+    }
+]

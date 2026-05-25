@@ -1,0 +1,29 @@
+[
+    {
+        "formId": "WF-2501006",
+        "date": "2025-01-20",
+        "supplierId": "TD01002",
+        "supplierName": "鈦鈿工業股份有限公司",
+        "contactPerson": "張先生",
+        "supplierAddress": "台中-台灣",
+        "supplierTelephone": "00886-4-26813961",
+        "supplierFax": "00886-4-26816063",
+        "purchaseId": "PO-2501002",
+        "paymentTerm": "出貨前T/T",
+        "invoiceNo": "INV-2501006"
+    },
+
+    {
+        "formId": "WF-1703003",
+        "date": "2026-04-10",
+        "supplierId": "VB03012",
+        "supplierName": "CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CÔNG NGHỆ THÔNG TIN TUU72NG PHÁT 祥發科技責任有限公司",
+        "contactPerson": "梁振祥",
+        "supplierAddress": "223/18-20 Nguyễn Tiểu La, Phường 8, Q 10 , TP. HCM",
+        "supplierTelephone": "0283-3957 4832",
+        "supplierFax": "0283-3957 4832",
+        "purchaseId": "PO-1703001",
+        "paymentTerm": "50%; 50%",
+        "invoiceNo": "INV-1703003"
+    }
+]

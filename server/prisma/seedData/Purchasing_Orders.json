@@ -1,0 +1,29 @@
+[
+    {
+        "purchaseId": "PO-2501002",
+        "purchaseDate": "2025-01-15",
+        "supplierId": "TD01002",
+        "supplierName": "鈦鈿工業股份有限公司",
+        "contactPerson": "張先生",
+        "paymentTerm": "出貨前T/T",
+        "supplierAddress": "台中-台灣",
+        "subtotal": 140.10,
+        "vat": 0,
+        "finalTotal": 140.10
+
+    },
+
+    {
+        "purchaseId": "PO-1703001",
+        "purchaseDate": "2026-04-05",
+        "supplierId": "VB03012",
+        "supplierName": "CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CÔNG NGHỆ THÔNG TIN TUU72NG PHÁT 祥發科技責任有限公司",
+        "contactPerson": "梁振祥",
+        "paymentTerm": "50%; 50%",
+        "supplierAddress": "223/18-20 Nguyễn Tiểu La, Phường 8, Q 10 , TP. HCM",
+        "subtotal": 21870000,
+        "vat": 2430000,
+        "finalTotal": 24300000
+
+    }
+]

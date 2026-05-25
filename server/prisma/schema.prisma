@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Suppliers {
+  supplierId String @id
+  name String
+  type String
+  contactPerson String?
+  telephone String
+  fax String?
+  mobileNo String?
+  address String?
+  email String?
+  paymentTerm String?
+  tax String?
+  MST String?
+  @@index([supplierId])
+  @@index([name])
+  @@index([type])
+  supplierProducts Supplier_Products[]
+  purchasingOrders Purchasing_Orders[]
+  materialWarehousingForms Material_Warehousing_Forms[]
+}
+
+model Products {
+  productId String @id
+  name String
+  specification String
+  unit String
+  price Decimal
+  lastPurchaseDate DateTime
+  supplierId String
+  supplierName String
+  @@index([productId])
+  @@index([name])
+  supplierProducts Supplier_Products[]
+  purchaseRequisitionItems Purchase_Requisition_Items[]
+  purchaseOrderItems Purchase_Order_Items[]
+  materialWarehousingItems Material_Warehousing_Items[]
+}
+
+model Supplier_Products {
+  supplierId String
+  productId String
+  supplier Suppliers @relation(fields: [supplierId], references: [supplierId])
+  product Products @relation(fields: [productId], references: [productId])
+  @@id([supplierId, productId])
+}
+
+model Purchasing_Requisitions {
+  requisitionId String @id
+  requisitionDate DateTime
+  department String
+  requester String
+  soNo String?
+  note String?
+  @@index([requisitionId])
+  purchaseRequisitionItems Purchase_Requisition_Items[]
+  purchaseOrderItems Purchase_Order_Items[]
+  materialWarehousingItems Material_Warehousing_Items[]
+}
+
+model Purchase_Requisition_Items {
+  id Int @id @default(autoincrement())
+  requisitionId String
+  productId String
+  productName String
+  productSpecification String
+  quantity Int
+  weight Float?
+  requiredDate DateTime
+  purpose String?
+  deliveryPlace String
+  requisition Purchasing_Requisitions @relation(fields: [requisitionId], references: [requisitionId])
+  product Products @relation(fields: [productId], references: [productId])
+}
+
+model Purchasing_Orders {
+  purchaseId String @id
+  purchaseDate DateTime
+  supplierId String
+  supplierName String
+  contactPerson String
+  paymentTerm String
+  supplierAddress String
+  subtotal Decimal @db.Decimal(10, 2)
+  vat Decimal @db.Decimal(10, 2)
+  finalTotal Decimal @db.Decimal(10, 2)
+  @@index([purchaseId])
+  supplier Suppliers @relation(fields: [supplierId], references: [supplierId])
+  purchaseOrderItems Purchase_Order_Items[]
+  materialWarehousingForms Material_Warehousing_Forms[]
+}
+
+model Purchase_Order_Items {
+  id Int @id @default(autoincrement())
+  purchaseId String
+  productId String
+  productName String
+  productSpecification String
+  quantity Int
+  productUnit String
+  productPrice Decimal @db.Decimal(20, 2)
+  totalPrice Decimal @db.Decimal(20, 2)
+  VAT Int?
+  deliveryDate DateTime
+  requisitionId String
+  deliveryPlace String
+  purchase Purchasing_Orders @relation(fields: [purchaseId], references: [purchaseId])
+  product Products @relation(fields: [productId], references: [productId])
+  requisition Purchasing_Requisitions @relation(fields: [requisitionId], references: [requisitionId])
+}
+
+model Material_Warehousing_Forms {
+  formId String @id
+  date DateTime
+  supplierId String
+  supplierName String
+  contactPerson String?
+  supplierAddress String
+  supplierTelephone String
+  supplierFax String?
+  purchaseId String
+  paymentTerm String?
+  invoiceNo String
+  deliveryNote String?
+  @@index([formId])
+  supplier Suppliers @relation(fields: [supplierId], references: [supplierId])
+  purchase Purchasing_Orders @relation(fields: [purchaseId], references: [purchaseId])
+  materialWarehousingItems Material_Warehousing_Items[]
+}
+
+model Material_Warehousing_Items {
+  id Int @id @default(autoincrement())
+  formId String
+  productId String
+  productName String
+  productSpecification String
+  quantity Int
+  productUnit String
+  deliveryDate DateTime
+  requisitionId String
+  deliveryPlace String
+  warehousingForm Material_Warehousing_Forms @relation(fields: [formId], references: [formId])
+  product Products @relation(fields: [productId], references: [productId])
+  requisition Purchasing_Requisitions @relation(fields: [requisitionId], references: [requisitionId])
+}
