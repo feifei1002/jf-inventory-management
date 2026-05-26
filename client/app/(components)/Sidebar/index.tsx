@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsSidebarCollapsed } from '@/app/state';
-import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, SlidersHorizontal, User } from 'lucide-react';
+import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, ShoppingCart, SlidersHorizontal, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { use } from 'react';
@@ -69,6 +69,12 @@ const Sidebar = () => {
               icon={Archive} 
               label="Inventory" 
               isCollapsed={isSidebarCollapsed} 
+            />
+            <SidebarLink
+            href="/purchase-orders" 
+            icon={ShoppingCart} 
+            label="Purchase Orders" 
+            isCollapsed={isSidebarCollapsed} 
             />
             <SidebarLink
               href="/products" 
