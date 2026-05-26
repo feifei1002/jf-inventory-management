@@ -14,6 +14,71 @@ export const api = {
     return res.json();
   },
 
+  createSupplier: async (data: any) => {
+  const res = await fetch(`${API_URL}/api/suppliers`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || "Failed to create supplier");
+  }
+  return res.json();
+},
+
+// Products
+getProducts: async () => {
+  const res = await fetch(`${API_URL}/api/products`);
+  if (!res.ok) throw new Error("Failed to fetch products");
+  return res.json();
+},
+
+getProduct: async (productId: string) => {
+  const res = await fetch(`${API_URL}/api/products/${productId}`);
+  if (!res.ok) throw new Error("Failed to fetch product");
+  return res.json();
+},
+
+createProduct: async (data: any) => {
+  const res = await fetch(`${API_URL}/api/products`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || "Failed to create product");
+  }
+  return res.json();
+},
+
+// Purchase Requisitions
+getPurchaseRequisitions: async () => {
+  const res = await fetch(`${API_URL}/api/purchase-requisitions`);
+  if (!res.ok) throw new Error("Failed to fetch requisitions");
+  return res.json();
+},
+
+getPurchaseRequisition: async (requisitionId: string) => {
+  const res = await fetch(`${API_URL}/api/purchase-requisitions/${requisitionId}`);
+  if (!res.ok) throw new Error("Failed to fetch requisition");
+  return res.json();
+},
+
+createPurchaseRequisition: async (data: any) => {
+  const res = await fetch(`${API_URL}/api/purchase-requisitions`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || "Failed to create requisition");
+  }
+  return res.json();
+},
+
   // Purchase Orders
   getPurchaseOrders: async () => {
     const res = await fetch(`${API_URL}/api/purchase-orders`);
@@ -41,6 +106,8 @@ export const api = {
   },
 
   // Export
+  getPRExportUrl: (requisitionId: string) =>
+  `${API_URL}/api/export/pr/${requisitionId}`,
   getExportUrl: (purchaseId: string) =>
     `${API_URL}/api/export/po/${purchaseId}`,
 };

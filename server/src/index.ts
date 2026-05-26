@@ -6,8 +6,10 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 /* ROUTE IMPORTS */
 import exportRoutes from "./routes/export";
-import purchaseOrderRoutes from "./routes/purchaseOrders";
 import supplierRoutes from "./routes/suppliers";
+import productRoutes from "./routes/products";
+import purchaseRequisitionRoutes from "./routes/purchaseRequisitions";
+import purchaseOrderRoutes from "./routes/purchaseOrders";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -27,6 +29,8 @@ app.get("/hello", (req, res) => {
 app.use("/api/export", exportRoutes);
 app.use("/api/purchase-orders", purchaseOrderRoutes);
 app.use("/api/suppliers", supplierRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/purchase-requisitions", purchaseRequisitionRoutes);
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

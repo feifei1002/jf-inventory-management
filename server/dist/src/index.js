@@ -11,8 +11,10 @@ const morgan_1 = __importDefault(require("morgan"));
 const body_parser_1 = __importDefault(require("body-parser"));
 /* ROUTE IMPORTS */
 const export_1 = __importDefault(require("./routes/export"));
-const purchaseOrders_1 = __importDefault(require("./routes/purchaseOrders"));
 const suppliers_1 = __importDefault(require("./routes/suppliers"));
+const products_1 = __importDefault(require("./routes/products"));
+const purchaseRequisitions_1 = __importDefault(require("./routes/purchaseRequisitions"));
+const purchaseOrders_1 = __importDefault(require("./routes/purchaseOrders"));
 /* CONFIGURATIONS */
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -30,6 +32,8 @@ app.get("/hello", (req, res) => {
 app.use("/api/export", export_1.default);
 app.use("/api/purchase-orders", purchaseOrders_1.default);
 app.use("/api/suppliers", suppliers_1.default);
+app.use("/api/products", products_1.default);
+app.use("/api/purchase-requisitions", purchaseRequisitions_1.default);
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

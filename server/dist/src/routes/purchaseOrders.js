@@ -37,16 +37,16 @@ router.get("/:purchaseId", async (req, res) => {
 // POST create new purchase order
 router.post("/", async (req, res) => {
     try {
-        const { purchaseId, purchaseDate, supplierId, supplierName, contactPerson, paymentTerm, supplierAddress, items, } = req.body;
+        const { purchaseId, purchaseDate, supplierId, supplierName, contactPerson, paymentTerm, supplierAddress, currency, subtotal, vatAmount, finalTotal, items, } = req.body;
         // Validate required fields
         if (!purchaseId || !supplierId || !items || items.length === 0) {
             res.status(400).json({ message: "Missing required fields" });
             return;
         }
         // Calculate totals from items
-        const subtotal = items.reduce((sum, item) => sum + item.quantity * item.productPrice, 0);
-        const vat = subtotal * 0.1;
-        const finalTotal = subtotal + vat;
+        const poSubtotal = subtotal ?? items.reduce((sum, item) => sum + item.quantity * item.productPrice, 0);
+        const poVat = vatAmount ?? items.reduce((sum, item) => sum + item.quantity * item.productPrice * ((item.VAT ?? 0) / 100), 0);
+        const poFinalTotal = finalTotal ?? poSubtotal + poVat;
         // Create PO and its items in one transaction
         const po = await prisma.$transaction(async (tx) => {
             const newPO = await tx.purchasing_Orders.create({
@@ -58,9 +58,10 @@ router.post("/", async (req, res) => {
                     contactPerson,
                     paymentTerm,
                     supplierAddress,
-                    subtotal,
-                    vat,
-                    finalTotal,
+                    subtotal: poSubtotal,
+                    vat: poVat,
+                    finalTotal: poFinalTotal,
+                    currency: currency || "VND",
                 },
             });
             for (const item of items) {
@@ -75,6 +76,7 @@ router.post("/", async (req, res) => {
                         productPrice: item.productPrice,
                         totalPrice: item.quantity * item.productPrice,
                         VAT: item.VAT ?? 10,
+                        currency: item.currency || currency || "VND",
                         deliveryDate: new Date(item.deliveryDate),
                         requisitionId: item.requisitionId,
                         deliveryPlace: item.deliveryPlace,

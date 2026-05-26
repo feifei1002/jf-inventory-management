@@ -31,7 +31,7 @@ export default function PurchaseOrderDetailPage() {
       const blob = await res.blob();
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `PO-${purchaseId}.xlsx`;
+      link.download = `${purchaseId}.xlsx`;
       link.click();
       URL.revokeObjectURL(link.href);
     } catch {
@@ -230,15 +230,15 @@ export default function PurchaseOrderDetailPage() {
             <div className="w-64 space-y-2">
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Subtotal</span>
-                <span className="font-mono">{fmt(po.subtotal)} ₫</span>
+                <span className="font-mono">{fmt(po.subtotal)} {po.currency ?? "VND"}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>VAT (10%)</span>
-                <span className="font-mono">{fmt(po.vat)} ₫</span>
+                <span className="font-mono">{fmt(po.vat)} {po.currency ?? "VND"}</span>
               </div>
               <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200 pt-2">
                 <span>Total</span>
-                <span className="font-mono">{fmt(po.finalTotal)} ₫</span>
+                <span className="font-mono">{fmt(po.finalTotal)} {po.currency ?? "VND"}</span>
               </div>
             </div>
           </div>

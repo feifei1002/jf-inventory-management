@@ -3,22 +3,24 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../../lib/api";
-import { Supplier, POItem } from "../../lib/types";
+import { Supplier, POItem, PurchaseRequisition } from "../../lib/types";
 
 const UNITS = ["tấm", "cái", "kg", "m", "m2", "cuộn", "bộ", "hộp", "thùng"];
 const DELIVERY_PLACES = ["J&F Factory", "J&F Office", "J&F Warehouse"];
 
-const emptyItem = (): Omit<POItem, "totalPrice"> => ({
+const emptyItem = (): Omit<POItem, "totalPrice"> & { selectedPRId: string } => ({
   productId: "",
   productName: "",
   productSpecification: "",
   quantity: 1,
   productUnit: "tấm",
   productPrice: 0,
-  VAT: 10,
+  VAT: 0,
+  currency: "VND",
   deliveryDate: "",
   requisitionId: "",
   deliveryPlace: "J&F Factory",
+  selectedPRId: "",
 });
 
 const generatePOId = () => {
@@ -38,11 +40,16 @@ export default function CreatePurchaseOrderPage() {
     new Date().toISOString().split("T")[0]
   );
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [supplierId, setSupplierId] = useState("");
   const [contactPerson, setContactPerson] = useState("");
   const [paymentTerm, setPaymentTerm] = useState("月底結帳次月30日轉帳");
   const [supplierAddress, setSupplierAddress] = useState("");
+  const [currency, setCurrency] = useState<"VND" | "TWD" | "USD">("VND");
+
+  // ── Requisition state ──
+  const [requisitions, setRequisitions] = useState<PurchaseRequisition[]>([]);
 
   // ── Line items state ──
   const [items, setItems] = useState([emptyItem()]);
@@ -51,9 +58,11 @@ export default function CreatePurchaseOrderPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // ── Load suppliers ──
+  // ── Load suppliers and requisitions ──
   useEffect(() => {
     api.getSuppliers().then(setSuppliers).catch(console.error);
+    api.getProducts().then(setProducts).catch(console.error);
+    api.getPurchaseRequisitions().then(setRequisitions).catch(console.error);
   }, []);
 
   // ── Auto-fill supplier fields when supplier is selected ──
@@ -76,6 +85,54 @@ export default function CreatePurchaseOrderPage() {
       )
     );
   };
+  const handleItemPRSelect = (index: number, reqId: string) => {
+  const requisition = requisitions.find((r) => r.requisitionId === reqId);
+  if (!requisition || !requisition.purchaseRequisitionItems) {
+    updateItem(index, "selectedPRId", reqId);
+    updateItem(index, "requisitionId", reqId);
+    return;
+  }
+
+  // If requisition has items, show them as options
+  // For now just set the requisitionId and let user pick product manually
+  updateItem(index, "selectedPRId", reqId);
+  updateItem(index, "requisitionId", reqId);
+};
+
+  const handleItemProductSelect = (index: number, reqId: string, productId: string) => {
+    const requisition = requisitions.find((r) => r.requisitionId === reqId);
+    if (!requisition || !requisition.purchaseRequisitionItems) return;
+
+    const prItem = requisition.purchaseRequisitionItems.find(
+      (i) => i.productId === productId
+    );
+    if (!prItem) return;
+
+    const product = products.find((p) => p.productId === productId);
+
+    setItems((prev) =>
+      prev.map((item, i) =>
+        i === index
+          ? {
+              ...item,
+              productId: prItem.productId,
+              productName: prItem.productName,
+              productSpecification: prItem.productSpecification,
+              quantity: prItem.quantity,
+              productUnit: product?.unit ?? "tấm",
+              productPrice: product?.price ? Number(product.price) : 0,
+              currency: product?.currency ?? currency,
+              deliveryDate: prItem.requiredDate
+                ? new Date(prItem.requiredDate).toISOString().split("T")[0]
+                : "",
+              requisitionId: reqId,
+              deliveryPlace: prItem.deliveryPlace,
+            }
+          : item
+      )
+    );
+  };
+  
 
   const addItem = () => setItems((prev) => [...prev, emptyItem()]);
 
@@ -87,8 +144,12 @@ export default function CreatePurchaseOrderPage() {
     (sum, item) => sum + item.quantity * item.productPrice,
     0
   );
-  const vat = subtotal * 0.1;
-  const finalTotal = subtotal + vat;
+  const vatAmount = items.reduce(
+    (sum, item: any) =>
+      sum + item.quantity * item.productPrice * (item.VAT / 100),
+    0
+  );
+  const finalTotal = subtotal + vatAmount;
 
   const fmt = (n: number) =>
     n.toLocaleString("vi-VN", { minimumFractionDigits: 0 });
@@ -97,9 +158,16 @@ export default function CreatePurchaseOrderPage() {
   const handleSubmit = async () => {
     setError("");
 
-    if (!supplierId) { setError("Please select a supplier"); return; }
+    if (!supplierId) {
+      setError("Please select a supplier");
+      return;
+    }
     if (items.some((i) => !i.productName || !i.deliveryDate)) {
       setError("Please fill in all product names and delivery dates");
+      return;
+    }
+    if (items.some((i) => !i.requisitionId)) {
+      setError("Please fill in the PR number for all items");
       return;
     }
 
@@ -113,6 +181,10 @@ export default function CreatePurchaseOrderPage() {
         contactPerson,
         paymentTerm,
         supplierAddress,
+        currency,
+        subtotal,
+        vatAmount,
+        finalTotal,
         items,
       });
       router.push(`/purchase-orders/${po.purchaseId}`);
@@ -165,7 +237,7 @@ export default function CreatePurchaseOrderPage() {
               Order Information
             </h2>
           </div>
-          <div className="p-5 grid grid-cols-2 gap-4">
+          <div className="p-5 grid grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">
                 PO Number
@@ -186,6 +258,20 @@ export default function CreatePurchaseOrderPage() {
                 onChange={(e) => setPurchaseDate(e.target.value)}
                 className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">
+                Currency
+              </label>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as "VND" | "TWD" | "USD")}
+                className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              >
+                <option value="VND">VND — Vietnamese Dong</option>
+                <option value="TWD">TWD — Taiwan Dollar</option>
+                <option value="USD">USD — US Dollar</option>
+              </select>
             </div>
           </div>
         </div>
@@ -273,9 +359,19 @@ export default function CreatePurchaseOrderPage() {
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   {[
-                    "#", "Product Code", "Product Name", "Specification",
-                    "Qty", "Unit", "Unit Price", "Total", "VAT %",
-                    "Delivery Date", "PR No.", "Delivery Place", "",
+                    "#",
+                    "PR No.",
+                    "Product",
+                    "Product Name",
+                    "Specification",
+                    "Qty",
+                    "Unit",
+                    "Unit Price",
+                    "Total",
+                    "VAT %",
+                    "Delivery Date",
+                    "Delivery Place",
+                    "",
                   ].map((h) => (
                     <th
                       key={h}
@@ -287,148 +383,226 @@ export default function CreatePurchaseOrderPage() {
                 </tr>
               </thead>
               <tbody>
-                {items.map((item, index) => (
-                  <tr
-                    key={index}
-                    className={index % 2 === 0 ? "bg-white" : "bg-blue-50/30"}
-                  >
-                    <td className="px-3 py-2 text-gray-400 text-xs">{index + 1}</td>
+                {items.map((item: any, index: number) => {
+                  // Get products available in the selected PR for this row
+                  const selectedReq = requisitions.find(
+                    (r) => r.requisitionId === item.selectedPRId
+                  );
+                  const prProducts = selectedReq?.purchaseRequisitionItems ?? [];
 
-                    <td className="px-2 py-1">
-                      <input
-                        value={item.productId}
-                        onChange={(e) => updateItem(index, "productId", e.target.value)}
-                        className="w-28 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        placeholder="e.g. 211112-..."
-                      />
-                    </td>
+                  return (
+                    <tr
+                      key={index}
+                      className={index % 2 === 0 ? "bg-white" : "bg-blue-50/30"}
+                    >
+                      <td className="px-3 py-2 text-gray-400 text-xs">{index + 1}</td>
 
-                    <td className="px-2 py-1">
-                      <input
-                        value={item.productName}
-                        onChange={(e) => updateItem(index, "productName", e.target.value)}
-                        className="w-36 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        placeholder="Product name"
-                      />
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <input
-                        value={item.productSpecification}
-                        onChange={(e) => updateItem(index, "productSpecification", e.target.value)}
-                        className="w-36 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        placeholder="e.g. 1.0t*1220W*1695L"
-                      />
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <input
-                        type="number"
-                        min={1}
-                        value={item.quantity}
-                        onChange={(e) => updateItem(index, "quantity", Number(e.target.value))}
-                        className="w-16 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
-                      />
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <select
-                        value={item.productUnit}
-                        onChange={(e) => updateItem(index, "productUnit", e.target.value)}
-                        className="w-20 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
-                      >
-                        {UNITS.map((u) => <option key={u}>{u}</option>)}
-                      </select>
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <input
-                        type="number"
-                        min={0}
-                        value={item.productPrice}
-                        onChange={(e) => updateItem(index, "productPrice", Number(e.target.value))}
-                        className="w-24 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
-                      />
-                    </td>
-
-                    <td className="px-3 py-2 text-xs font-semibold text-gray-700 whitespace-nowrap">
-                      {fmt(item.quantity * item.productPrice)}
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <input
-                        type="number"
-                        min={0}
-                        max={100}
-                        value={item.VAT}
-                        onChange={(e) => updateItem(index, "VAT", Number(e.target.value))}
-                        className="w-14 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
-                      />
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <input
-                        type="date"
-                        value={item.deliveryDate}
-                        onChange={(e) => updateItem(index, "deliveryDate", e.target.value)}
-                        className="w-32 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <input
-                        value={item.requisitionId}
-                        onChange={(e) => updateItem(index, "requisitionId", e.target.value)}
-                        className="w-24 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                        placeholder="PR-..."
-                      />
-                    </td>
-
-                    <td className="px-2 py-1">
-                      <select
-                        value={item.deliveryPlace}
-                        onChange={(e) => updateItem(index, "deliveryPlace", e.target.value)}
-                        className="w-28 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
-                      >
-                        {DELIVERY_PLACES.map((p) => <option key={p}>{p}</option>)}
-                      </select>
-                    </td>
-
-                    <td className="px-2 py-1">
-                      {items.length > 1 && (
-                        <button
-                          onClick={() => removeItem(index)}
-                          className="text-red-400 hover:text-red-600 text-lg leading-none"
+                      {/* PR selector per row */}
+                      <td className="px-2 py-1">
+                        <select
+                          value={item.selectedPRId}
+                          onChange={(e) => handleItemPRSelect(index, e.target.value)}
+                          className="w-32 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
                         >
-                          ×
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                          <option value="">-- PR --</option>
+                          {requisitions.map((r) => (
+                            <option key={r.requisitionId} value={r.requisitionId}>
+                              {r.requisitionId}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+
+                      {/* Product selector — shows products from selected PR */}
+                      <td className="px-2 py-1">
+                        {item.selectedPRId && prProducts.length > 0 ? (
+                          <select
+                            value={item.productId}
+                            onChange={(e) =>
+                              handleItemProductSelect(
+                                index,
+                                item.selectedPRId,
+                                e.target.value
+                              )
+                            }
+                            className="w-40 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                          >
+                            <option value="">-- Product --</option>
+                            {prProducts.map((p) => (
+                              <option key={p.productId} value={p.productId}>
+                                {p.productId}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            value={item.productId}
+                            onChange={(e) =>
+                              updateItem(index, "productId", e.target.value)
+                            }
+                            className="w-36 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            placeholder="Product code"
+                          />
+                        )}
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <input
+                          value={item.productName}
+                          onChange={(e) =>
+                            updateItem(index, "productName", e.target.value)
+                          }
+                          className="w-36 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          placeholder="Product name"
+                        />
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <input
+                          value={item.productSpecification}
+                          onChange={(e) =>
+                            updateItem(index, "productSpecification", e.target.value)
+                          }
+                          className="w-36 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          placeholder="e.g. 1.0t*1220W*1695L"
+                        />
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <input
+                          type="number"
+                          min={1}
+                          value={item.quantity}
+                          onChange={(e) =>
+                            updateItem(index, "quantity", Number(e.target.value))
+                          }
+                          className="w-16 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
+                        />
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <select
+                          value={item.productUnit}
+                          onChange={(e) =>
+                            updateItem(index, "productUnit", e.target.value)
+                          }
+                          className="w-20 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                        >
+                          {UNITS.map((u) => (
+                            <option key={u}>{u}</option>
+                          ))}
+                        </select>
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <input
+                          type="number"
+                          min={0}
+                          value={item.productPrice}
+                          onChange={(e) =>
+                            updateItem(index, "productPrice", Number(e.target.value))
+                          }
+                          className="w-24 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
+                        />
+                      </td>
+
+                      <td className="px-3 py-2 text-xs font-semibold text-gray-700 whitespace-nowrap">
+                        {fmt(item.quantity * item.productPrice)}
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <input
+                          type="number"
+                          min={0}
+                          max={100}
+                          value={item.VAT}
+                          onChange={(e) =>
+                            updateItem(index, "VAT", Number(e.target.value))
+                          }
+                          className="w-16 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-right"
+                          placeholder="0"
+                        />
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <input
+                          type="date"
+                          value={item.deliveryDate}
+                          onChange={(e) =>
+                            updateItem(index, "deliveryDate", e.target.value)
+                          }
+                          className="w-32 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        />
+                      </td>
+
+                      <td className="px-2 py-1">
+                        <select
+                          value={item.deliveryPlace}
+                          onChange={(e) =>
+                            updateItem(index, "deliveryPlace", e.target.value)
+                          }
+                          className="w-28 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                        >
+                          {DELIVERY_PLACES.map((p) => (
+                            <option key={p}>{p}</option>
+                          ))}
+                        </select>
+                      </td>
+
+                      <td className="px-2 py-1">
+                        {items.length > 1 && (
+                          <button
+                            onClick={() => removeItem(index)}
+                            className="text-red-400 hover:text-red-600 text-lg leading-none"
+                          >
+                            ×
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
+
+  {/* ── Totals ── */}
+  <div className="border-t border-gray-200 p-5 flex justify-end">
+    <div className="w-64 space-y-2">
+      <div className="flex justify-between text-sm text-gray-600">
+        <span>Subtotal</span>
+        <span className="font-mono">{fmt(subtotal)} {currency}</span>
+      </div>
+      <div className="flex justify-between text-sm text-gray-600">
+        <span>VAT</span>
+        <span className="font-mono">{fmt(vatAmount)} {currency}</span>
+      </div>
+      <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200 pt-2">
+        <span>Total</span>
+        <span className="font-mono">{fmt(finalTotal)} {currency}</span>
+      </div>
+    </div>
+  </div>
+</div>
 
           {/* ── Totals ── */}
           <div className="border-t border-gray-200 p-5 flex justify-end">
             <div className="w-64 space-y-2">
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Subtotal</span>
-                <span className="font-mono">{fmt(subtotal)} ₫</span>
+                <span className="font-mono">{fmt(subtotal)} {currency}</span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
-                <span>VAT (10%)</span>
-                <span className="font-mono">{fmt(vat)} ₫</span>
+                <span>VAT</span>
+                <span className="font-mono">{fmt(vatAmount)} {currency}</span>
               </div>
               <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200 pt-2">
                 <span>Total</span>
-                <span className="font-mono">{fmt(finalTotal)} ₫</span>
+                <span className="font-mono">{fmt(finalTotal)} {currency}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }

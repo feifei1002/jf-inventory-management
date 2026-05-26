@@ -9,7 +9,8 @@
         "supplierAddress": "台中-台灣",
         "subtotal": 140.10,
         "vat": 0,
-        "finalTotal": 140.10
+        "finalTotal": 140.10,
+        "currency": "VND"
 
     },
 
@@ -24,6 +25,5 @@
         "subtotal": 21870000,
         "vat": 2430000,
         "finalTotal": 24300000
-
     }
 ]

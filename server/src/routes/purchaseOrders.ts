@@ -45,6 +45,10 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       contactPerson,
       paymentTerm,
       supplierAddress,
+      currency,
+      subtotal,
+      vatAmount,
+      finalTotal,
       items,
     } = req.body;
 
@@ -55,12 +59,16 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     }
 
     // Calculate totals from items
-    const subtotal = items.reduce(
-      (sum: number, item: any) => sum + item.quantity * item.productPrice,
-      0
-    );
-    const vat = subtotal * 0.1;
-    const finalTotal = subtotal + vat;
+   const poSubtotal = subtotal ?? items.reduce(
+  (sum: number, item: any) => sum + item.quantity * item.productPrice,
+  0
+  );
+  const poVat = vatAmount ?? items.reduce(
+    (sum: number, item: any) =>
+      sum + item.quantity * item.productPrice * ((item.VAT ?? 0) / 100),
+    0
+  );
+  const poFinalTotal = finalTotal ?? poSubtotal + poVat;
 
     // Create PO and its items in one transaction
     const po = await prisma.$transaction(async (tx) => {
@@ -73,9 +81,10 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
           contactPerson,
           paymentTerm,
           supplierAddress,
-          subtotal,
-          vat,
-          finalTotal,
+          subtotal: poSubtotal,
+          vat: poVat,
+          finalTotal: poFinalTotal,
+          currency: currency || "VND",
         },
       });
 
@@ -91,6 +100,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
             productPrice: item.productPrice,
             totalPrice: item.quantity * item.productPrice,
             VAT: item.VAT ?? 10,
+            currency: item.currency || currency || "VND",
             deliveryDate: new Date(item.deliveryDate),
             requisitionId: item.requisitionId,
             deliveryPlace: item.deliveryPlace,

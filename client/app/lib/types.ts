@@ -1,3 +1,5 @@
+export type Currency = "VND" | "TWD" | "USD";
+
 export type Supplier = {
   supplierId: string;
   name: string;
@@ -13,12 +15,48 @@ export type Supplier = {
   MST?: string;
 };
 
+export type Product = {
+  productId: string;
+  name: string;
+  specification: string;
+  unit: string;
+  price: number;
+  currency: Currency;
+  lastPurchaseDate: string;
+  supplierId: string;
+  supplierName: string;
+};
+
+export type PRItem = {
+  id?: number;
+  requisitionId: string;
+  productId: string;
+  productName: string;
+  productSpecification: string;
+  quantity: number;
+  weight?: number;
+  requiredDate: string;
+  purpose?: string;
+  deliveryPlace: string;
+};
+
+export type PurchaseRequisition = {
+  requisitionId: string;
+  requisitionDate: string;
+  department: string;
+  requester: string;
+  soNo?: string;
+  note?: string;
+  purchaseRequisitionItems?: PRItem[];
+};
+
 export type POItem = {
   productId: string;
   productName: string;
   productSpecification: string;
   quantity: number;
   productUnit: string;
+  currency: Currency;
   productPrice: number;
   totalPrice: number;
   VAT: number;
@@ -38,6 +76,7 @@ export type PurchaseOrder = {
   subtotal: number;
   vat: number;
   finalTotal: number;
+  currency: Currency;
   supplier?: Supplier;
   purchaseOrderItems?: POItem[];
 };

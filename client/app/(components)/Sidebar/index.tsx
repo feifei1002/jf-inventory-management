@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsSidebarCollapsed } from '@/app/state';
-import { Archive, CircleDollarSign, Clipboard, Layout, LucideIcon, Menu, ShoppingCart, SlidersHorizontal, User } from 'lucide-react';
+import { Archive, Building2, CircleDollarSign, ClipboardList, Layout, LucideIcon, Menu, Package, ShoppingCart, SlidersHorizontal, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { use } from 'react';
@@ -64,6 +64,18 @@ const Sidebar = () => {
               label="Dashboard" 
               isCollapsed={isSidebarCollapsed} 
             />
+             <SidebarLink
+              href="/suppliers" 
+              icon={Building2} 
+              label="Suppliers" 
+              isCollapsed={isSidebarCollapsed} 
+            />
+            <SidebarLink
+              href="/products" 
+              icon={Package} 
+              label="Products" 
+              isCollapsed={isSidebarCollapsed} 
+            />
             <SidebarLink
               href="/inventory" 
               icon={Archive} 
@@ -71,16 +83,16 @@ const Sidebar = () => {
               isCollapsed={isSidebarCollapsed} 
             />
             <SidebarLink
+            href="/purchase-requisitions"
+            icon={ClipboardList}
+            label="Requisitions"
+            isCollapsed={isSidebarCollapsed}
+            />
+            <SidebarLink
             href="/purchase-orders" 
             icon={ShoppingCart} 
             label="Purchase Orders" 
             isCollapsed={isSidebarCollapsed} 
-            />
-            <SidebarLink
-              href="/products" 
-              icon={Clipboard} 
-              label="Products" 
-              isCollapsed={isSidebarCollapsed} 
             />
             <SidebarLink
               href="/users" 

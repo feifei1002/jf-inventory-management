@@ -40,6 +40,7 @@ model Products {
   specification String
   unit String
   price Decimal
+  currency String @default("VND")
   lastPurchaseDate DateTime
   supplierId String
   supplierName String
@@ -98,6 +99,7 @@ model Purchasing_Orders {
   subtotal Decimal @db.Decimal(10, 2)
   vat Decimal @db.Decimal(10, 2)
   finalTotal Decimal @db.Decimal(10, 2)
+  currency String @default("VND")
   @@index([purchaseId])
   supplier Suppliers @relation(fields: [supplierId], references: [supplierId])
   purchaseOrderItems Purchase_Order_Items[]
@@ -115,6 +117,7 @@ model Purchase_Order_Items {
   productPrice Decimal @db.Decimal(20, 2)
   totalPrice Decimal @db.Decimal(20, 2)
   VAT Int?
+  currency String @default("VND")
   deliveryDate DateTime
   requisitionId String
   deliveryPlace String
