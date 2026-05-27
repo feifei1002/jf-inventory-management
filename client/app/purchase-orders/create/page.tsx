@@ -196,12 +196,12 @@ export default function CreatePurchaseOrderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 `` pb-20 ``">
+    <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white`` border-b border-gray-200 `` px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white``">
+      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
-          <h1 className="text-xl font-bold text-gray-800 `` ``">New Purchase Order</h1>
-          <p className="text-sm text-gray-500 ``">ĐƠN ĐẶT HÀNG / 採購單</p>
+          <h1 className="text-xl font-bold text-gray-800  ">New Purchase Order</h1>
+          <p className="text-sm text-gray-500 ">ĐƠN ĐẶT HÀNG / 採購單</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm font-mono bg-brand-green-50 text-brand-green-dark px-3 py-1 rounded-full border border-blue-200">
@@ -209,7 +209,7 @@ export default function CreatePurchaseOrderPage() {
           </span>
           <button
             onClick={() => router.back()}
-            className="text-sm text-gray-500 `` hover:text-gray-700 px-4 py-2 border border-gray-200 `` rounded-lg"
+            className="text-sm text-gray-500  hover:text-gray-700 px-4 py-2 border border-gray-200  rounded-lg"
           >
             Cancel
           </button>
@@ -231,7 +231,7 @@ export default function CreatePurchaseOrderPage() {
         )}
 
         {/* ── Section 1: Order Info ── */}
-        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+        <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Order Information
@@ -239,34 +239,34 @@ export default function CreatePurchaseOrderPage() {
           </div>
           <div className="p-5 grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 PO Number
               </label>
               <input
                 value={purchaseId}
                 readOnly
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg bg-gray-50 text-gray-500 `` font-mono"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg bg-gray-50 text-gray-500  font-mono"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 PO Date
               </label>
               <input
                 type="date"
                 value={purchaseDate}
                 onChange={(e) => setPurchaseDate(e.target.value)}
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` ``"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green      "
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Currency
               </label>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value as "VND" | "TWD" | "USD")}
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green       bg-white"
               >
                 <option value="VND">VND — Vietnamese Dong</option>
                 <option value="TWD">TWD — Taiwan Dollar</option>
@@ -277,7 +277,7 @@ export default function CreatePurchaseOrderPage() {
         </div>
 
         {/* ── Section 2: Supplier Info ── */}
-        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+        <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Supplier / Nhà Cung Cấp
@@ -285,13 +285,13 @@ export default function CreatePurchaseOrderPage() {
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Select Supplier <span className="text-red-500">*</span>
               </label>
               <select
                 value={supplierId}
                 onChange={(e) => handleSupplierChange(e.target.value)}
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green       bg-white"
               >
                 <option value="">-- Select a supplier --</option>
                 {suppliers.map((s) => (
@@ -303,37 +303,37 @@ export default function CreatePurchaseOrderPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Contact Person / 聯絡人
               </label>
               <input
                 value={contactPerson}
                 onChange={(e) => setContactPerson(e.target.value)}
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` ``"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green      "
                 placeholder="Contact name"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Payment Terms / 付款條件
               </label>
               <input
                 value={paymentTerm}
                 onChange={(e) => setPaymentTerm(e.target.value)}
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` ``"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green      "
                 placeholder="e.g. 月底結帳次月30日轉帳"
               />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Supplier Address / 廠商地址
               </label>
               <input
                 value={supplierAddress}
                 onChange={(e) => setSupplierAddress(e.target.value)}
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` ``"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green      "
                 placeholder="Full address"
               />
             </div>
@@ -341,7 +341,7 @@ export default function CreatePurchaseOrderPage() {
         </div>
 
         {/* ── Section 3: Line Items ── */}
-        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+        <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Line Items / Mặt Hàng
@@ -357,7 +357,7 @@ export default function CreatePurchaseOrderPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-50 `` border-b border-gray-200 `` ``">
+                <tr className="bg-gray-50  border-b border-gray-200  ">
                   {[
                     "#",
                     "PR No.",
@@ -375,7 +375,7 @@ export default function CreatePurchaseOrderPage() {
                   ].map((h) => (
                     <th
                       key={h}
-                      className="px-3 py-2 text-left text-xs font-semibold text-gray-500 `` whitespace-nowrap"
+                      className="px-3 py-2 text-left text-xs font-semibold text-gray-500  whitespace-nowrap"
                     >
                       {h}
                     </th>
@@ -402,7 +402,7 @@ export default function CreatePurchaseOrderPage() {
                         <select
                           value={item.selectedPRId}
                           onChange={(e) => handleItemPRSelect(index, e.target.value)}
-                          className="w-32 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                          className="w-32 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                         >
                           <option value="">-- PR --</option>
                           {requisitions.map((r) => (
@@ -425,7 +425,7 @@ export default function CreatePurchaseOrderPage() {
                                 e.target.value
                               )
                             }
-                            className="w-40 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                            className="w-40 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                           >
                             <option value="">-- Product --</option>
                             {prProducts.map((p) => (
@@ -440,7 +440,7 @@ export default function CreatePurchaseOrderPage() {
                             onChange={(e) =>
                               updateItem(index, "productId", e.target.value)
                             }
-                            className="w-36 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                            className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                             placeholder="Product code"
                           />
                         )}
@@ -452,7 +452,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "productName", e.target.value)
                           }
-                          className="w-36 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                          className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                           placeholder="Product name"
                         />
                       </td>
@@ -463,7 +463,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "productSpecification", e.target.value)
                           }
-                          className="w-36 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                          className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                           placeholder="e.g. 1.0t*1220W*1695L"
                         />
                       </td>
@@ -476,7 +476,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "quantity", Number(e.target.value))
                           }
-                          className="w-16 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` text-right"
+                          className="w-16 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       text-right"
                         />
                       </td>
 
@@ -486,7 +486,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "productUnit", e.target.value)
                           }
-                          className="w-20 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                          className="w-20 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                         >
                           {UNITS.map((u) => (
                             <option key={u}>{u}</option>
@@ -502,7 +502,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "productPrice", Number(e.target.value))
                           }
-                          className="w-24 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` text-right"
+                          className="w-24 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       text-right"
                         />
                       </td>
 
@@ -519,7 +519,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "VAT", Number(e.target.value))
                           }
-                          className="w-16 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` text-right"
+                          className="w-16 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       text-right"
                           placeholder="0"
                         />
                       </td>
@@ -531,7 +531,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "deliveryDate", e.target.value)
                           }
-                          className="w-32 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                          className="w-32 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                         />
                       </td>
 
@@ -541,7 +541,7 @@ export default function CreatePurchaseOrderPage() {
                           onChange={(e) =>
                             updateItem(index, "deliveryPlace", e.target.value)
                           }
-                          className="w-28 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                          className="w-28 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                         >
                           {DELIVERY_PLACES.map((p) => (
                             <option key={p}>{p}</option>
@@ -567,17 +567,17 @@ export default function CreatePurchaseOrderPage() {
           </div>
 
   {/* ── Totals ── */}
-  <div className="border-t border-gray-200 `` p-5 flex justify-end">
+  <div className="border-t border-gray-200  p-5 flex justify-end">
     <div className="w-64 space-y-2">
-      <div className="flex justify-between text-sm text-gray-600````">
+      <div className="flex justify-between text-sm text-gray-600">
         <span>Subtotal</span>
         <span className="font-mono">{fmt(subtotal)} {currency}</span>
       </div>
-      <div className="flex justify-between text-sm text-gray-600````">
+      <div className="flex justify-between text-sm text-gray-600">
         <span>VAT</span>
         <span className="font-mono">{fmt(vatAmount)} {currency}</span>
       </div>
-      <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200 `` pt-2">
+      <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200  pt-2">
         <span>Total</span>
         <span className="font-mono">{fmt(finalTotal)} {currency}</span>
       </div>
@@ -586,17 +586,17 @@ export default function CreatePurchaseOrderPage() {
 </div>
 
           {/* ── Totals ── */}
-          <div className="border-t border-gray-200 `` p-5 flex justify-end">
+          <div className="border-t border-gray-200  p-5 flex justify-end">
             <div className="w-64 space-y-2">
-              <div className="flex justify-between text-sm text-gray-600````">
+              <div className="flex justify-between text-sm text-gray-600">
                 <span>Subtotal</span>
                 <span className="font-mono">{fmt(subtotal)} {currency}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-600````">
+              <div className="flex justify-between text-sm text-gray-600">
                 <span>VAT</span>
                 <span className="font-mono">{fmt(vatAmount)} {currency}</span>
               </div>
-              <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200 `` pt-2">
+              <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200  pt-2">
                 <span>Total</span>
                 <span className="font-mono">{fmt(finalTotal)} {currency}</span>
               </div>

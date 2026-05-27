@@ -19,7 +19,7 @@ export const theme = {
   exportBtn: "bg-brand-blue hover:bg-brand-blue-dark text-white",
 
   // Cancel buttons
-  cancelBtn: "text-gray-500 `` hover:text-gray-700 border border-gray-200 ``",
+  cancelBtn: "text-gray-500  hover:text-gray-700 border border-gray-200 ",
 
   // Active link in sidebar
   activeLink: "bg-brand-green border-r-4 border-brand-red text-white",
@@ -34,7 +34,7 @@ export const theme = {
   rowAlt: "bg-brand-green-50/20",
 
   // Focus ring on inputs
-  focusRing: "focus:ring-brand-green `` `` `` `` `` ``",
+  focusRing: "focus:ring-brand-green      ",
 
   // Badge/pill for IDs
   badge: "bg-brand-green-50 text-brand-green-dark border text-brand-green-dark",

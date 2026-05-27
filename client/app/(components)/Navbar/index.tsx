@@ -20,14 +20,14 @@ const Navbar = () => {
           className="p-2 rounded-lg bg-gray-100 hover:bg-brand-green-50 hover:text-brand-green transition-colors"
           onClick={toggleSidebar}
         >
-          <Menu className="w-5 h-5 text-gray-600````" />
+          <Menu className="w-5 h-5 text-gray-600" />
         </button>
 
         <div className="relative">
           <input
             type="search"
             placeholder="Search materials & products..."
-            className="pl-10 pr-4 py-2 w-56 md:w-72 border border-gray-200 `` bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` `` focus:border-transparent shadow-sm"
+            className="pl-10 pr-4 py-2 w-56 md:w-72 border border-gray-200  bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-green       focus:border-transparent shadow-sm"
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg
@@ -53,7 +53,7 @@ const Navbar = () => {
         {/* Notifications */}
         <div className="relative">
           <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-            <Bell className="text-gray-500 `` w-5 h-5" />
+            <Bell className="text-gray-500  w-5 h-5" />
           </button>
           <span className="absolute top-1 right-1 w-2 h-2 bg-brand-red rounded-full" />
         </div>
@@ -66,7 +66,7 @@ const Navbar = () => {
             FL
           </div>
           <div className="hidden md:block">
-            <p className="text-sm font-semibold text-gray-800 `` `` leading-tight">
+            <p className="text-sm font-semibold text-gray-800   leading-tight">
               Fei Liu
             </p>
             <p className="text-xs text-gray-400 leading-tight">Admin</p>
@@ -78,7 +78,7 @@ const Navbar = () => {
         {/* Settings */}
         <Link href="/settings">
           <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-            <Settings className="text-gray-500 `` w-5 h-5" />
+            <Settings className="text-gray-500  w-5 h-5" />
           </button>
         </Link>
       </div>

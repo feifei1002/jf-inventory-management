@@ -35,7 +35,7 @@ const emptyItem = () => ({
 });
 
 const inputClass =
-  "w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` ``";
+  "w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green      ";
 
 export default function CreatePurchaseRequisitionPage() {
   const router = useRouter();
@@ -122,14 +122,14 @@ export default function CreatePurchaseRequisitionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 `` pb-20 ``">
+    <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white`` border-b border-gray-200 `` px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white``">
+      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
-          <h1 className="text-xl font-bold text-gray-800 `` ``">
+          <h1 className="text-xl font-bold text-gray-800  ">
             New Purchase Requisition
           </h1>
-          <p className="text-sm text-gray-500 ``">請購單 / Đơn Đề Nghị Mua Hàng</p>
+          <p className="text-sm text-gray-500 ">請購單 / Đơn Đề Nghị Mua Hàng</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm font-mono bg-brand-green-50 text-brand-green-dark px-3 py-1 rounded-full border border-blue-200">
@@ -137,7 +137,7 @@ export default function CreatePurchaseRequisitionPage() {
           </span>
           <button
             onClick={() => router.back()}
-            className="text-sm text-gray-500 `` hover:text-gray-700 px-4 py-2 border border-gray-200 `` rounded-lg"
+            className="text-sm text-gray-500  hover:text-gray-700 px-4 py-2 border border-gray-200  rounded-lg"
           >
             Cancel
           </button>
@@ -159,7 +159,7 @@ export default function CreatePurchaseRequisitionPage() {
         )}
 
         {/* ── Requisition Info ── */}
-        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+        <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Requisition Information
@@ -167,17 +167,17 @@ export default function CreatePurchaseRequisitionPage() {
           </div>
           <div className="p-5 grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 PR Number
               </label>
               <input
                 value={requisitionId}
                 readOnly
-                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg bg-gray-50 text-gray-500 `` font-mono"
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg bg-gray-50 text-gray-500  font-mono"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Date
               </label>
               <input
@@ -188,7 +188,7 @@ export default function CreatePurchaseRequisitionPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 SO Number
               </label>
               <input
@@ -199,7 +199,7 @@ export default function CreatePurchaseRequisitionPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Department <span className="text-red-500">*</span>
               </label>
               <select
@@ -213,7 +213,7 @@ export default function CreatePurchaseRequisitionPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Requester <span className="text-red-500">*</span>
               </label>
               <input
@@ -224,7 +224,7 @@ export default function CreatePurchaseRequisitionPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 `` mb-1">
+              <label className="block text-xs font-medium text-gray-500  mb-1">
                 Note
               </label>
               <input
@@ -238,7 +238,7 @@ export default function CreatePurchaseRequisitionPage() {
         </div>
 
         {/* ── Line Items ── */}
-        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+        <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Items / Mặt Hàng
@@ -254,7 +254,7 @@ export default function CreatePurchaseRequisitionPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-50 `` border-b border-gray-200 `` ``">
+                <tr className="bg-gray-50  border-b border-gray-200  ">
                   {[
                     "#",
                     "Select Product",
@@ -270,7 +270,7 @@ export default function CreatePurchaseRequisitionPage() {
                   ].map((h) => (
                     <th
                       key={h}
-                      className="px-3 py-2 text-left text-xs font-semibold text-gray-500 `` whitespace-nowrap"
+                      className="px-3 py-2 text-left text-xs font-semibold text-gray-500  whitespace-nowrap"
                     >
                       {h}
                     </th>
@@ -295,7 +295,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           handleProductSelect(index, e.target.value)
                         }
-                        className="w-40 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                        className="w-40 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                       >
                         <option value="">-- Select --</option>
                         {products.map((p) => (
@@ -312,7 +312,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           updateItem(index, "productName", e.target.value)
                         }
-                        className="w-36 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                        className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                         placeholder="Product name"
                       />
                     </td>
@@ -327,7 +327,7 @@ export default function CreatePurchaseRequisitionPage() {
                             e.target.value
                           )
                         }
-                        className="w-36 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                        className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                         placeholder="e.g. 1.0t*1220W"
                       />
                     </td>
@@ -340,7 +340,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           updateItem(index, "quantity", Number(e.target.value))
                         }
-                        className="w-16 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` text-right"
+                        className="w-16 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       text-right"
                       />
                     </td>
 
@@ -350,7 +350,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           updateItem(index, "productUnit", e.target.value)
                         }
-                        className="w-16 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                        className="w-16 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                       />
                     </td>
 
@@ -362,7 +362,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           updateItem(index, "weight", e.target.value)
                         }
-                        className="w-20 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` text-right"
+                        className="w-20 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       text-right"
                         placeholder="0.00"
                       />
                     </td>
@@ -374,7 +374,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           updateItem(index, "requiredDate", e.target.value)
                         }
-                        className="w-32 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                        className="w-32 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                       />
                     </td>
 
@@ -384,7 +384,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           updateItem(index, "purpose", e.target.value)
                         }
-                        className="w-28 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` ``"
+                        className="w-28 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                         placeholder="Purpose"
                       />
                     </td>
@@ -395,7 +395,7 @@ export default function CreatePurchaseRequisitionPage() {
                         onChange={(e) =>
                           updateItem(index, "deliveryPlace", e.target.value)
                         }
-                        className="w-28 text-xs px-2 py-1.5 border border-gray-200 `` rounded focus:outline-none focus:ring-1 focus:ring-brand-green `` `` `` `` `` `` bg-white"
+                        className="w-28 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                       >
                         {DELIVERY_PLACES.map((p) => (
                           <option key={p}>{p}</option>

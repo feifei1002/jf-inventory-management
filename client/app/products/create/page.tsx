@@ -20,7 +20,7 @@ const Field = ({
     children: React.ReactNode;
   }) => (
     <div>
-      <label className="block text-xs font-medium text-gray-500 `` mb-1">
+      <label className="block text-xs font-medium text-gray-500  mb-1">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}
@@ -28,7 +28,7 @@ const Field = ({
   );
 
 const inputClass =
-  "w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` ``";
+  "w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green      ";
 
 
 export default function CreateProductPage() {
@@ -79,17 +79,17 @@ export default function CreateProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 `` pb-20 ``">
+    <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white`` border-b border-gray-200 `` px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white``">
+      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
-          <h1 className="text-xl font-bold text-gray-800 `` ``">New Product</h1>
-          <p className="text-sm text-gray-500 ``">Sản Phẩm / 產品</p>
+          <h1 className="text-xl font-bold text-gray-800  ">New Product</h1>
+          <p className="text-sm text-gray-500 ">Sản Phẩm / 產品</p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="text-sm text-gray-500 `` hover:text-gray-700 px-4 py-2 border border-gray-200 `` rounded-lg"
+            className="text-sm text-gray-500  hover:text-gray-700 px-4 py-2 border border-gray-200  rounded-lg"
           >
             Cancel
           </button>
@@ -111,7 +111,7 @@ export default function CreateProductPage() {
         )}
 
         {/* ── Product Info ── */}
-        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+        <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Product Information
@@ -178,7 +178,7 @@ export default function CreateProductPage() {
         </div>
 
         {/* ── Supplier ── */}
-        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+        <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Supplier / Nhà Cung Cấp

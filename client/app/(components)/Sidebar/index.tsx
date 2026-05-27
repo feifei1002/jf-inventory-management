@@ -30,10 +30,10 @@ const SidebarLink = ({ href, icon: Icon, label, isCollapsed }: SidebarLinkProps)
         ${isCollapsed ? "justify-center py-4 px-2" : "justify-start px-8 py-3"}
         ${isActive
           ? "bg-brand-green text-white border-r-4 border-brand-red"
-          : "text-gray-600```` hover:bg-brand-green-50 hover:text-brand-green"
+          : "text-gray-600 hover:bg-brand-green-50 hover:text-brand-green"
         }
       `}>
-        <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-white" : "text-gray-500 ``"}`} />
+        <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-white" : "text-gray-500 "}`} />
         <span className={`${isCollapsed ? "hidden" : "block"} font-medium text-sm`}>
           {label}
         </span>
@@ -79,7 +79,7 @@ const Sidebar = () => {
           className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
           onClick={toggleSidebar}
         >
-          <Menu className="w-4 h-4 text-gray-500 ``" />
+          <Menu className="w-4 h-4 text-gray-500 " />
         </button>
       </div>
 
