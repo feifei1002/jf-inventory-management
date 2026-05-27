@@ -27,6 +27,16 @@ export default function PurchaseRequisitionsPage() {
       r.requester.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleDelete = async (requisitionId: string) => {
+    if (!confirm(`Are you sure you want to delete requisition "${requisitionId}"? This cannot be undone.`)) return;
+    try {
+      await api.deletePurchaseRequisition(requisitionId);
+      setRequisitions((prev) => prev.filter((r) => r.requisitionId !== requisitionId));
+    } catch (err: any) {
+      alert(err.message ?? "Failed to delete requisition");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* ── Top bar ── */}
@@ -153,12 +163,17 @@ export default function PurchaseRequisitionsPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() =>
-                            router.push(`/purchase-requisitions/${req.requisitionId}`)
-                          }
+                          onClick={() => router.push(`/purchase-requisitions/${req.requisitionId}`)}
                           className="text-xs text-blue-600 hover:text-blue-800 font-medium"
                         >
                           View
+                        </button>
+                        <span className="text-gray-300">/</span>
+                        <button
+                          onClick={() => router.push(`/purchase-requisitions/${req.requisitionId}/edit`)}
+                          className="text-xs text-orange-600 hover:text-orange-800 font-medium"
+                        >
+                          Edit
                         </button>
                         <span className="text-gray-300">/</span>
                         
@@ -168,6 +183,13 @@ export default function PurchaseRequisitionsPage() {
                         >
                           📥 Excel
                         </a>
+                        <span className="text-gray-300">/</span>
+                        <button
+                          onClick={() => handleDelete(req.requisitionId)}
+                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                        >
+                          Delete
+                        </button>
                       </div>
                     </td>
                   </tr>

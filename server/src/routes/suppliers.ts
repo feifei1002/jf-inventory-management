@@ -33,6 +33,7 @@ router.get("/:supplierId", async (req: Request, res: Response): Promise<void> =>
   }
 });
 
+// Add new supplier
 router.post("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const {
@@ -79,6 +80,70 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.status(500).json({ message: "Error creating supplier" });
+  }
+});
+
+// PUT update supplier
+router.put("/:supplierId", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      name,
+      type,
+      contactPerson,
+      telephone,
+      fax,
+      mobileNo,
+      address,
+      email,
+      paymentTerm,
+      tax,
+      MST,
+    } = req.body;
+
+    const supplier = await prisma.suppliers.update({
+      where: { supplierId: req.params.supplierId as string },
+      data: {
+        name,
+        type,
+        contactPerson,
+        telephone,
+        fax,
+        mobileNo,
+        address,
+        email,
+        paymentTerm,
+        tax,
+        MST,
+      },
+    });
+
+    res.json(supplier);
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      res.status(404).json({ message: "Supplier not found" });
+      return;
+    }
+    res.status(500).json({ message: "Error updating supplier" });
+  }
+});
+
+// DELETE supplier
+router.delete("/:supplierId", async (req: Request, res: Response): Promise<void> => {
+  try {
+    await prisma.suppliers.delete({
+      where: { supplierId: req.params.supplierId as string },
+    });
+    res.json({ message: "Supplier deleted successfully" });
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      res.status(404).json({ message: "Supplier not found" });
+      return;
+    }
+    if (error.code === "P2003") {
+      res.status(400).json({ message: "Cannot delete supplier with existing purchase orders or products" });
+      return;
+    }
+    res.status(500).json({ message: "Error deleting supplier" });
   }
 });
 

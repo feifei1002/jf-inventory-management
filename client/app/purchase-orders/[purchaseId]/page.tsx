@@ -79,6 +79,12 @@ export default function PurchaseOrderDetailPage() {
             ← Back
           </button>
           <button
+            onClick={() => router.push(`/purchase-orders/${purchaseId}/edit`)}
+            className="text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-lg"
+          >
+            Edit
+          </button>
+          <button
             onClick={handleDownload}
             disabled={downloading}
             className="text-sm font-semibold text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 px-5 py-2 rounded-lg flex items-center gap-2"
@@ -87,7 +93,6 @@ export default function PurchaseOrderDetailPage() {
               "Generating..."
             ) : (
               <>
-                <span>📥</span>
                 <span>Download Excel</span>
               </>
             )}

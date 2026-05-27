@@ -122,4 +122,120 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// PUT update purchase order
+router.put("/:purchaseId", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      purchaseDate,
+      supplierId,
+      supplierName,
+      contactPerson,
+      paymentTerm,
+      supplierAddress,
+      currency,
+      subtotal,
+      vatAmount,
+      finalTotal,
+      items,
+    } = req.body;
+
+    const po = await prisma.$transaction(async (tx) => {
+      const updated = await tx.purchasing_Orders.update({
+        where: { purchaseId: req.params.purchaseId as string },
+        data: {
+          purchaseDate: new Date(purchaseDate),
+          supplierId,
+          supplierName,
+          contactPerson,
+          paymentTerm,
+          supplierAddress,
+          subtotal,
+          vat: vatAmount,
+          finalTotal,
+          currency: currency || "VND",
+        },
+      });
+
+      // Delete existing items and recreate
+      await tx.purchase_Order_Items.deleteMany({
+        where: { purchaseId: req.params.purchaseId as string },
+      });
+
+      for (const item of items) {
+        await tx.products.upsert({
+          where: { productId: item.productId },
+          update: {
+            price: item.productPrice,
+            lastPurchaseDate: new Date(),
+          },
+          create: {
+            productId: item.productId,
+            name: item.productName,
+            specification: item.productSpecification,
+            unit: item.productUnit,
+            price: item.productPrice,
+            lastPurchaseDate: new Date(),
+            supplierId: supplierId,
+            supplierName: supplierName,
+          },
+        });
+
+        await tx.purchase_Order_Items.create({
+          data: {
+            purchaseId: updated.purchaseId,
+            productId: item.productId,
+            productName: item.productName,
+            productSpecification: item.productSpecification,
+            quantity: item.quantity,
+            productUnit: item.productUnit,
+            productPrice: item.productPrice,
+            totalPrice: item.quantity * item.productPrice,
+            VAT: item.VAT ?? 0,
+            currency: item.currency || currency || "VND",
+            deliveryDate: new Date(item.deliveryDate),
+            requisitionId: item.requisitionId,
+            deliveryPlace: item.deliveryPlace,
+          },
+        });
+      }
+
+      return updated;
+    });
+
+    res.json(po);
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      res.status(404).json({ message: "Purchase order not found" });
+      return;
+    }
+    res.status(500).json({ message: "Error updating purchase order" });
+  }
+});
+
+// DELETE purchase order
+router.delete("/:purchaseId", async (req: Request, res: Response): Promise<void> => {
+  try {
+    await prisma.$transaction(async (tx) => {
+      // Delete items first
+      await tx.purchase_Order_Items.deleteMany({
+        where: { purchaseId: req.params.purchaseId as string },
+      });
+      // Then delete the PO
+      await tx.purchasing_Orders.delete({
+        where: { purchaseId: req.params.purchaseId as string },
+      });
+    });
+    res.json({ message: "Purchase order deleted successfully" });
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      res.status(404).json({ message: "Purchase order not found" });
+      return;
+    }
+    if (error.code === "P2003") {
+      res.status(400).json({ message: "Cannot delete purchase order linked to existing records" });
+      return;
+    }
+    res.status(500).json({ message: "Error deleting purchase order" });
+  }
+});
 export default router;

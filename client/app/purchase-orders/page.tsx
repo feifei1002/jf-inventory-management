@@ -29,6 +29,16 @@ export default function PurchaseOrdersPage() {
       o.supplierName.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleDelete = async (purchaseId: string) => {
+    if (!confirm(`Are you sure you want to delete purchase order "${purchaseId}"? This cannot be undone.`)) return;
+    try {
+      await api.deletePurchaseOrder(purchaseId);
+      setOrders((prev) => prev.filter((o) => o.purchaseId !== purchaseId));
+    } catch (err: any) {
+      alert(err.message ?? "Failed to delete purchase order");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* ── Top bar ── */}
@@ -155,26 +165,38 @@ export default function PurchaseOrdersPage() {
                       {fmt(order.vat)}
                     </td>
                     <td className="px-4 py-3 text-xs text-right font-mono font-bold text-blue-900">
-                      {fmt(order.finalTotal)} ₫
+                      {fmt(order.finalTotal)} {order.currency}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() =>
-                            router.push(`/purchase-orders/${order.purchaseId}`)
-                          }
+                          onClick={() => router.push(`/purchase-orders/${order.purchaseId}`)}
                           className="text-xs text-blue-600 hover:text-blue-800 font-medium"
                         >
                           View
                         </button>
                         <span className="text-gray-300">/</span>
-                        <a
-                          href={api.getExportUrl(order.purchaseId)}
+                        <button
+                          onClick={() => router.push(`/purchase-orders/${order.purchaseId}/edit`)}
+                          className="text-xs text-orange-600 hover:text-orange-800 font-medium"
+                        >
+                          Edit
+                        </button>
+                        <span className="text-gray-300">/</span>
+                        
+                          <a href={api.getExportUrl(order.purchaseId)}
                           download={`${order.purchaseId}.xlsx`}
                           className="text-xs text-green-600 hover:text-green-800 font-medium"
                         >
-                          📥 Excel
+                          Excel
                         </a>
+                        <span className="text-gray-300">/</span>
+                        <button
+                          onClick={() => handleDelete(order.purchaseId)}
+                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                        >
+                          Delete
+                        </button>
                       </div>
                     </td>
                   </tr>

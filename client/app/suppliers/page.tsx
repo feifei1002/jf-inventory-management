@@ -26,6 +26,16 @@ export default function SuppliersPage() {
       s.supplierId.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleDelete = async (supplierId: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete supplier "${name}"? This cannot be undone.`)) return;
+    try {
+      await api.deleteSupplier(supplierId);
+      setSuppliers((prev) => prev.filter((s) => s.supplierId !== supplierId));
+    } catch (err: any) {
+      alert(err.message ?? "Failed to delete supplier");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* ── Top bar ── */}
@@ -153,14 +163,28 @@ export default function SuppliersPage() {
                       {supplier.MST ?? "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <button
-                        onClick={() =>
-                          router.push(`/suppliers/${supplier.supplierId}`)
-                        }
-                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                      >
-                        View
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => router.push(`/suppliers/${supplier.supplierId}`)}
+                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          View
+                        </button>
+                        <span className="text-gray-300">/</span>
+                        <button
+                          onClick={() => router.push(`/suppliers/${supplier.supplierId}/edit`)}
+                          className="text-xs text-orange-600 hover:text-orange-800 font-medium"
+                        >
+                          Edit
+                        </button>
+                        <span className="text-gray-300">/</span>
+                        <button
+                          onClick={() => handleDelete(supplier.supplierId, supplier.name)}
+                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

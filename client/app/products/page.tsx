@@ -30,6 +30,16 @@ export default function ProductsPage() {
   const fmt = (n: number) =>
     Number(n).toLocaleString("vi-VN", { minimumFractionDigits: 0 });
 
+  const handleDelete = async (productId: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete product "${name}"? This cannot be undone.`)) return;
+    try {
+      await api.deleteProduct(productId);
+      setProducts((prev) => prev.filter((p) => p.productId !== productId));
+    } catch (err: any) {
+      alert(err.message ?? "Failed to delete product");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* ── Top bar ── */}
@@ -105,6 +115,7 @@ export default function ProductsPage() {
                     "Price",
                     "Supplier",
                     "Last Purchase",
+                    "Actions",
                   ].map((h) => (
                     <th
                       key={h}
@@ -154,6 +165,30 @@ export default function ProductsPage() {
                       {new Date(product.lastPurchaseDate).toLocaleDateString(
                         "vi-VN"
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => router.push(`/products/${product.productId}`)}
+                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          View
+                        </button>
+                        <span className="text-gray-300">/</span>
+                        <button
+                          onClick={() => router.push(`/products/${product.productId}/edit`)}
+                          className="text-xs text-orange-600 hover:text-orange-800 font-medium"
+                        >
+                          Edit
+                        </button>
+                        <span className="text-gray-300">/</span>
+                        <button
+                          onClick={() => handleDelete(product.productId, product.name)}
+                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

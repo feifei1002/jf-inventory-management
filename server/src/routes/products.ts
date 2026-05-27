@@ -90,4 +90,81 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// PUT update product
+router.put("/:productId", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      name,
+      specification,
+      unit,
+      price,
+      currency,
+      supplierId,
+      supplierName,
+    } = req.body;
+
+    const product = await prisma.products.update({
+      where: { productId: req.params.productId as string },
+      data: {
+        name,
+        specification,
+        unit,
+        price,
+        currency,
+        supplierId,
+        supplierName,
+        lastPurchaseDate: new Date(),
+      },
+    });
+
+    res.json(product);
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      res.status(404).json({ message: "Product not found" });
+      return;
+    }
+    res.status(500).json({ message: "Error updating product" });
+  }
+});
+
+  // DELETE product
+  router.delete("/:productId", async (req: Request, res: Response): Promise<void> => {
+    try {
+      await prisma.$transaction(async (tx) => {
+        // Delete linked supplier_products first
+        await tx.supplier_Products.deleteMany({
+          where: { productId: req.params.productId as string },
+        });
+
+        // Delete linked purchase requisition items
+        await tx.purchase_Requisition_Items.deleteMany({
+          where: { productId: req.params.productId as string },
+        });
+
+        // Delete linked purchase order items
+        await tx.purchase_Order_Items.deleteMany({
+          where: { productId: req.params.productId as string },
+        });
+
+        // Delete linked material warehousing items
+        await tx.material_Warehousing_Items.deleteMany({
+          where: { productId: req.params.productId as string },
+        });
+
+        // Finally delete the product
+        await tx.products.delete({
+          where: { productId: req.params.productId as string },
+        });
+      });
+
+      res.json({ message: "Product deleted successfully" });
+    } catch (error: any) {
+      console.error("Delete product error:", error);
+      if (error.code === "P2025") {
+        res.status(404).json({ message: "Product not found" });
+        return;
+      }
+      res.status(500).json({ message: "Error deleting product" });
+    }
+  });
 export default router;
