@@ -7,6 +7,26 @@ import { Supplier } from "../../../lib/types";
 
 const UNITS = ["tấm", "cái", "kg", "m", "m2", "cuộn", "bộ", "hộp", "thùng"];
 
+const Field = ({
+    label,
+    required,
+    children,
+  }: {
+    label: string;
+    required?: boolean;
+    children: React.ReactNode;
+  }) => (
+    <div>
+      <label className="block text-xs font-medium text-gray-500 `` mb-1">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      {children}
+    </div>
+  );
+
+const inputClass =
+  "w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green `` `` `` `` `` ``";
+
 export default function EditProductPage() {
   const router = useRouter();
   const { productId } = useParams<{ productId: string }>();
@@ -68,53 +88,33 @@ export default function EditProductPage() {
     }
   };
 
-  const Field = ({
-    label,
-    required,
-    children,
-  }: {
-    label: string;
-    required?: boolean;
-    children: React.ReactNode;
-  }) => (
-    <div>
-      <label className="block text-xs font-medium text-gray-500 mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      {children}
-    </div>
-  );
-
-  const inputClass =
-    "w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500";
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-400 text-sm">Loading product...</p>
+      <div className="min-h-screen bg-gray-50 `` flex items-center justify-center">
+        <p className="text-gray-400 `` text-sm">Loading product...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 `` pb-20 ``">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <div className="bg-white`` border-b border-gray-200 `` px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white``">
         <div>
-          <h1 className="text-xl font-bold text-gray-800">Edit Product</h1>
-          <p className="text-sm text-gray-500 font-mono">{productId}</p>
+          <h1 className="text-xl font-bold text-gray-800 `` ``">Edit Product</h1>
+          <p className="text-sm text-gray-500 `` font-mono">{productId}</p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 border border-gray-200 rounded-lg"
+            className="text-sm text-gray-500 `` hover:text-gray-700 px-4 py-2 border border-gray-200 `` rounded-lg"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 px-5 py-2 rounded-lg"
+            className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark disabled:opacity-50 px-5 py-2 rounded-lg"
           >
             {submitting ? "Saving..." : "Save Changes"}
           </button>
@@ -129,21 +129,21 @@ export default function EditProductPage() {
         )}
 
         {/* ── Product Info ── */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="bg-blue-900 px-5 py-3">
+        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+          <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Product Information
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">
+              <label className="block text-xs font-medium text-gray-500 `` mb-1">
                 Product ID
               </label>
               <input
                 value={productId}
                 readOnly
-                className="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-400 font-mono"
+                className="w-full text-sm px-3 py-2 border border-gray-200 `` rounded-lg bg-gray-50 text-gray-400 font-mono"
               />
             </div>
             <Field label="Unit" required>
@@ -197,8 +197,8 @@ export default function EditProductPage() {
         </div>
 
         {/* ── Supplier ── */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="bg-blue-900 px-5 py-3">
+        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+          <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Supplier / Nhà Cung Cấp
             </h2>
@@ -219,7 +219,7 @@ export default function EditProductPage() {
               </select>
             </Field>
             {selectedSupplier && (
-              <div className="bg-blue-50 rounded-lg p-4 grid grid-cols-2 gap-3">
+              <div className="bg-brand-green-50 rounded-lg p-4 grid grid-cols-2 gap-3">
                 <div>
                   <p className="text-xs text-gray-400">Contact</p>
                   <p className="text-xs font-semibold text-gray-700">

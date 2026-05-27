@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
             data: {
                 supplierId,
                 name,
-                type: type || "General",
+                type: type || null,
                 contactPerson,
                 telephone,
                 fax,

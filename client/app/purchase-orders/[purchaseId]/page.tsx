@@ -46,41 +46,41 @@ export default function PurchaseOrderDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-400 text-sm">Loading purchase order...</div>
+      <div className="min-h-screen bg-gray-50 `` flex items-center justify-center">
+        <div className="text-gray-400 `` text-sm">Loading purchase order...</div>
       </div>
     );
   }
 
   if (error || !po) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 `` flex items-center justify-center">
         <div className="text-red-500 text-sm">{error || "Order not found"}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 `` pb-20 ``">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <div className="bg-white`` border-b border-gray-200 `` px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white``">
         <div>
-          <h1 className="text-xl font-bold text-gray-800">Purchase Order</h1>
-          <p className="text-sm text-gray-500">ĐƠN ĐẶT HÀNG / 採購單</p>
+          <h1 className="text-xl font-bold text-gray-800 `` ``">Purchase Order</h1>
+          <p className="text-sm text-gray-500 ``">ĐƠN ĐẶT HÀNG / 採購單</p>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-sm font-mono bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200">
+          <span className="text-sm font-mono bg-brand-green-50 text-brand-green-dark px-3 py-1 rounded-full border border-blue-200">
             {po.purchaseId}
           </span>
           <button
             onClick={() => router.push("/purchase-orders")}
-            className="text-sm text-gray-500 hover:text-gray-700 px-4 py-2 border border-gray-200 rounded-lg"
+            className="text-sm text-gray-500 `` hover:text-gray-700 px-4 py-2 border border-gray-200 `` rounded-lg"
           >
             ← Back
           </button>
           <button
             onClick={() => router.push(`/purchase-orders/${purchaseId}/edit`)}
-            className="text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-lg"
+            className="text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg"
           >
             Edit
           </button>
@@ -102,22 +102,22 @@ export default function PurchaseOrderDetailPage() {
 
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
         {/* ── Order Info ── */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="bg-blue-900 px-5 py-3">
+        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+          <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Order Information
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">PO Number</p>
-              <p className="text-sm font-mono font-semibold text-gray-800">
+              <p className="text-xs text-gray-400 `` mb-0.5">PO Number</p>
+              <p className="text-sm font-mono font-semibold text-gray-800 `` ``">
                 {po.purchaseId}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">PO Date</p>
-              <p className="text-sm text-gray-800">
+              <p className="text-xs text-gray-400 `` mb-0.5">PO Date</p>
+              <p className="text-sm text-gray-800 `` ``">
                 {new Date(po.purchaseDate).toLocaleDateString("vi-VN")}
               </p>
             </div>
@@ -125,37 +125,37 @@ export default function PurchaseOrderDetailPage() {
         </div>
 
         {/* ── Supplier Info ── */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="bg-blue-900 px-5 py-3">
+        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+          <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Supplier / Nhà Cung Cấp
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Supplier</p>
-              <p className="text-sm font-semibold text-gray-800">
+              <p className="text-xs text-gray-400 `` mb-0.5">Supplier</p>
+              <p className="text-sm font-semibold text-gray-800 `` ``">
                 {po.supplierId} — {po.supplierName}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Contact Person</p>
-              <p className="text-sm text-gray-800">{po.contactPerson}</p>
+              <p className="text-xs text-gray-400 `` mb-0.5">Contact Person</p>
+              <p className="text-sm text-gray-800 `` ``">{po.contactPerson}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Payment Terms</p>
-              <p className="text-sm text-gray-800">{po.paymentTerm}</p>
+              <p className="text-xs text-gray-400 `` mb-0.5">Payment Terms</p>
+              <p className="text-sm text-gray-800 `` ``">{po.paymentTerm}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Address</p>
-              <p className="text-sm text-gray-800">{po.supplierAddress}</p>
+              <p className="text-xs text-gray-400 `` mb-0.5">Address</p>
+              <p className="text-sm text-gray-800 `` ``">{po.supplierAddress}</p>
             </div>
           </div>
         </div>
 
         {/* ── Line Items ── */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="bg-blue-900 px-5 py-3">
+        <div className="bg-white`` rounded-xl border border-gray-200 `` shadow-sm overflow-hidden`` ``">
+          <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
               Line Items / Mặt Hàng
             </h2>
@@ -163,7 +163,7 @@ export default function PurchaseOrderDetailPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
+                <tr className="bg-gray-50 `` border-b border-gray-200 `` ``">
                   {[
                     "#", "Product Code", "Product Name", "Specification",
                     "Qty", "Unit", "Unit Price", "Total", "VAT",
@@ -171,7 +171,7 @@ export default function PurchaseOrderDetailPage() {
                   ].map((h) => (
                     <th
                       key={h}
-                      className="px-3 py-2 text-left text-xs font-semibold text-gray-500 whitespace-nowrap"
+                      className="px-3 py-2 text-left text-xs font-semibold text-gray-500 `` whitespace-nowrap"
                     >
                       {h}
                     </th>
@@ -184,26 +184,26 @@ export default function PurchaseOrderDetailPage() {
                     key={index}
                     className={
                       index % 2 === 0
-                        ? "bg-white border-b border-gray-100"
-                        : "bg-blue-50/30 border-b border-gray-100"
+                        ? "bg-white`` border-b border-gray-100 ``"
+                        : "bg-brand-green-50/30 border-b border-gray-100"
                     }
                   >
                     <td className="px-3 py-2 text-gray-400 text-xs">
                       {index + 1}
                     </td>
-                    <td className="px-3 py-2 text-xs font-mono text-gray-600">
+                    <td className="px-3 py-2 text-xs font-mono text-gray-600````">
                       {item.productId}
                     </td>
-                    <td className="px-3 py-2 text-xs text-gray-800">
+                    <td className="px-3 py-2 text-xs text-gray-800 `` ``">
                       {item.productName}
                     </td>
-                    <td className="px-3 py-2 text-xs text-gray-600">
+                    <td className="px-3 py-2 text-xs text-gray-600````">
                       {item.productSpecification}
                     </td>
                     <td className="px-3 py-2 text-xs text-right">
                       {item.quantity}
                     </td>
-                    <td className="px-3 py-2 text-xs text-gray-600">
+                    <td className="px-3 py-2 text-xs text-gray-600````">
                       {item.productUnit}
                     </td>
                     <td className="px-3 py-2 text-xs text-right font-mono">
@@ -218,10 +218,10 @@ export default function PurchaseOrderDetailPage() {
                     <td className="px-3 py-2 text-xs whitespace-nowrap">
                       {new Date(item.deliveryDate).toLocaleDateString("vi-VN")}
                     </td>
-                    <td className="px-3 py-2 text-xs font-mono text-gray-600">
+                    <td className="px-3 py-2 text-xs font-mono text-gray-600````">
                       {item.requisitionId}
                     </td>
-                    <td className="px-3 py-2 text-xs text-gray-600">
+                    <td className="px-3 py-2 text-xs text-gray-600````">
                       {item.deliveryPlace}
                     </td>
                   </tr>
@@ -231,17 +231,17 @@ export default function PurchaseOrderDetailPage() {
           </div>
 
           {/* ── Totals ── */}
-          <div className="border-t border-gray-200 p-5 flex justify-end">
+          <div className="border-t border-gray-200 `` p-5 flex justify-end">
             <div className="w-64 space-y-2">
-              <div className="flex justify-between text-sm text-gray-600">
+              <div className="flex justify-between text-sm text-gray-600````">
                 <span>Subtotal</span>
                 <span className="font-mono">{fmt(po.subtotal)} {po.currency ?? "VND"}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-600">
+              <div className="flex justify-between text-sm text-gray-600````">
                 <span>VAT (10%)</span>
                 <span className="font-mono">{fmt(po.vat)} {po.currency ?? "VND"}</span>
               </div>
-              <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200 pt-2">
+              <div className="flex justify-between text-base font-bold text-blue-900 border-t border-gray-200 `` pt-2">
                 <span>Total</span>
                 <span className="font-mono">{fmt(po.finalTotal)} {po.currency ?? "VND"}</span>
               </div>
