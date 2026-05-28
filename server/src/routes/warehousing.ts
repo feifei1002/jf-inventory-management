@@ -136,6 +136,125 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// PUT update warehousing form
+router.put("/:formId", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      date,
+      supplierId,
+      supplierName,
+      contactPerson,
+      supplierAddress,
+      supplierTelephone,
+      supplierFax,
+      purchaseId,
+      paymentTerm,
+      invoiceNo,
+      deliveryNote,
+      items,
+    } = req.body;
+
+    const form = await prisma.$transaction(async (tx) => {
+      // Get old items to reverse inventory
+      const oldForm = await tx.material_Warehousing_Forms.findUnique({
+        where: { formId: req.params.formId as string },
+        include: { materialWarehousingItems: true },
+      });
+
+      if (!oldForm) throw new Error("NOT_FOUND");
+
+      // Reverse old inventory
+      for (const item of oldForm.materialWarehousingItems) {
+        await tx.inventory.upsert({
+          where: { productId: item.productId },
+          update: {
+            currentStock: { decrement: item.quantity },
+            lastUpdated: new Date(),
+          },
+          create: {
+            productId: item.productId,
+            productName: item.productName,
+            productSpecification: item.productSpecification,
+            unit: item.productUnit,
+            currentStock: 0,
+            lastUpdated: new Date(),
+          },
+        });
+      }
+
+      // Update the form header
+      const updated = await tx.material_Warehousing_Forms.update({
+        where: { formId: req.params.formId as string },
+        data: {
+          date: new Date(date),
+          supplierId,
+          supplierName,
+          contactPerson: contactPerson || "",
+          supplierAddress,
+          supplierTelephone,
+          supplierFax: supplierFax || "",
+          purchaseId,
+          paymentTerm: paymentTerm || "",
+          invoiceNo,
+          deliveryNote: deliveryNote || "",
+        },
+      });
+
+      // Delete old items
+      await tx.material_Warehousing_Items.deleteMany({
+        where: { formId: req.params.formId as string },
+      });
+
+      // Create new items and update inventory
+      for (const item of items) {
+        await tx.material_Warehousing_Items.create({
+          data: {
+            formId: updated.formId,
+            productId: item.productId,
+            productName: item.productName,
+            productSpecification: item.productSpecification,
+            quantity: item.quantity,
+            productUnit: item.productUnit,
+            deliveryDate: new Date(item.deliveryDate),
+            requisitionId: item.requisitionId,
+            deliveryPlace: item.deliveryPlace,
+          },
+        });
+
+        // Add new quantities to inventory
+        await tx.inventory.upsert({
+          where: { productId: item.productId },
+          update: {
+            currentStock: { increment: item.quantity },
+            lastUpdated: new Date(),
+          },
+          create: {
+            productId: item.productId,
+            productName: item.productName,
+            productSpecification: item.productSpecification,
+            unit: item.productUnit,
+            currentStock: item.quantity,
+            lastUpdated: new Date(),
+            supplierId: supplierId,
+            supplierName: supplierName,
+          },
+        });
+      }
+
+      return updated;
+    });
+
+    res.json(form);
+  } catch (error: any) {
+    console.error("Update warehousing error:", error);
+    if (error.message === "NOT_FOUND" || error.code === "P2025") {
+      res.status(404).json({ message: "Warehousing form not found" });
+      return;
+    }
+    res.status(500).json({ message: "Error updating warehousing form" });
+  }
+});
+
 // DELETE warehousing form — also reverses inventory
 router.delete("/:formId", async (req: Request, res: Response): Promise<void> => {
   try {
@@ -150,10 +269,18 @@ router.delete("/:formId", async (req: Request, res: Response): Promise<void> => 
 
       // Reverse inventory for each item
       for (const item of form.materialWarehousingItems) {
-        await tx.inventory.update({
+        await tx.inventory.upsert({
           where: { productId: item.productId },
-          data: {
+          update: {
             currentStock: { decrement: item.quantity },
+            lastUpdated: new Date(),
+          },
+          create: {
+            productId: item.productId,
+            productName: item.productName,
+            productSpecification: item.productSpecification,
+            unit: item.productUnit,
+            currentStock: 0,
             lastUpdated: new Date(),
           },
         });

@@ -11,6 +11,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const body_parser_1 = __importDefault(require("body-parser"));
 /* ROUTE IMPORTS */
 const export_1 = __importDefault(require("./routes/export"));
+const dashboard_1 = __importDefault(require("./routes/dashboard"));
 const suppliers_1 = __importDefault(require("./routes/suppliers"));
 const products_1 = __importDefault(require("./routes/products"));
 const purchaseRequisitions_1 = __importDefault(require("./routes/purchaseRequisitions"));
@@ -32,6 +33,7 @@ app.get("/hello", (req, res) => {
     res.send("Hello, World!");
 });
 app.use("/api/export", export_1.default);
+app.use("/api/dashboard", dashboard_1.default);
 app.use("/api/purchase-orders", purchaseOrders_1.default);
 app.use("/api/suppliers", suppliers_1.default);
 app.use("/api/products", products_1.default);

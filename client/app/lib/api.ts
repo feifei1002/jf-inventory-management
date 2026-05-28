@@ -1,6 +1,13 @@
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
 export const api = {
+  // Dashboard
+  getDashboardMetrics: async () => {
+  const res = await fetch(`${API_URL}/api/dashboard`);
+  if (!res.ok) throw new Error("Failed to fetch dashboard metrics");
+  return res.json();
+  },
+
   // Suppliers
   getSuppliers: async () => {
     const res = await fetch(`${API_URL}/api/suppliers`);

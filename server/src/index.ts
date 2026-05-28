@@ -6,6 +6,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 /* ROUTE IMPORTS */
 import exportRoutes from "./routes/export";
+import dashboardRoutes from "./routes/dashboard";
 import supplierRoutes from "./routes/suppliers";
 import productRoutes from "./routes/products";
 import purchaseRequisitionRoutes from "./routes/purchaseRequisitions";
@@ -29,6 +30,7 @@ app.get("/hello", (req, res) => {
   res.send("Hello, World!");
 });
 app.use("/api/export", exportRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/purchase-orders", purchaseOrderRoutes);
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/products", productRoutes);
