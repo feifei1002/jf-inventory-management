@@ -15,6 +15,8 @@ const suppliers_1 = __importDefault(require("./routes/suppliers"));
 const products_1 = __importDefault(require("./routes/products"));
 const purchaseRequisitions_1 = __importDefault(require("./routes/purchaseRequisitions"));
 const purchaseOrders_1 = __importDefault(require("./routes/purchaseOrders"));
+const warehousing_1 = __importDefault(require("./routes/warehousing"));
+const inventory_1 = __importDefault(require("./routes/inventory"));
 /* CONFIGURATIONS */
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -34,6 +36,8 @@ app.use("/api/purchase-orders", purchaseOrders_1.default);
 app.use("/api/suppliers", suppliers_1.default);
 app.use("/api/products", products_1.default);
 app.use("/api/purchase-requisitions", purchaseRequisitions_1.default);
+app.use("/api/warehousing", warehousing_1.default);
+app.use("/api/inventory", inventory_1.default);
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

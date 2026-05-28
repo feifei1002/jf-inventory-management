@@ -5,7 +5,8 @@ import { setIsSidebarCollapsed } from '@/app/state';
 import {
   Archive, Building2, CircleDollarSign, Clipboard,
   ClipboardList, Layout, LucideIcon, Menu, Package,
-  ShoppingCart, SlidersHorizontal, User
+  ShoppingCart, SlidersHorizontal, User,
+  Warehouse
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -86,10 +87,11 @@ const Sidebar = () => {
       {/* ── LINKS ── */}
       <div className="grow mt-2 overflow-y-auto">
         <SidebarLink href="/dashboard" icon={Layout} label="Dashboard" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/purchase-requisitions" icon={ClipboardList} label="Requisitions" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/purchase-orders" icon={ShoppingCart} label="Purchase Orders" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/suppliers" icon={Building2} label="Suppliers" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/products" icon={Package} label="Products" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/purchase-requisitions" icon={ClipboardList} label="PurchaseRequisitions" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/purchase-orders" icon={ShoppingCart} label="Purchase Orders" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/warehousing" icon={Warehouse} label="Warehousing" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/inventory" icon={Archive} label="Inventory" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/users" icon={User} label="Users" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/settings" icon={SlidersHorizontal} label="Settings" isCollapsed={isSidebarCollapsed} />

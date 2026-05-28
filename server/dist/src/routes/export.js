@@ -500,5 +500,300 @@ router.get("/po/:purchaseId", async (req, res) => {
         res.status(500).json({ message: "Failed to generate Excel file" });
     }
 });
+router.get("/warehousing/:formId", async (req, res) => {
+    try {
+        const form = await prisma.material_Warehousing_Forms.findUnique({
+            where: { formId: req.params.formId },
+            include: {
+                supplier: true,
+                purchase: true,
+                materialWarehousingItems: { include: { product: true } },
+            },
+        });
+        if (!form) {
+            res.status(404).json({ message: "Warehousing form not found" });
+            return;
+        }
+        const workbook = new exceljs_1.default.Workbook();
+        const sheet = workbook.addWorksheet("入庫單");
+        const NAVY = "FF1F3864";
+        const WHITE = "FFFFFFFF";
+        const LIGHT_GREEN = "FFE8F5E9";
+        const GREEN = "FF2D7A2D";
+        sheet.columns = [
+            { width: 5 },
+            { width: 18 },
+            { width: 20 },
+            { width: 22 },
+            { width: 8 },
+            { width: 6 },
+            { width: 12 },
+            { width: 12 },
+            { width: 15 },
+        ];
+        const border = (cell) => {
+            cell.border = {
+                top: { style: "thin" },
+                left: { style: "thin" },
+                bottom: { style: "thin" },
+                right: { style: "thin" },
+            };
+        };
+        const label = (cell, value) => {
+            cell.value = value;
+            cell.font = { bold: true, size: 9 };
+            cell.alignment = { vertical: "middle", wrapText: true };
+        };
+        const val = (cell, value) => {
+            cell.value = value;
+            cell.font = { size: 9 };
+            cell.alignment = { vertical: "middle", wrapText: true };
+        };
+        // ── Row 1: Company ──
+        sheet.mergeCells("A1:I1");
+        const r1 = sheet.getCell("A1");
+        r1.value = "CÔNG TY TNHH QUỐC TẾ J&F";
+        r1.font = { bold: true, size: 13 };
+        r1.alignment = { horizontal: "center", vertical: "middle" };
+        sheet.getRow(1).height = 20;
+        // ── Row 2: Address ──
+        sheet.mergeCells("A2:I2");
+        const r2 = sheet.getCell("A2");
+        r2.value = "Lô C2-18, KCN Đại Đăng, Phường Bình Dương, TP.HCM, Việt Nam";
+        r2.font = { size: 9, italic: true };
+        r2.alignment = { horizontal: "center", vertical: "middle" };
+        // ── Row 3: Title ──
+        sheet.mergeCells("A3:I3");
+        const r3 = sheet.getCell("A3");
+        r3.value = "PHIẾU NHẬP KHO NGUYÊN VẬT LIỆU / Material Warehousing Form 原物料入庫單";
+        r3.font = { bold: true, size: 13 };
+        r3.alignment = { horizontal: "center", vertical: "middle" };
+        r3.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE8F5E9" } };
+        sheet.getRow(3).height = 24;
+        // ── Rows 4-7: Meta ──
+        sheet.mergeCells("A4:B4");
+        label(sheet.getCell("A4"), "Nhà Cung Cấp:\n供應商");
+        sheet.mergeCells("C4:E4");
+        val(sheet.getCell("C4"), `${form.supplierId} - ${form.supplierName}`);
+        label(sheet.getCell("F4"), "WF No:");
+        sheet.mergeCells("G4:I4");
+        const wfCell = sheet.getCell("G4");
+        wfCell.value = form.formId;
+        wfCell.font = { bold: true, size: 9, color: { argb: "FF2D7A2D" } };
+        sheet.mergeCells("A5:B5");
+        label(sheet.getCell("A5"), "Ng. Liên Lạc:\n聯絡人");
+        sheet.mergeCells("C5:E5");
+        val(sheet.getCell("C5"), form.contactPerson ?? "");
+        label(sheet.getCell("F5"), "Hóa Đơn:\n發票");
+        sheet.mergeCells("G5:I5");
+        val(sheet.getCell("G5"), form.invoiceNo);
+        sheet.mergeCells("A6:B6");
+        label(sheet.getCell("A6"), "Đ.K Thanh Toán:\n付款條件");
+        sheet.mergeCells("C6:E6");
+        val(sheet.getCell("C6"), form.paymentTerm ?? "");
+        label(sheet.getCell("F6"), "PO No:");
+        sheet.mergeCells("G6:I6");
+        val(sheet.getCell("G6"), form.purchaseId);
+        sheet.mergeCells("A7:B7");
+        label(sheet.getCell("A7"), "Địa Chỉ:\n廠商地址");
+        sheet.mergeCells("C7:E7");
+        val(sheet.getCell("C7"), form.supplierAddress);
+        label(sheet.getCell("F7"), "Date:");
+        sheet.mergeCells("G7:I7");
+        val(sheet.getCell("G7"), new Date(form.date).toLocaleDateString("vi-VN"));
+        for (let r = 4; r <= 7; r++) {
+            sheet.getRow(r).height = 26;
+            for (let c = 1; c <= 9; c++)
+                border(sheet.getRow(r).getCell(c));
+        }
+        // ── Row 8: Table header ──
+        const HEADERS = [
+            "STT", "Mã Hàng\n料號", "Tên Hàng\n品名", "Quy Cách\n規格",
+            "SL\n數量", "ĐV\n單位", "Ngày Nhập\n交貨日期",
+            "Số PR\n請購單號", "Add Giao Hàng\n交貨地點",
+        ];
+        const headerRow = sheet.getRow(8);
+        headerRow.height = 32;
+        HEADERS.forEach((h, i) => {
+            const cell = headerRow.getCell(i + 1);
+            cell.value = h;
+            cell.font = { bold: true, color: { argb: WHITE }, size: 9 };
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: GREEN } };
+            cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+            border(cell);
+        });
+        // ── Line items ──
+        let rowIdx = 9;
+        for (const [i, item] of form.materialWarehousingItems.entries()) {
+            const row = sheet.getRow(rowIdx);
+            row.height = 20;
+            const bg = i % 2 === 1
+                ? { type: "pattern", pattern: "solid", fgColor: { argb: "FFE8F5E9" } }
+                : undefined;
+            const setCell = (col, value, align = "center") => {
+                const cell = row.getCell(col);
+                cell.value = value;
+                cell.font = { size: 9 };
+                cell.alignment = { horizontal: align, vertical: "middle", wrapText: true };
+                if (bg)
+                    cell.fill = bg;
+                border(cell);
+            };
+            setCell(1, i + 1);
+            setCell(2, item.productId, "left");
+            setCell(3, item.productName, "left");
+            setCell(4, item.productSpecification, "left");
+            setCell(5, item.quantity);
+            setCell(6, item.productUnit);
+            setCell(7, new Date(item.deliveryDate).toLocaleDateString("vi-VN"));
+            setCell(8, item.requisitionId, "left");
+            setCell(9, item.deliveryPlace, "left");
+            rowIdx++;
+        }
+        // ── Empty filler rows ──
+        while (rowIdx < 17) {
+            const row = sheet.getRow(rowIdx);
+            row.height = 18;
+            for (let c = 1; c <= 9; c++) {
+                border(row.getCell(c));
+            }
+            rowIdx++;
+        }
+        // ── Total row ──
+        const totalRow = sheet.getRow(rowIdx);
+        sheet.mergeCells(`A${rowIdx}:D${rowIdx}`);
+        totalRow.getCell(1).value = "Total / 合計";
+        totalRow.getCell(1).font = { bold: true, size: 9 };
+        totalRow.getCell(1).alignment = { horizontal: "center", vertical: "middle" };
+        totalRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE8F5E9" } };
+        totalRow.getCell(5).value = form.materialWarehousingItems.reduce((sum, item) => sum + item.quantity, 0);
+        totalRow.getCell(5).font = { bold: true, size: 9 };
+        for (let c = 1; c <= 9; c++)
+            border(totalRow.getCell(c));
+        rowIdx += 2;
+        // ── Notes ──
+        sheet.mergeCells(`A${rowIdx}:I${rowIdx}`);
+        sheet.getCell(`A${rowIdx}`).value =
+            "1. Mỗi thứ 2 liên: 1 liên Quản lý hàng  2 kế toán bảo lưu";
+        sheet.getCell(`A${rowIdx}`).font = { size: 8, italic: true };
+        rowIdx++;
+        sheet.mergeCells(`A${rowIdx}:I${rowIdx}`);
+        sheet.getCell(`A${rowIdx}`).value =
+            "2. Chảy: Bộ phận thu mua lập biểu → nhân viên kho nhận đếm hàng → kiểm phẩm → thu mua kiểm tra → kế toán";
+        sheet.getCell(`A${rowIdx}`).font = { size: 8, italic: true };
+        rowIdx += 2;
+        // ── Signatures ──
+        sheet.mergeCells(`A${rowIdx}:C${rowIdx}`);
+        sheet.getCell(`A${rowIdx}`).value = "Thu mua 採購:";
+        sheet.getCell(`A${rowIdx}`).font = { bold: true, size: 9 };
+        sheet.getCell(`A${rowIdx}`).alignment = { horizontal: "center", vertical: "middle" };
+        sheet.mergeCells(`D${rowIdx}:F${rowIdx}`);
+        sheet.getCell(`D${rowIdx}`).value = "Kiểm phẩm 品保:";
+        sheet.getCell(`D${rowIdx}`).font = { bold: true, size: 9 };
+        sheet.getCell(`D${rowIdx}`).alignment = { horizontal: "center", vertical: "middle" };
+        sheet.mergeCells(`G${rowIdx}:I${rowIdx}`);
+        sheet.getCell(`G${rowIdx}`).value = "Quản lý hàng 物管:";
+        sheet.getCell(`G${rowIdx}`).font = { bold: true, size: 9 };
+        sheet.getCell(`G${rowIdx}`).alignment = { horizontal: "center", vertical: "middle" };
+        sheet.getRow(rowIdx).height = 40;
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        res.setHeader("Content-Disposition", `attachment; filename=${form.formId}.xlsx`);
+        await workbook.xlsx.write(res);
+        res.end();
+    }
+    catch (error) {
+        console.error("Warehousing export error:", error);
+        res.status(500).json({ message: "Failed to generate Excel file" });
+    }
+});
+// PUT update warehousing form
+router.put("/:formId", async (req, res) => {
+    try {
+        const { date, supplierId, supplierName, contactPerson, supplierAddress, supplierTelephone, supplierFax, purchaseId, paymentTerm, invoiceNo, deliveryNote, items, } = req.body;
+        const form = await prisma.$transaction(async (tx) => {
+            // Get old items to reverse inventory
+            const oldForm = await tx.material_Warehousing_Forms.findUnique({
+                where: { formId: req.params.formId },
+                include: { materialWarehousingItems: true },
+            });
+            if (!oldForm)
+                throw new Error("NOT_FOUND");
+            // Reverse old inventory
+            for (const item of oldForm.materialWarehousingItems) {
+                await tx.inventory.update({
+                    where: { productId: item.productId },
+                    data: {
+                        currentStock: { decrement: item.quantity },
+                        lastUpdated: new Date(),
+                    },
+                });
+            }
+            // Update the form
+            const updated = await tx.material_Warehousing_Forms.update({
+                where: { formId: req.params.formId },
+                data: {
+                    date: new Date(date),
+                    supplierId,
+                    supplierName,
+                    contactPerson: contactPerson || "",
+                    supplierAddress,
+                    supplierTelephone,
+                    supplierFax: supplierFax || "",
+                    purchaseId,
+                    paymentTerm: paymentTerm || "",
+                    invoiceNo,
+                    deliveryNote: deliveryNote || "",
+                },
+            });
+            // Delete old items
+            await tx.material_Warehousing_Items.deleteMany({
+                where: { formId: req.params.formId },
+            });
+            // Create new items and update inventory
+            for (const item of items) {
+                await tx.material_Warehousing_Items.create({
+                    data: {
+                        formId: updated.formId,
+                        productId: item.productId,
+                        productName: item.productName,
+                        productSpecification: item.productSpecification,
+                        quantity: item.quantity,
+                        productUnit: item.productUnit,
+                        deliveryDate: new Date(item.deliveryDate),
+                        requisitionId: item.requisitionId,
+                        deliveryPlace: item.deliveryPlace,
+                    },
+                });
+                // Add new quantities to inventory
+                await tx.inventory.upsert({
+                    where: { productId: item.productId },
+                    update: {
+                        currentStock: { increment: item.quantity },
+                        lastUpdated: new Date(),
+                    },
+                    create: {
+                        productId: item.productId,
+                        productName: item.productName,
+                        productSpecification: item.productSpecification,
+                        unit: item.productUnit,
+                        currentStock: item.quantity,
+                        lastUpdated: new Date(),
+                        supplierId: supplierId,
+                        supplierName: supplierName,
+                    },
+                });
+            }
+            return updated;
+        });
+        res.json(form);
+    }
+    catch (error) {
+        if (error.message === "NOT_FOUND" || error.code === "P2025") {
+            res.status(404).json({ message: "Warehousing form not found" });
+            return;
+        }
+        res.status(500).json({ message: "Error updating warehousing form" });
+    }
+});
 exports.default = router;
 //# sourceMappingURL=export.js.map

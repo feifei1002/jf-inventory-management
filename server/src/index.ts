@@ -10,6 +10,8 @@ import supplierRoutes from "./routes/suppliers";
 import productRoutes from "./routes/products";
 import purchaseRequisitionRoutes from "./routes/purchaseRequisitions";
 import purchaseOrderRoutes from "./routes/purchaseOrders";
+import warehousingRoutes from "./routes/warehousing";
+import inventoryRoutes from "./routes/inventory";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -31,6 +33,10 @@ app.use("/api/purchase-orders", purchaseOrderRoutes);
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/purchase-requisitions", purchaseRequisitionRoutes);
+app.use("/api/warehousing", warehousingRoutes);
+app.use("/api/inventory", inventoryRoutes);
+
+
 /* SERVER */
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

@@ -209,9 +209,87 @@ export const api = {
     return res.json();
   },
 
+  // Warehousing
+  getWarehousingForms: async () => {
+    const res = await fetch(`${API_URL}/api/warehousing`);
+    if (!res.ok) throw new Error("Failed to fetch warehousing forms");
+    return res.json();
+  },
+
+  getWarehousingForm: async (formId: string) => {
+    const res = await fetch(`${API_URL}/api/warehousing/${formId}`);
+    if (!res.ok) throw new Error("Failed to fetch warehousing form");
+    return res.json();
+  },
+
+  createWarehousingForm: async (data: any) => {
+    const res = await fetch(`${API_URL}/api/warehousing`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || "Failed to create warehousing form");
+    }
+    return res.json();
+  },
+
+  updateWarehousingForm: async (formId: string, data: any) => {
+    const res = await fetch(`${API_URL}/api/warehousing/${formId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || "Failed to update warehousing form");
+    }
+    return res.json();
+  },
+
+  deleteWarehousingForm: async (formId: string) => {
+    const res = await fetch(`${API_URL}/api/warehousing/${formId}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || "Failed to delete warehousing form");
+    }
+    return res.json();
+  },
+
+// Inventory
+getInventory: async () => {
+  const res = await fetch(`${API_URL}/api/inventory`);
+  if (!res.ok) throw new Error("Failed to fetch inventory");
+  return res.json();
+},
+
+getInventoryItem: async (productId: string) => {
+  const res = await fetch(`${API_URL}/api/inventory/${productId}`);
+  if (!res.ok) throw new Error("Failed to fetch inventory item");
+  return res.json();
+},
+
+updateInventory: async (productId: string, data: any) => {
+  const res = await fetch(`${API_URL}/api/inventory/${productId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || "Failed to update inventory");
+  }
+  return res.json();
+},
+
   // Export
   getPRExportUrl: (requisitionId: string) =>
   `${API_URL}/api/export/pr/${requisitionId}`,
   getExportUrl: (purchaseId: string) =>
     `${API_URL}/api/export/po/${purchaseId}`,
+  getWarehousingExportUrl: (formId: string) =>
+    `${API_URL}/api/export/warehousing/${formId}`,
 };

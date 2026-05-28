@@ -80,3 +80,47 @@ export type PurchaseOrder = {
   supplier?: Supplier;
   purchaseOrderItems?: POItem[];
 };
+
+export type WarehousingItem = {
+  id?: number;
+  formId: string;
+  productId: string;
+  productName: string;
+  productSpecification: string;
+  quantity: number;
+  productUnit: string;
+  deliveryDate: string;
+  requisitionId: string;
+  deliveryPlace: string;
+};
+
+export type WarehousingForm = {
+  formId: string;
+  date: string;
+  supplierId: string;
+  supplierName: string;
+  contactPerson?: string;
+  supplierAddress: string;
+  supplierTelephone: string;
+  supplierFax?: string;
+  purchaseId: string;
+  paymentTerm?: string;
+  invoiceNo: string;
+  deliveryNote?: string;
+  supplier?: Supplier;
+  purchase?: PurchaseOrder;
+  materialWarehousingItems?: WarehousingItem[];
+};
+
+export type InventoryItem = {
+  inventoryId: string;
+  productId: string;
+  productName: string;
+  productSpecification: string;
+  unit: string;
+  currentStock: number;
+  lastUpdated: string;
+  supplierId?: string;
+  supplierName?: string;
+  product?: Product;
+};

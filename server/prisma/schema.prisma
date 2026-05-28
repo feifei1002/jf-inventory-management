@@ -50,6 +50,7 @@ model Products {
   purchaseRequisitionItems Purchase_Requisition_Items[]
   purchaseOrderItems Purchase_Order_Items[]
   materialWarehousingItems Material_Warehousing_Items[]
+  inventory Inventory?
 }
 
 model Supplier_Products {
@@ -159,4 +160,18 @@ model Material_Warehousing_Items {
   warehousingForm Material_Warehousing_Forms @relation(fields: [formId], references: [formId])
   product Products @relation(fields: [productId], references: [productId])
   requisition Purchasing_Requisitions @relation(fields: [requisitionId], references: [requisitionId])
+}
+
+model Inventory {
+  inventoryId String @id @default(cuid())
+  productId String @unique
+  productName String
+  productSpecification String
+  unit String
+  currentStock Float @default(0)
+  lastUpdated DateTime @default(now())
+  supplierId String?
+  supplierName String?
+  product Products @relation(fields: [productId], references: [productId])
+  @@index([productName])
 }
