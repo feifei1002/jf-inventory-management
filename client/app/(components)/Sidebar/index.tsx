@@ -3,8 +3,7 @@
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsSidebarCollapsed } from '@/app/state';
 import {
-  Archive, Building2, CircleDollarSign, Clipboard,
-  ClipboardList, Layout, LucideIcon, Menu, Package,
+  Archive, Building2, ClipboardList, Layout, LucideIcon, Menu, Package,
   ShoppingCart, SlidersHorizontal, User,
   Warehouse
 } from 'lucide-react';
@@ -52,7 +51,7 @@ const Sidebar = () => {
   };
 
   const sidebarClassNames = `fixed flex flex-col ${
-    isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
+    isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-72"
   } bg-white transition-all duration-300 overflow-hidden h-full shadow-md z-40 border-r border-gray-100`;
 
   return (
@@ -64,7 +63,7 @@ const Sidebar = () => {
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 flex-shrink-0">
             <Image
-              src="/logo.png"
+              src="/favicon.ico"
               alt="J&F Logo"
               fill
               className="object-contain"
@@ -86,16 +85,15 @@ const Sidebar = () => {
 
       {/* ── LINKS ── */}
       <div className="grow mt-2 overflow-y-auto">
-        <SidebarLink href="/dashboard" icon={Layout} label="Dashboard" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/suppliers" icon={Building2} label="Suppliers" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/products" icon={Package} label="Products" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/purchase-requisitions" icon={ClipboardList} label="Purchase Requisitions" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/purchase-orders" icon={ShoppingCart} label="Purchase Orders" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/warehousing" icon={Warehouse} label="Warehousing" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/inventory" icon={Archive} label="Inventory" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/users" icon={User} label="Users" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/settings" icon={SlidersHorizontal} label="Settings" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/expenses" icon={CircleDollarSign} label="Expenses" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/dashboard" icon={Layout} label="Dashboard 首頁" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/suppliers" icon={Building2} label="Suppliers 供應商" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/products" icon={Package} label="Materials 材料" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/purchase-requisitions" icon={ClipboardList} label="Purchase Requisitions 請購單" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/purchase-orders" icon={ShoppingCart} label="Purchase Orders 採購單" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/warehousing" icon={Warehouse} label="Warehousing 入庫單" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/inventory" icon={Archive} label="Inventory 庫存" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/users" icon={User} label="Users 用戶" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/settings" icon={SlidersHorizontal} label="Settings 設定" isCollapsed={isSidebarCollapsed} />
       </div>
 
       {/* ── FOOTER ── */}

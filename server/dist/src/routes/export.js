@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const exceljs_1 = __importDefault(require("exceljs"));
 const client_1 = require("@prisma/client");
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.get("/pr/:requisitionId", async (req, res) => {
@@ -20,6 +22,22 @@ router.get("/pr/:requisitionId", async (req, res) => {
         }
         const workbook = new exceljs_1.default.Workbook();
         const sheet = workbook.addWorksheet("請購單");
+        // ── Add logo ──
+        const logoPath = path_1.default.join(__dirname, "../../assets/excel_logo.png");
+        console.log("Looking for logo at:", logoPath);
+        console.log("File exists:", fs_1.default.existsSync(logoPath));
+        if (fs_1.default.existsSync(logoPath)) {
+            const logoId = workbook.addImage({
+                filename: logoPath,
+                extension: "png",
+            });
+            sheet.addImage(logoId, {
+                tl: { col: 0, row: 0 },
+                ext: { width: 50, height: 50 },
+            });
+        }
+        sheet.getRow(1).height = 40;
+        sheet.getRow(2).height = 30;
         // ── Column widths ──
         sheet.columns = [
             { width: 5 }, // A - STT
@@ -27,16 +45,16 @@ router.get("/pr/:requisitionId", async (req, res) => {
             { width: 20 }, // C - Tên Hàng
             { width: 22 }, // D - Quy Cách
             { width: 6 }, // E - SL
-            { width: 8 }, // F - Trọng Lg
+            { width: 10 }, // F - Trọng Lg
             { width: 6 }, // G - ĐV
             { width: 12 }, // H - Ngày SD
             { width: 20 }, // I - Mục Đích SD
             { width: 15 }, // J - Add Nhận Hàng
         ];
         // ── Helpers ──
-        const NAVY = "FF1F3864";
+        const GREEN = "FF2D7A2D";
         const WHITE = "FFFFFFFF";
-        const LIGHT_BLUE = "FFD9E1F2";
+        const LIGHT_GREEN = "FFE8F5E9";
         const border = (cell) => {
             cell.border = {
                 top: { style: "thin" },
@@ -55,87 +73,94 @@ router.get("/pr/:requisitionId", async (req, res) => {
             cell.font = { size: 9 };
             cell.alignment = { vertical: "middle", wrapText: true };
         };
-        // ── Row 1: Company name ──
+        // ── Row 1: Company name - VN ──
         sheet.mergeCells("A1:J1");
         const r1 = sheet.getCell("A1");
         r1.value = "CÔNG TY TNHH QUỐC TẾ J&F";
         r1.font = { bold: true, size: 13 };
         r1.alignment = { horizontal: "center", vertical: "middle" };
-        sheet.getRow(1).height = 20;
-        // ── Row 2: Address ──
+        sheet.getRow(1).height = 28;
+        // ── Row 1: Company name - EN──
         sheet.mergeCells("A2:J2");
         const r2 = sheet.getCell("A2");
-        r2.value = "Lô C2-18, KCN Đại Đăng, Phường Bình Dương, TP.HCM, Việt Nam";
-        r2.font = { size: 9, italic: true };
+        r2.value = "J&F INDUSTRIES INTERNATIONAL CO., LTD";
+        r2.font = { bold: true, size: 13 };
         r2.alignment = { horizontal: "center", vertical: "middle" };
-        // ── Row 3: Document title ──
+        sheet.getRow(2).height = 28;
+        // ── Row 3: Address ──
         sheet.mergeCells("A3:J3");
         const r3 = sheet.getCell("A3");
-        r3.value = "ĐƠN ĐỀ NGHỊ MUA HÀNG / Purchasing Requisition 請購單";
-        r3.font = { bold: true, size: 14 };
+        r3.value = "Lô C2-18, KCN Đại Đăng, Phường Bình Dương, TP.HCM, Việt Nam";
+        r3.font = { size: 9, italic: true };
         r3.alignment = { horizontal: "center", vertical: "middle" };
-        sheet.getRow(3).height = 24;
-        // ── Row 4: Meta info ──
-        sheet.mergeCells("A4:B4");
-        label(sheet.getCell("A4"), "Department:\n管理部");
-        sheet.mergeCells("C4:D4");
-        val(sheet.getCell("C4"), pr.department);
-        sheet.mergeCells("E4:F4");
-        label(sheet.getCell("E4"), "PR No:\n請購單");
-        sheet.mergeCells("G4:H4");
-        val(sheet.getCell("G4"), pr.requisitionId);
-        sheet.getCell("G4").font = { bold: true, size: 9 };
-        label(sheet.getCell("I4"), "Date:\n日期");
-        val(sheet.getCell("J4"), new Date(pr.requisitionDate).toLocaleDateString("vi-VN"));
-        // ── Row 5: Requester / SO ──
+        // ── Row 4: Document title ──
+        sheet.mergeCells("A4:J4");
+        const r4 = sheet.getCell("A4");
+        r4.value = "ĐƠN ĐỀ NGHỊ MUA HÀNG / Purchasing Requisition 請購單";
+        r4.font = { bold: true, size: 14 };
+        r4.alignment = { horizontal: "center", vertical: "middle" };
+        sheet.getRow(4).height = 28;
+        // ── Row 5: Meta info ──
         sheet.mergeCells("A5:B5");
-        label(sheet.getCell("A5"), "Requester:\n請購人");
+        label(sheet.getCell("A5"), "Bộ Phận Department 部門:");
         sheet.mergeCells("C5:D5");
-        val(sheet.getCell("C5"), pr.requester);
+        val(sheet.getCell("C5"), pr.department);
         sheet.mergeCells("E5:F5");
-        label(sheet.getCell("E5"), "SO No:\n訂單");
+        label(sheet.getCell("E5"), "PR No 請購單:");
         sheet.mergeCells("G5:H5");
-        val(sheet.getCell("G5"), pr.soNo ?? "");
-        sheet.mergeCells("I5:J5");
-        val(sheet.getCell("I5"), pr.note ?? "");
+        val(sheet.getCell("G5"), pr.requisitionId);
+        sheet.getCell("G5").font = { bold: true, size: 9 };
+        label(sheet.getCell("I5"), "Date 日期:");
+        val(sheet.getCell("J5"), new Date(pr.requisitionDate).toLocaleDateString("vi-VN"));
+        // ── Row 6: Requester / SO ──
+        sheet.mergeCells("A6:B6");
+        label(sheet.getCell("A6"), "Người Điền Biểu Requester 請購人:");
+        sheet.mergeCells("C6:D6");
+        val(sheet.getCell("C6"), pr.requester);
+        sheet.mergeCells("E6:F6");
+        label(sheet.getCell("E6"), "SO No 訂單:");
+        sheet.mergeCells("G6:H6");
+        val(sheet.getCell("G6"), pr.soNo ?? "");
+        sheet.mergeCells("I6:J6");
+        val(sheet.getCell("I6"), pr.note ?? "");
         // Apply borders to meta rows
-        for (let r = 4; r <= 5; r++) {
+        for (let r = 5; r <= 6; r++) {
             for (let c = 1; c <= 10; c++) {
                 border(sheet.getRow(r).getCell(c));
             }
         }
-        sheet.getRow(4).height = 28;
-        sheet.getRow(5).height = 24;
-        // ── Row 6: Table header ──
+        sheet.getRow(5).height = 30;
+        sheet.getRow(6).height = 30;
+        // ── Row 7: Table header ──
         const HEADERS = [
             "STT",
             "Mã Hàng\n料號",
             "Tên Hàng\n品名",
             "Quy Cách\n規格",
             "SL\n數量",
-            "Trọng Lg\n重量",
+            "Trọng Lượng\n重量",
             "ĐV\n單位",
             "Ngày SD\n需求日",
             "Mục Đích SD\n使用說明",
             "Add Nhận Hàng\n交貨地點",
         ];
-        const headerRow = sheet.getRow(6);
+        const headerRow = sheet.getRow(7);
         headerRow.height = 32;
         HEADERS.forEach((h, i) => {
             const cell = headerRow.getCell(i + 1);
             cell.value = h;
             cell.font = { bold: true, color: { argb: WHITE }, size: 9 };
-            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: NAVY } };
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: GREEN } };
             cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
             border(cell);
         });
-        // ── Rows 7+: Line items ──
-        let rowIdx = 7;
+        // ── Rows 8+: Line items ──
+        let rowIdx = 8;
         for (const [i, item] of pr.purchaseRequisitionItems.entries()) {
             const row = sheet.getRow(rowIdx);
             row.height = 20;
             const bg = i % 2 === 1
-                ? { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_BLUE } }
+                ? { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_GREEN } }
                 : undefined;
             const setCell = (col, value, align = "center") => {
                 const cell = row.getCell(col);
@@ -175,7 +200,7 @@ router.get("/pr/:requisitionId", async (req, res) => {
         totalRow.getCell(1).value = "Total / 合計";
         totalRow.getCell(1).font = { bold: true, size: 9 };
         totalRow.getCell(1).alignment = { horizontal: "center", vertical: "middle" };
-        totalRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_BLUE } };
+        totalRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_GREEN } };
         totalRow.getCell(5).value = pr.purchaseRequisitionItems.reduce((sum, item) => sum + item.quantity, 0);
         totalRow.getCell(5).font = { bold: true, size: 9 };
         totalRow.getCell(5).alignment = { horizontal: "center", vertical: "middle" };
@@ -233,22 +258,38 @@ router.get("/po/:purchaseId", async (req, res) => {
         }
         const workbook = new exceljs_1.default.Workbook();
         const sheet = workbook.addWorksheet("採購單");
+        // ── Add logo ──
+        const logoPath = path_1.default.join(__dirname, "../../assets/excel_logo.png");
+        console.log("Looking for logo at:", logoPath);
+        console.log("File exists:", fs_1.default.existsSync(logoPath));
+        if (fs_1.default.existsSync(logoPath)) {
+            const logoId = workbook.addImage({
+                filename: logoPath,
+                extension: "png",
+            });
+            sheet.addImage(logoId, {
+                tl: { col: 0, row: 0 },
+                ext: { width: 50, height: 50 },
+            });
+        }
+        sheet.getRow(1).height = 40;
+        sheet.getRow(2).height = 30;
         // ── Column widths ──
         sheet.columns = [
-            { width: 5 }, // A - STT
+            { width: 3 }, // A - STT
             { width: 18 }, // B - Mã Hàng
             { width: 20 }, // C - Tên Hàng
             { width: 22 }, // D - Quy Cách
             { width: 6 }, // E - SL
             { width: 6 }, // F - ĐV
-            { width: 7 }, // G - SL (kg)
+            { width: 6 }, // G - TL (kg)
             { width: 6 }, // H - ĐV (kg)
             { width: 12 }, // I - Đơn Giá
-            { width: 14 }, // J - T.Tiền
-            { width: 5 }, // K - VAT
+            { width: 12 }, // J - T.Tiền
+            { width: 10 }, // K - VAT
             { width: 11 }, // L - N.Giao Hg
             { width: 12 }, // M - Số PR
-            { width: 10 }, // N - Add Nhận
+            { width: 8 }, // N - Add Nhận
         ];
         // ── Row 1: Company name ──
         sheet.mergeCells("A1:N1");
@@ -256,30 +297,37 @@ router.get("/po/:purchaseId", async (req, res) => {
         r1.value = "CÔNG TY TNHH QUỐC TẾ J&F";
         r1.font = { bold: true, size: 13 };
         r1.alignment = { horizontal: "center", vertical: "middle" };
-        sheet.getRow(1).height = 20;
-        // ── Row 2: Address ──
+        sheet.getRow(1).height = 28;
+        // ── Row 2: Company name ──
         sheet.mergeCells("A2:N2");
         const r2 = sheet.getCell("A2");
-        r2.value = "Lô C2-18, KCN Đại Đăng, Phường Bình Dương, TP.HCM, Việt Nam";
-        r2.font = { size: 9, italic: true };
+        r2.value = "J&F INDUSTRIES INTERNATIONAL CO., LTD";
+        r2.font = { bold: true, size: 13 };
         r2.alignment = { horizontal: "center", vertical: "middle" };
-        // ── Row 3: TEL / FAX / MST ──
+        sheet.getRow(2).height = 28;
+        // ── Row 3: Address ──
         sheet.mergeCells("A3:N3");
         const r3 = sheet.getCell("A3");
-        r3.value = "TEL: 0274-3624200   FAX: 0274-3624201   MST: 3700812309";
-        r3.font = { size: 9 };
+        r3.value = "Lô C2-18, KCN Đại Đăng, Phường Bình Dương, TP.HCM, Việt Nam";
+        r3.font = { size: 9, italic: true };
         r3.alignment = { horizontal: "center", vertical: "middle" };
-        // ── Row 4: Document title ──
+        // ── Row 4: TEL / FAX / MST ──
         sheet.mergeCells("A4:N4");
         const r4 = sheet.getCell("A4");
-        r4.value = "ĐƠN ĐẶT HÀNG / Purchasing Order 採購單";
-        r4.font = { bold: true, size: 14 };
+        r4.value = "TEL: 0274-3624200   FAX: 0274-3624201   MST: 3700812309";
+        r4.font = { size: 9 };
         r4.alignment = { horizontal: "center", vertical: "middle" };
-        sheet.getRow(4).height = 24;
+        // ── Row 5: Document title ──
+        sheet.mergeCells("A5:N5");
+        const r5 = sheet.getCell("A5");
+        r5.value = "ĐƠN ĐẶT HÀNG / Purchasing Order 採購單";
+        r5.font = { bold: true, size: 14 };
+        r5.alignment = { horizontal: "center", vertical: "middle" };
+        sheet.getRow(5).height = 24;
         // ── Helpers ──
-        const NAVY = "FF1F3864";
+        const GREEN = "FF2D7A2D";
         const WHITE = "FFFFFFFF";
-        const LIGHT_BLUE = "FFD9E1F2";
+        const LIGHT_GREEN = "FFE8F5E9";
         const label = (cell, value) => {
             cell.value = value;
             cell.font = { bold: true, size: 9 };
@@ -298,89 +346,89 @@ router.get("/po/:purchaseId", async (req, res) => {
                 right: { style: "thin" },
             };
         };
-        // ── Rows 5–7: Supplier meta block ──
-        // Row 5
-        sheet.mergeCells("A5:B5");
-        label(sheet.getCell("A5"), "Nhà Cung Cấp\n供應商N:");
-        sheet.mergeCells("C5:F5");
-        val(sheet.getCell("C5"), `${po.supplierId} - ${po.supplierName}`);
-        sheet.mergeCells("G5:H5");
-        label(sheet.getCell("G5"), "ĐT Liên Lạc:\n聯絡電話");
-        sheet.mergeCells("I5:J5");
-        val(sheet.getCell("I5"), po.supplier?.telephone ?? "");
-        label(sheet.getCell("K5"), "TEL:");
-        sheet.mergeCells("L5:M5");
-        val(sheet.getCell("L5"), po.supplier?.telephone ?? "");
-        label(sheet.getCell("N5"), "PO No:");
+        // ── Rows 6–8: Supplier meta block ──
         // Row 6
         sheet.mergeCells("A6:B6");
-        label(sheet.getCell("A6"), "Ng Liên Lạc\n聯絡人:");
+        label(sheet.getCell("A6"), "Nhà Cung Cấp 供應商:");
         sheet.mergeCells("C6:F6");
-        val(sheet.getCell("C6"), po.contactPerson);
+        val(sheet.getCell("C6"), `${po.supplierId} - ${po.supplierName}`);
         sheet.mergeCells("G6:H6");
-        label(sheet.getCell("G6"), "Đ.K Thanh Toán:\n付款條件:");
-        sheet.mergeCells("I6:M6");
-        val(sheet.getCell("I6"), po.paymentTerm);
-        label(sheet.getCell("N6"), "PO Date:");
+        label(sheet.getCell("G6"), "ĐT Liên Lạc 聯絡電話:");
+        sheet.mergeCells("I6:J6");
+        val(sheet.getCell("I6"), po.supplier?.mobileNo ?? "");
+        label(sheet.getCell("K6"), "TEL:");
+        sheet.mergeCells("L6:M6");
+        val(sheet.getCell("L6"), po.supplier?.telephone ?? "");
+        label(sheet.getCell("N6"), "PO No:");
         // Row 7
         sheet.mergeCells("A7:B7");
-        label(sheet.getCell("A7"), "Địa Chỉ\n廠商地址:");
+        label(sheet.getCell("A7"), "Ng Liên Lạc 聯絡人:");
         sheet.mergeCells("C7:F7");
-        val(sheet.getCell("C7"), po.supplierAddress);
-        label(sheet.getCell("G7"), "MST:");
-        sheet.mergeCells("H7:I7");
-        val(sheet.getCell("H7"), po.supplier?.MST ?? "");
-        label(sheet.getCell("J7"), "HD:");
-        sheet.mergeCells("K7:M7");
-        val(sheet.getCell("K7"), "");
-        label(sheet.getCell("N7"), "Liên Hệ:");
-        // PO number / date in column N (rows 5–6)
-        val(sheet.getCell("N5"), po.purchaseId); // overwrite the label we set
+        val(sheet.getCell("C7"), po.contactPerson);
+        sheet.mergeCells("G7:H7");
+        label(sheet.getCell("G7"), "Đ.K Thanh Toán 付款條件:");
+        sheet.mergeCells("I7:M7");
+        val(sheet.getCell("I7"), po.paymentTerm);
+        label(sheet.getCell("N7"), "PO Date:");
+        // Row 8
+        sheet.mergeCells("A8:B8");
+        label(sheet.getCell("A8"), "Địa Chỉ 廠商地址:");
+        sheet.mergeCells("C8:F8");
+        val(sheet.getCell("C8"), po.supplierAddress);
+        label(sheet.getCell("G8"), "MST:");
+        sheet.mergeCells("H8:I8");
+        val(sheet.getCell("H8"), po.supplier?.MST ?? "");
+        label(sheet.getCell("J8"), "HD:");
+        sheet.mergeCells("K8:M8");
+        val(sheet.getCell("K8"), "");
+        label(sheet.getCell("N8"), "Liên Hệ:");
+        // PO number / date in column N (rows 6–8)
+        val(sheet.getCell("N6"), po.purchaseId); // overwrite the label we set
         // We need a different approach — use a separate column for the value
         // Actually let's keep it simple: put PO No label in N5 and value beside
         // Rewrite: use a two-column block at the right
         // (Already handled above — N5 = label "PO No:", but value goes next cell)
         // Since we only have 14 cols, let's embed value in same cell with line break
-        sheet.getCell("N5").value = `PO No:\n${po.purchaseId}`;
-        sheet.getCell("N5").font = { bold: false, size: 9 };
-        sheet.getCell("N5").alignment = { horizontal: "center", vertical: "middle", wrapText: true };
-        const poDate = new Date(po.purchaseDate).toLocaleDateString("vi-VN");
-        sheet.getCell("N6").value = `PO Date:\n${poDate}\nCurrency: ${po.currency ?? "VND"}`;
-        sheet.getCell("N6").font = { size: 9 };
+        sheet.getCell("N6").value = `PO No:\n${po.purchaseId}`;
+        sheet.getCell("N6").font = { bold: false, size: 9 };
         sheet.getCell("N6").alignment = { horizontal: "center", vertical: "middle", wrapText: true };
-        sheet.getRow(5).height = 28;
-        sheet.getRow(6).height = 28;
-        sheet.getRow(7).height = 28;
+        const poDate = new Date(po.purchaseDate).toLocaleDateString("vi-VN");
+        sheet.getCell("N7").value = `PO Date:\n${poDate}\nCurrency: ${po.currency ?? "VND"}`;
+        sheet.getCell("N7").font = { size: 9 };
+        sheet.getCell("N7").alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        sheet.getRow(6).height = 32;
+        sheet.getRow(7).height = 32;
+        sheet.getRow(8).height = 30;
         // Apply borders to meta rows
-        for (let r = 5; r <= 7; r++) {
+        for (let r = 6; r <= 8; r++) {
             for (let c = 1; c <= 14; c++) {
                 border(sheet.getRow(r).getCell(c));
             }
         }
-        // ── Row 8: Table header ──
+        // ── Row 9: Table header ──
         const HEADERS = [
             "STT", "Mã Hàng\n料號", "Tên Hàng\n品名", "Quy Cách\n規格",
-            "SL\n數量", "ĐV\n單位", "SL\n數量", "ĐV\n單位",
+            "SL\n數量", "ĐV\n單位", "TL\n重量", "ĐV\n單位",
             "Đơn Giá\n單價/未稅", "T.Tiền\n金額", "VAT",
             "N.Giao Hg\n交貨日期", "Số PR\n請購單號", "Add Nhận\n交貨地點",
         ];
-        const headerRow = sheet.getRow(8);
+        const headerRow = sheet.getRow(9);
         headerRow.height = 32;
         HEADERS.forEach((h, i) => {
             const cell = headerRow.getCell(i + 1);
             cell.value = h;
             cell.font = { bold: true, color: { argb: WHITE }, size: 9 };
-            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: NAVY } };
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: GREEN } };
             cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
             border(cell);
         });
-        // ── Rows 9+: Line items ──
-        let rowIdx = 9;
+        // ── Rows 10+: Line items ──
+        let rowIdx = 10;
         for (const [i, item] of po.purchaseOrderItems.entries()) {
             const row = sheet.getRow(rowIdx);
             row.height = 20;
             const bg = i % 2 === 1
-                ? { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_BLUE } }
+                ? { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_GREEN } }
                 : undefined;
             const setCell = (col, value, align = "center") => {
                 const cell = row.getCell(col);
@@ -401,13 +449,13 @@ router.get("/po/:purchaseId", async (req, res) => {
             setCell(8, "kg");
             setCell(9, Number(item.productPrice));
             setCell(10, Number(item.totalPrice));
-            setCell(11, item.VAT != null ? `${item.VAT}%` : "");
+            setCell(11, item.VAT != null ? `${item.VAT}` : "");
             setCell(12, new Date(item.deliveryDate).toLocaleDateString("vi-VN"));
             setCell(13, item.requisitionId);
             setCell(14, item.deliveryPlace);
             // Format currency columns
-            row.getCell(9).numFmt = "#,##0";
-            row.getCell(10).numFmt = "#,##0";
+            row.getCell(9).numFmt = "#,##0.##";
+            row.getCell(10).numFmt = "#,##0.##";
             const itemCurrency = item.currency ?? po.currency ?? "VND";
             row.getCell(9).note = itemCurrency;
             rowIdx++;
@@ -430,9 +478,9 @@ router.get("/po/:purchaseId", async (req, res) => {
         totalRow.getCell(1).value = "Total";
         totalRow.getCell(1).font = { bold: true, size: 9 };
         totalRow.getCell(1).alignment = { horizontal: "center", vertical: "middle" };
-        totalRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_BLUE } };
+        totalRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: LIGHT_GREEN } };
         totalRow.getCell(10).value = Number(po.subtotal);
-        totalRow.getCell(10).numFmt = "#,##0";
+        totalRow.getCell(10).numFmt = "#,##0.##";
         totalRow.getCell(10).font = { bold: true, size: 9 };
         totalRow.getCell(11).value = currency;
         totalRow.getCell(11).font = { bold: true, size: 9 };
@@ -445,7 +493,7 @@ router.get("/po/:purchaseId", async (req, res) => {
         vatRow.getCell(1).font = { bold: true, size: 9 };
         vatRow.getCell(1).alignment = { horizontal: "center", vertical: "middle" };
         vatRow.getCell(10).value = Number(po.vat);
-        vatRow.getCell(10).numFmt = "#,##0";
+        vatRow.getCell(10).numFmt = "#,##0.##";
         vatRow.getCell(10).font = { size: 9 };
         vatRow.getCell(11).value = currency;
         vatRow.getCell(11).font = { size: 9 };
@@ -456,10 +504,10 @@ router.get("/po/:purchaseId", async (req, res) => {
         sheet.mergeCells(`A${rowIdx}:H${rowIdx}`);
         grandRow.getCell(1).value = "Total";
         grandRow.getCell(1).alignment = { horizontal: "center", vertical: "middle" };
-        grandRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: NAVY } };
+        grandRow.getCell(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: GREEN } };
         grandRow.getCell(1).font = { bold: true, color: { argb: WHITE }, size: 9 };
         grandRow.getCell(10).value = Number(po.finalTotal);
-        grandRow.getCell(10).numFmt = "#,##0";
+        grandRow.getCell(10).numFmt = "#,##0.##";
         grandRow.getCell(10).font = { bold: true, size: 9 };
         grandRow.getCell(11).value = currency;
         grandRow.getCell(11).font = { bold: true, size: 9 };
@@ -516,9 +564,23 @@ router.get("/warehousing/:formId", async (req, res) => {
         }
         const workbook = new exceljs_1.default.Workbook();
         const sheet = workbook.addWorksheet("入庫單");
-        const NAVY = "FF1F3864";
+        // ── Add logo ──
+        const logoPath = path_1.default.join(__dirname, "../../assets/excel_logo.png");
+        console.log("Looking for logo at:", logoPath);
+        console.log("File exists:", fs_1.default.existsSync(logoPath));
+        if (fs_1.default.existsSync(logoPath)) {
+            const logoId = workbook.addImage({
+                filename: logoPath,
+                extension: "png",
+            });
+            sheet.addImage(logoId, {
+                tl: { col: 0, row: 0 },
+                ext: { width: 50, height: 50 },
+            });
+        }
+        sheet.getRow(1).height = 40;
+        sheet.getRow(2).height = 30;
         const WHITE = "FFFFFFFF";
-        const LIGHT_GREEN = "FFE8F5E9";
         const GREEN = "FF2D7A2D";
         sheet.columns = [
             { width: 5 },
@@ -526,7 +588,7 @@ router.get("/warehousing/:formId", async (req, res) => {
             { width: 20 },
             { width: 22 },
             { width: 8 },
-            { width: 6 },
+            { width: 12 },
             { width: 12 },
             { width: 12 },
             { width: 15 },
@@ -555,53 +617,59 @@ router.get("/warehousing/:formId", async (req, res) => {
         r1.value = "CÔNG TY TNHH QUỐC TẾ J&F";
         r1.font = { bold: true, size: 13 };
         r1.alignment = { horizontal: "center", vertical: "middle" };
-        sheet.getRow(1).height = 20;
-        // ── Row 2: Address ──
+        sheet.getRow(1).height = 28;
+        // ── Row 2: Company ──
         sheet.mergeCells("A2:I2");
         const r2 = sheet.getCell("A2");
-        r2.value = "Lô C2-18, KCN Đại Đăng, Phường Bình Dương, TP.HCM, Việt Nam";
-        r2.font = { size: 9, italic: true };
+        r2.value = "J&F INDUSTRIES INTERNATIONAL CO., LTD";
+        r2.font = { bold: true, size: 13 };
         r2.alignment = { horizontal: "center", vertical: "middle" };
-        // ── Row 3: Title ──
+        sheet.getRow(2).height = 28;
+        // ── Row 3: Address ──
         sheet.mergeCells("A3:I3");
         const r3 = sheet.getCell("A3");
-        r3.value = "PHIẾU NHẬP KHO NGUYÊN VẬT LIỆU / Material Warehousing Form 原物料入庫單";
-        r3.font = { bold: true, size: 13 };
+        r3.value = "Lô C2-18, KCN Đại Đăng, Phường Bình Dương, TP.HCM, Việt Nam";
+        r3.font = { size: 9, italic: true };
         r3.alignment = { horizontal: "center", vertical: "middle" };
-        r3.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE8F5E9" } };
-        sheet.getRow(3).height = 24;
-        // ── Rows 4-7: Meta ──
-        sheet.mergeCells("A4:B4");
-        label(sheet.getCell("A4"), "Nhà Cung Cấp:\n供應商");
-        sheet.mergeCells("C4:E4");
-        val(sheet.getCell("C4"), `${form.supplierId} - ${form.supplierName}`);
-        label(sheet.getCell("F4"), "WF No:");
-        sheet.mergeCells("G4:I4");
-        const wfCell = sheet.getCell("G4");
+        // ── Row 4: Title ──
+        sheet.mergeCells("A4:I4");
+        const r4 = sheet.getCell("A4");
+        r4.value = "PHIẾU NHẬP KHO NGUYÊN VẬT LIỆU / Material Warehousing Form 原物料入庫單";
+        r4.font = { bold: true, size: 14 };
+        r4.alignment = { horizontal: "center", vertical: "middle" };
+        sheet.getRow(4).height = 24;
+        // ── Rows 5-8: Meta ──
+        sheet.mergeCells("A5:B5");
+        label(sheet.getCell("A5"), "Nhà Cung Cấp 供應商:");
+        sheet.mergeCells("C5:E5");
+        val(sheet.getCell("C5"), `${form.supplierId} - ${form.supplierName}`);
+        label(sheet.getCell("F5"), "WF No:");
+        sheet.mergeCells("G5:I5");
+        const wfCell = sheet.getCell("G5");
         wfCell.value = form.formId;
         wfCell.font = { bold: true, size: 9, color: { argb: "FF2D7A2D" } };
-        sheet.mergeCells("A5:B5");
-        label(sheet.getCell("A5"), "Ng. Liên Lạc:\n聯絡人");
-        sheet.mergeCells("C5:E5");
-        val(sheet.getCell("C5"), form.contactPerson ?? "");
-        label(sheet.getCell("F5"), "Hóa Đơn:\n發票");
-        sheet.mergeCells("G5:I5");
-        val(sheet.getCell("G5"), form.invoiceNo);
         sheet.mergeCells("A6:B6");
-        label(sheet.getCell("A6"), "Đ.K Thanh Toán:\n付款條件");
+        label(sheet.getCell("A6"), "Ng. Liên Lạc 聯絡人:");
         sheet.mergeCells("C6:E6");
-        val(sheet.getCell("C6"), form.paymentTerm ?? "");
-        label(sheet.getCell("F6"), "PO No:");
+        val(sheet.getCell("C6"), form.contactPerson ?? "");
+        label(sheet.getCell("F6"), "Hóa Đơn 發票:");
         sheet.mergeCells("G6:I6");
-        val(sheet.getCell("G6"), form.purchaseId);
+        val(sheet.getCell("G6"), form.invoiceNo);
         sheet.mergeCells("A7:B7");
-        label(sheet.getCell("A7"), "Địa Chỉ:\n廠商地址");
+        label(sheet.getCell("A7"), "Đ.K Thanh Toán 付款條件:");
         sheet.mergeCells("C7:E7");
-        val(sheet.getCell("C7"), form.supplierAddress);
-        label(sheet.getCell("F7"), "Date:");
+        val(sheet.getCell("C7"), form.paymentTerm ?? "");
+        label(sheet.getCell("F7"), "PO No:");
         sheet.mergeCells("G7:I7");
-        val(sheet.getCell("G7"), new Date(form.date).toLocaleDateString("vi-VN"));
-        for (let r = 4; r <= 7; r++) {
+        val(sheet.getCell("G7"), form.purchaseId);
+        sheet.mergeCells("A8:B8");
+        label(sheet.getCell("A8"), "Địa Chỉ 廠商地址:");
+        sheet.mergeCells("C8:E8");
+        val(sheet.getCell("C8"), form.supplierAddress);
+        label(sheet.getCell("F8"), "Date:");
+        sheet.mergeCells("G8:I8");
+        val(sheet.getCell("G8"), new Date(form.date).toLocaleDateString("vi-VN"));
+        for (let r = 5; r <= 8; r++) {
             sheet.getRow(r).height = 26;
             for (let c = 1; c <= 9; c++)
                 border(sheet.getRow(r).getCell(c));

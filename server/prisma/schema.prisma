@@ -115,6 +115,7 @@ model Purchase_Order_Items {
   productSpecification String
   quantity Int
   productUnit String
+  // weight Float?
   productPrice Decimal @db.Decimal(20, 2)
   totalPrice Decimal @db.Decimal(20, 2)
   VAT Int?
