@@ -3,7 +3,19 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../lib/api";
-
+import {
+  LucideIcon,
+  ShoppingCart,
+  ClipboardList,
+  FileText,
+  Package,
+  AlertTriangle,
+  AlertCircle,
+  Tag,
+  Building2,
+  Archive,
+  RefreshCcw,
+} from "lucide-react";
 type DashboardMetrics = {
   totalPOsThisMonth: number;
   pendingPRs: number;
@@ -19,14 +31,14 @@ const StatCard = ({
   title,
   subtitle,
   value,
-  icon,
+  icon: Icon,
   color,
   onClick,
 }: {
   title: string;
   subtitle: string;
   value: number | string;
-  icon: string;
+  icon: LucideIcon;
   color: "green" | "blue" | "amber" | "red" | "gray";
   onClick?: () => void;
 }) => {
@@ -80,7 +92,7 @@ const StatCard = ({
           <p className="text-xs text-gray-400">{subtitle}</p>
         </div>
         <div className={`w-10 h-10 rounded-lg ${c.icon} flex items-center justify-center text-lg flex-shrink-0 ml-4`}>
-          {icon}
+          <Icon className="w-5 h-5" />
         </div>
       </div>
     </div>
@@ -139,9 +151,10 @@ export default function Dashboard() {
                 .catch(() => setError("Failed to refresh"))
                 .finally(() => setLoading(false));
             }}
-            className="text-sm text-gray-500 hover:text-brand-green px-4 py-2 border border-gray-200 rounded-lg hover:border-brand-green transition-colors"
+            className="text-sm text-gray-500 hover:text-brand-green px-4 py-2 border border-gray-200 rounded-lg hover:border-brand-green transition-colors flex items-center gap-2"
           >
-            ↻ Refresh
+            <RefreshCcw className="w-4 h-4" />
+            Refresh
           </button>
         </div>
       </div>
@@ -158,7 +171,7 @@ export default function Dashboard() {
               title="Purchase Orders"
               subtitle={`Created in ${monthName}`}
               value={metrics.totalPOsThisMonth}
-              icon="🛒"
+              icon={ShoppingCart}
               color="green"
               onClick={() => router.push("/purchase-orders")}
             />
@@ -166,7 +179,7 @@ export default function Dashboard() {
               title="Pending Requisitions"
               subtitle="PRs not yet converted to PO"
               value={metrics.pendingPRs}
-              icon="📋"
+              icon={ClipboardList}
               color="amber"
               onClick={() => router.push("/purchase-requisitions")}
             />
@@ -174,7 +187,7 @@ export default function Dashboard() {
               title="Total PRs"
               subtitle="All time"
               value={metrics.totalPRs}
-              icon="📄"
+              icon={FileText}
               color="blue"
               onClick={() => router.push("/purchase-requisitions")}
             />
@@ -182,7 +195,7 @@ export default function Dashboard() {
               title="Items Received"
               subtitle={`Units received in ${monthName}`}
               value={metrics.itemsReceivedThisMonth.toLocaleString()}
-              icon="📦"
+              icon={Package}
               color="green"
               onClick={() => router.push("/warehousing")}
             />
@@ -199,7 +212,7 @@ export default function Dashboard() {
               title="Low Stock Items"
               subtitle="10 units or fewer remaining"
               value={metrics.lowStockItems}
-              icon="⚠️"
+              icon={AlertTriangle}
               color="amber"
               onClick={() => router.push("/inventory")}
             />
@@ -207,7 +220,7 @@ export default function Dashboard() {
               title="Out of Stock"
               subtitle="Needs restocking"
               value={metrics.outOfStockItems}
-              icon="🚨"
+              icon={AlertCircle}
               color="red"
               onClick={() => router.push("/inventory")}
             />
@@ -215,7 +228,7 @@ export default function Dashboard() {
               title="Total Products"
               subtitle="In product catalog"
               value={metrics.totalProducts}
-              icon="🏷️"
+              icon={Tag}
               color="gray"
               onClick={() => router.push("/products")}
             />
@@ -223,7 +236,7 @@ export default function Dashboard() {
               title="Active Suppliers"
               subtitle="In supplier directory"
               value={metrics.totalSuppliers}
-              icon="🏭"
+              icon={Building2}
               color="blue"
               onClick={() => router.push("/suppliers")}
             />
@@ -237,20 +250,23 @@ export default function Dashboard() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: "New Requisition", icon: "📋", href: "/purchase-requisitions/create", color: "bg-blue-600" },
-              { label: "New Purchase Order", icon: "🛒", href: "/purchase-orders/create", color: "bg-brand-green" },
-              { label: "Receive Stock", icon: "📦", href: "/warehousing/create", color: "bg-amber-500" },
-              { label: "View Inventory", icon: "🏪", href: "/inventory", color: "bg-gray-600" },
-            ].map((action) => (
-              <button
-                key={action.href}
-                onClick={() => router.push(action.href)}
-                className={`${action.color} text-white rounded-xl p-4 text-left hover:opacity-90 transition-opacity shadow-sm`}
-              >
-                <span className="text-2xl mb-2 block">{action.icon}</span>
-                <span className="text-sm font-semibold">{action.label}</span>
-              </button>
-            ))}
+              { label: "New Requisition", icon: ClipboardList, href: "/purchase-requisitions/create", color: "bg-blue-600" },
+              { label: "New Purchase Order", icon: ShoppingCart, href: "/purchase-orders/create", color: "bg-brand-green" },
+              { label: "Receive Stock", icon: Package, href: "/warehousing/create", color: "bg-amber-500" },
+              { label: "View Inventory", icon: Archive, href: "/inventory", color: "bg-gray-600" },
+            ].map((action) => {
+              const Icon = action.icon;
+              return (
+                <button
+                  key={action.href}
+                  onClick={() => router.push(action.href)}
+                  className={`${action.color} text-white rounded-xl p-4 text-left hover:opacity-90 transition-opacity shadow-sm`}
+                >
+                  <Icon className="w-6 h-6 mb-2" />
+                  <span className="text-sm font-semibold">{action.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
