@@ -44,8 +44,8 @@ router.post("/", async (req, res) => {
             return;
         }
         // Calculate totals from items
-        const poSubtotal = subtotal ?? items.reduce((sum, item) => sum + item.quantity * item.productPrice, 0);
-        const poVat = vatAmount ?? items.reduce((sum, item) => sum + item.quantity * item.productPrice * ((item.VAT ?? 0) / 100), 0);
+        const poSubtotal = subtotal ?? items.reduce((sum, item) => sum + item.quantity * item.materialPrice, 0);
+        const poVat = vatAmount ?? items.reduce((sum, item) => sum + item.quantity * item.materialPrice * ((item.VAT ?? 0) / 100), 0);
         const poFinalTotal = finalTotal ?? poSubtotal + poVat;
         // Create PO and its items in one transaction
         const po = await prisma.$transaction(async (tx) => {
@@ -68,13 +68,13 @@ router.post("/", async (req, res) => {
                 await tx.purchase_Order_Items.create({
                     data: {
                         purchaseId: newPO.purchaseId,
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
                         quantity: item.quantity,
-                        productUnit: item.productUnit,
-                        productPrice: item.productPrice,
-                        totalPrice: item.quantity * item.productPrice,
+                        materialUnit: item.materialUnit,
+                        materialPrice: item.materialPrice,
+                        totalPrice: item.quantity * item.materialPrice,
                         VAT: item.VAT ?? 10,
                         currency: item.currency || currency || "VND",
                         deliveryDate: new Date(item.deliveryDate),
@@ -121,18 +121,18 @@ router.put("/:purchaseId", async (req, res) => {
                 where: { purchaseId: req.params.purchaseId },
             });
             for (const item of items) {
-                await tx.products.upsert({
-                    where: { productId: item.productId },
+                await tx.materials.upsert({
+                    where: { materialId: item.materialId },
                     update: {
-                        price: item.productPrice,
+                        price: item.materialPrice,
                         lastPurchaseDate: new Date(),
                     },
                     create: {
-                        productId: item.productId,
-                        name: item.productName,
-                        specification: item.productSpecification,
-                        unit: item.productUnit,
-                        price: item.productPrice,
+                        materialId: item.materialId,
+                        name: item.materialName,
+                        specification: item.materialSpecification,
+                        unit: item.materialUnit,
+                        price: item.materialPrice,
                         lastPurchaseDate: new Date(),
                         supplierId: supplierId,
                         supplierName: supplierName,
@@ -141,13 +141,13 @@ router.put("/:purchaseId", async (req, res) => {
                 await tx.purchase_Order_Items.create({
                     data: {
                         purchaseId: updated.purchaseId,
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
                         quantity: item.quantity,
-                        productUnit: item.productUnit,
-                        productPrice: item.productPrice,
-                        totalPrice: item.quantity * item.productPrice,
+                        materialUnit: item.materialUnit,
+                        materialPrice: item.materialPrice,
+                        totalPrice: item.quantity * item.materialPrice,
                         VAT: item.VAT ?? 0,
                         currency: item.currency || currency || "VND",
                         deliveryDate: new Date(item.deliveryDate),

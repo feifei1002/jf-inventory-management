@@ -8,8 +8,8 @@ const prisma = new client_1.PrismaClient();
 router.get("/", async (req, res) => {
     try {
         const inventory = await prisma.inventory.findMany({
-            include: { product: true },
-            orderBy: { productName: "asc" },
+            include: { material: true },
+            orderBy: { materialName: "asc" },
         });
         res.json(inventory);
     }
@@ -18,11 +18,11 @@ router.get("/", async (req, res) => {
     }
 });
 // GET single inventory item
-router.get("/:productId", async (req, res) => {
+router.get("/:materialId", async (req, res) => {
     try {
         const item = await prisma.inventory.findUnique({
-            where: { productId: req.params.productId },
-            include: { product: true },
+            where: { materialId: req.params.materialId },
+            include: { material: true },
         });
         if (!item) {
             res.status(404).json({ message: "Inventory item not found" });
@@ -35,11 +35,11 @@ router.get("/:productId", async (req, res) => {
     }
 });
 // PUT manually adjust stock
-router.put("/:productId", async (req, res) => {
+router.put("/:materialId", async (req, res) => {
     try {
         const { currentStock, reservedStock } = req.body;
         const item = await prisma.inventory.update({
-            where: { productId: req.params.productId },
+            where: { materialId: req.params.materialId },
             data: {
                 currentStock,
                 lastUpdated: new Date(),

@@ -18,7 +18,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       lowStockItems,
       outOfStockItems,
       totalSuppliers,
-      totalProducts,
+      totalMaterials,
     ] = await Promise.all([
       // Total POs this month
       prisma.purchasing_Orders.count({
@@ -53,8 +53,8 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       }),
       // Total suppliers
       prisma.suppliers.count(),
-      // Total products
-      prisma.products.count(),
+      // Total materials
+      prisma.materials.count(),
     ]);
 
     // Calculate pending PRs — PRs where requisitionId not found in any PO item
@@ -74,7 +74,7 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       lowStockItems,
       outOfStockItems,
       totalSuppliers,
-      totalProducts,
+      totalMaterials,
       totalPRs,
     });
   } catch (error) {

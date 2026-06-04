@@ -54,15 +54,15 @@ router.post("/", async (req, res) => {
                 },
             });
             for (const item of items) {
-                // Auto-create product if it doesn't exist
-                await tx.products.upsert({
-                    where: { productId: item.productId },
+                // Auto-create material if it doesn't exist
+                await tx.materials.upsert({
+                    where: { materialId: item.materialId },
                     update: {},
                     create: {
-                        productId: item.productId,
-                        name: item.productName,
-                        specification: item.productSpecification,
-                        unit: item.productUnit,
+                        materialId: item.materialId,
+                        name: item.materialName,
+                        specification: item.materialSpecification,
+                        unit: item.materialUnit,
                         price: 0,
                         lastPurchaseDate: new Date(),
                         supplierId: item.supplierId || "UNKNOWN",
@@ -72,9 +72,9 @@ router.post("/", async (req, res) => {
                 await tx.purchase_Requisition_Items.create({
                     data: {
                         requisitionId: newRequisition.requisitionId,
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
                         quantity: item.quantity,
                         weight: item.weight || null,
                         requiredDate: new Date(item.requiredDate),
@@ -116,14 +116,14 @@ router.put("/:requisitionId", async (req, res) => {
                 where: { requisitionId: req.params.requisitionId },
             });
             for (const item of items) {
-                await tx.products.upsert({
-                    where: { productId: item.productId },
+                await tx.materials.upsert({
+                    where: { materialId: item.materialId },
                     update: {},
                     create: {
-                        productId: item.productId,
-                        name: item.productName,
-                        specification: item.productSpecification,
-                        unit: item.productUnit ?? "tấm",
+                        materialId: item.materialId,
+                        name: item.materialName,
+                        specification: item.materialSpecification,
+                        unit: item.materialUnit ?? "tấm",
                         price: 0,
                         lastPurchaseDate: new Date(),
                         supplierId: "UNKNOWN",
@@ -133,9 +133,9 @@ router.put("/:requisitionId", async (req, res) => {
                 await tx.purchase_Requisition_Items.create({
                     data: {
                         requisitionId: updated.requisitionId,
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
                         quantity: item.quantity,
                         weight: item.weight || null,
                         requiredDate: new Date(item.requiredDate),

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { api } from "../../../lib/api";
-import { Product } from "../../../lib/types";
+import { Material } from "../../../lib/types";
 
 const DEPARTMENTS = [
   "管理部 AD",
@@ -29,7 +29,7 @@ export default function EditPurchaseRequisitionPage() {
   const [soNo, setSoNo] = useState("");
   const [note, setNote] = useState("");
   const [items, setItems] = useState<any[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -38,9 +38,9 @@ export default function EditPurchaseRequisitionPage() {
   useEffect(() => {
     Promise.all([
       api.getPurchaseRequisition(requisitionId),
-      api.getProducts(),
+      api.getMaterials(),
     ])
-      .then(([pr, productList]) => {
+      .then(([pr, materialList]) => {
         setRequisitionDate(
           new Date(pr.requisitionDate).toISOString().split("T")[0]
         );
@@ -50,12 +50,12 @@ export default function EditPurchaseRequisitionPage() {
         setNote(pr.note ?? "");
         setItems(
           pr.purchaseRequisitionItems?.map((item: any) => ({
-            productId: item.productId,
-            productName: item.productName,
-            productSpecification: item.productSpecification,
+            materialId: item.materialId,
+            materialName: item.materialName,
+            materialSpecification: item.materialSpecification,
             quantity: item.quantity,
             weight: item.weight ?? "",
-            productUnit: item.productUnit ?? "tấm",
+            materialUnit: item.materialUnit ?? "tấm",
             requiredDate: new Date(item.requiredDate)
               .toISOString()
               .split("T")[0],
@@ -63,7 +63,7 @@ export default function EditPurchaseRequisitionPage() {
             deliveryPlace: item.deliveryPlace,
           })) ?? []
         );
-        setProducts(productList);
+        setMaterials(materialList);
       })
       .catch(() => setError("Failed to load requisition"))
       .finally(() => setLoading(false));
@@ -77,24 +77,24 @@ export default function EditPurchaseRequisitionPage() {
     );
   };
 
-  const handleProductSelect = (index: number, productId: string) => {
-    const product = products.find((p) => p.productId === productId);
-    if (product) {
+  const handleMaterialSelect = (index: number, materialId: string) => {
+    const material = materials.find((m) => m.materialId === materialId);
+    if (material) {
       setItems((prev) =>
         prev.map((item, i) =>
           i === index
             ? {
                 ...item,
-                productId: product.productId,
-                productName: product.name,
-                productSpecification: product.specification,
-                productUnit: product.unit,
+                materialId: material.materialId,
+                materialName: material.name,
+                materialSpecification: material.specification,
+                materialUnit: material.unit,
               }
             : item
         )
       );
     } else {
-      updateItem(index, "productId", productId);
+      updateItem(index, "materialId", materialId);
     }
   };
 
@@ -102,12 +102,12 @@ export default function EditPurchaseRequisitionPage() {
     setItems((prev) => [
       ...prev,
       {
-        productId: "",
-        productName: "",
-        productSpecification: "",
+        materialId: "",
+        materialName: "",
+        materialSpecification: "",
         quantity: 1,
         weight: "",
-        productUnit: "tấm",
+        materialUnit: "tấm",
         requiredDate: "",
         purpose: "",
         deliveryPlace: "J&F Factory",
@@ -123,8 +123,8 @@ export default function EditPurchaseRequisitionPage() {
       setError("Requester name is required");
       return;
     }
-    if (items.some((i) => !i.productName || !i.requiredDate)) {
-      setError("Please fill in all product names and required dates");
+    if (items.some((i) => !i.materialName || !i.requiredDate)) {
+      setError("Please fill in all material names and required dates");
       return;
     }
     setSubmitting(true);
@@ -284,8 +284,8 @@ export default function EditPurchaseRequisitionPage() {
                 <tr className="bg-gray-50  border-b border-gray-200  ">
                   {[
                     "#",
-                    "Select Product",
-                    "Product Name",
+                    "Select Material",
+                    "Material Name",
                     "Specification",
                     "Qty",
                     "Unit",
@@ -317,37 +317,37 @@ export default function EditPurchaseRequisitionPage() {
                     </td>
                     <td className="px-2 py-1">
                       <select
-                        value={item.productId}
+                        value={item.materialId}
                         onChange={(e) =>
-                          handleProductSelect(index, e.target.value)
+                          handleMaterialSelect(index, e.target.value)
                         }
                         className="w-40 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                       >
                         <option value="">-- Select --</option>
-                        {products.map((p) => (
-                          <option key={p.productId} value={p.productId}>
-                            {p.productId}
+                        {materials.map((m) => (
+                          <option key={m.materialId} value={m.materialId}>
+                            {m.materialId}
                           </option>
                         ))}
                       </select>
                     </td>
                     <td className="px-2 py-1">
                       <input
-                        value={item.productName}
+                        value={item.materialName}
                         onChange={(e) =>
-                          updateItem(index, "productName", e.target.value)
+                          updateItem(index, "materialName", e.target.value)
                         }
                         className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
-                        placeholder="Product name"
+                        placeholder="Material name"
                       />
                     </td>
                     <td className="px-2 py-1">
                       <input
-                        value={item.productSpecification}
+                        value={item.materialSpecification}
                         onChange={(e) =>
                           updateItem(
                             index,
-                            "productSpecification",
+                            "materialSpecification",
                             e.target.value
                           )
                         }
@@ -368,9 +368,9 @@ export default function EditPurchaseRequisitionPage() {
                     </td>
                     <td className="px-2 py-1">
                       <input
-                        value={item.productUnit}
+                        value={item.materialUnit}
                         onChange={(e) =>
-                          updateItem(index, "productUnit", e.target.value)
+                          updateItem(index, "materialUnit", e.target.value)
                         }
                         className="w-16 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                       />

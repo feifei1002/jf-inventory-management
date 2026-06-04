@@ -1,14 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { api } from "../../lib/api";
-import { Supplier } from "../../lib/types";
+import { useRouter, useParams } from "next/navigation";
+import { api } from "../../../lib/api";
+import { Supplier } from "../../../lib/types";
 
-const UNITS = ["cây", "pcs", "Bộ", "P", "set", "Xe", "Bình", "Cuộn", "tấm", "M", "kg", "bộ ", "hộp", "pes",
-  "bộ 組", "cái", "đôi", "箱", "盒", "桶", "Phuy", "Bính", "cuốn", "捲", "kgw", "thùng", "lit", "罐",
-"Lon", "bao", "捆", "ram", "cục", "m2", "PO", "支", "套", "次", "M³", "Chai", "式", "bo", "chuyến",
-];
+const UNITS = ["tấm", "cái", "kg", "m", "m2", "cuộn", "bộ", "hộp", "thùng"];
 
 const Field = ({
     label,
@@ -30,38 +27,51 @@ const Field = ({
 const inputClass =
   "w-full text-sm px-3 py-2 border border-gray-200  rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green      ";
 
-
-export default function CreateProductPage() {
+export default function EditMaterialPage() {
   const router = useRouter();
+  const { materialId } = useParams<{ materialId: string }>();
 
-  const [productId, setProductId] = useState("");
   const [name, setName] = useState("");
   const [specification, setSpecification] = useState("");
   const [unit, setUnit] = useState("tấm");
   const [price, setPrice] = useState("");
+  const [currency, setCurrency] = useState<"VND" | "TWD" | "USD">("VND");
   const [supplierId, setSupplierId] = useState("");
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [currency, setCurrency] = useState<"VND" | "TWD" | "USD">("VND");
 
+  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api.getSuppliers().then(setSuppliers).catch(console.error);
-  }, []);
+    Promise.all([
+      api.getMaterial(materialId),
+      api.getSuppliers(),
+    ])
+      .then(([material, supplierList]) => {
+        setName(material.name ?? "");
+        setSpecification(material.specification ?? "");
+        setUnit(material.unit ?? "tấm");
+        setPrice(String(material.price ?? ""));
+        setCurrency(material.currency ?? "VND");
+        setSupplierId(material.supplierId ?? "");
+        setSuppliers(supplierList);
+      })
+      .catch(() => setError("Failed to load material"))
+      .finally(() => setLoading(false));
+  }, [materialId]);
 
   const selectedSupplier = suppliers.find((s) => s.supplierId === supplierId);
 
   const handleSubmit = async () => {
     setError("");
-    if (!productId || !name || !unit || !supplierId) {
-      setError("Product ID, name, unit and supplier are required");
+    if (!name || !unit || !supplierId) {
+      setError("Name, unit and supplier are required");
       return;
     }
     setSubmitting(true);
     try {
-      await api.createProduct({
-        productId,
+      await api.updateMaterial(materialId, {
         name,
         specification,
         unit,
@@ -70,7 +80,7 @@ export default function CreateProductPage() {
         supplierId,
         supplierName: selectedSupplier?.name ?? "",
       });
-      router.push("/products");
+      router.push("/materials");
     } catch (err: any) {
       setError(err.message ?? "Something went wrong");
     } finally {
@@ -78,13 +88,21 @@ export default function CreateProductPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50  flex items-center justify-center">
+        <p className="text-gray-400  text-sm">Loading material...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
       <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
-          <h1 className="text-xl font-bold text-gray-800  ">New Product</h1>
-          <p className="text-sm text-gray-500 ">Sản Phẩm / 產品</p>
+          <h1 className="text-xl font-bold text-gray-800  ">Edit Material</h1>
+          <p className="text-sm text-gray-500  font-mono">{materialId}</p>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -98,7 +116,7 @@ export default function CreateProductPage() {
             disabled={submitting}
             className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark disabled:opacity-50 px-5 py-2 rounded-lg"
           >
-            {submitting ? "Saving..." : "Save Product"}
+            {submitting ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>
@@ -110,22 +128,24 @@ export default function CreateProductPage() {
           </div>
         )}
 
-        {/* ── Product Info ── */}
+        {/* ── Material Info ── */}
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Product Information
+              Material Information
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
-            <Field label="Product ID" required>
+            <div>
+              <label className="block text-xs font-medium text-gray-500  mb-1">
+                Material ID
+              </label>
               <input
-                value={productId}
-                onChange={(e) => setProductId(e.target.value)}
-                className={inputClass}
-                placeholder="e.g. 211112-1012201695"
+                value={materialId}
+                readOnly
+                className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg bg-gray-50 text-gray-400 font-mono"
               />
-            </Field>
+            </div>
             <Field label="Unit" required>
               <select
                 value={unit}
@@ -137,42 +157,41 @@ export default function CreateProductPage() {
                 ))}
               </select>
             </Field>
-            <Field label="Product Name" required>
+            <Field label="Material Name" required>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className={inputClass}
-                placeholder="e.g. SPCC光板 Thép Tấm"
               />
-            </Field>
-            <Field label="Price (₫)">
-              <input
-                type="number"
-                min={0}
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className={inputClass}
-                placeholder="e.g. 19000"
-              />
-            </Field>
-            <Field label="Currency">
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value as "VND" | "TWD" | "USD")}
-                className={inputClass + " bg-white"}
-              >
-                <option value="VND">VND — Vietnamese Dong</option>
-                <option value="TWD">TWD — Taiwan Dollar</option>
-                <option value="USD">USD — US Dollar</option>
-              </select>
             </Field>
             <Field label="Specification">
               <input
                 value={specification}
                 onChange={(e) => setSpecification(e.target.value)}
                 className={inputClass}
-                placeholder="e.g. 1.0t*1220W*1695L"
               />
+            </Field>
+            <Field label="Price">
+              <input
+                type="number"
+                min={0}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Currency">
+              <select
+                value={currency}
+                onChange={(e) =>
+                  setCurrency(e.target.value as "VND" | "TWD" | "USD")
+                }
+                className={inputClass + " bg-white"}
+              >
+                <option value="VND">VND — Vietnamese Dong</option>
+                <option value="TWD">TWD — Taiwan Dollar</option>
+                <option value="USD">USD — US Dollar</option>
+              </select>
             </Field>
           </div>
         </div>
@@ -199,7 +218,6 @@ export default function CreateProductPage() {
                 ))}
               </select>
             </Field>
-
             {selectedSupplier && (
               <div className="bg-brand-green-50 rounded-lg p-4 grid grid-cols-2 gap-3">
                 <div>

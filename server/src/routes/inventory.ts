@@ -8,8 +8,8 @@ const prisma = new PrismaClient();
 router.get("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const inventory = await prisma.inventory.findMany({
-      include: { product: true },
-      orderBy: { productName: "asc" },
+      include: { material: true },
+      orderBy: { materialName: "asc" },
     });
     res.json(inventory);
   } catch (error) {
@@ -18,11 +18,11 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
 });
 
 // GET single inventory item
-router.get("/:productId", async (req: Request, res: Response): Promise<void> => {
+router.get("/:materialId", async (req: Request, res: Response): Promise<void> => {
   try {
     const item = await prisma.inventory.findUnique({
-      where: { productId: req.params.productId as string },
-      include: { product: true },
+      where: { materialId: req.params.materialId as string },
+      include: { material: true },
     });
     if (!item) {
       res.status(404).json({ message: "Inventory item not found" });
@@ -35,11 +35,11 @@ router.get("/:productId", async (req: Request, res: Response): Promise<void> => 
 });
 
 // PUT manually adjust stock
-router.put("/:productId", async (req: Request, res: Response): Promise<void> => {
+router.put("/:materialId", async (req: Request, res: Response): Promise<void> => {
   try {
     const { currentStock, reservedStock } = req.body;
     const item = await prisma.inventory.update({
-      where: { productId: req.params.productId as string },
+      where: { materialId: req.params.materialId as string },
       data: {
         currentStock,
         lastUpdated: new Date(),

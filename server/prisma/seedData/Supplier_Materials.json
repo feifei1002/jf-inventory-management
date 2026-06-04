@@ -1,26 +1,26 @@
 [
     {
         "supplierId": "VB03012",
-        "productId": "19-D004"
+        "materialId": "19-D004"
     },
 
     {
         "supplierId": "VC02006",
-        "productId": "22110-E1810002000T"
+        "materialId": "22110-E1810002000T"
     },
 
     {
         "supplierId": "VD01114",
-        "productId": "31-035-3"
+        "materialId": "31-035-3"
     },
 
     {
         "supplierId": "TD01002",
-        "productId": "31-052"
+        "materialId": "31-052"
     },
 
     {
         "supplierId": "TD01002",
-        "productId": "31-054"
+        "materialId": "31-054"
     }
 ]

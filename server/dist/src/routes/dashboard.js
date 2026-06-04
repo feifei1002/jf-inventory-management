@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
     try {
         const now = new Date();
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-        const [totalPOsThisMonth, totalPRs, allPRs, allPOs, itemsReceivedThisMonth, lowStockItems, outOfStockItems, totalSuppliers, totalProducts,] = await Promise.all([
+        const [totalPOsThisMonth, totalPRs, allPRs, allPOs, itemsReceivedThisMonth, lowStockItems, outOfStockItems, totalSuppliers, totalMaterials,] = await Promise.all([
             // Total POs this month
             prisma.purchasing_Orders.count({
                 where: { purchaseDate: { gte: startOfMonth } },
@@ -42,8 +42,8 @@ router.get("/", async (req, res) => {
             }),
             // Total suppliers
             prisma.suppliers.count(),
-            // Total products
-            prisma.products.count(),
+            // Total materials
+            prisma.materials.count(),
         ]);
         // Calculate pending PRs — PRs where requisitionId not found in any PO item
         const linkedRequisitionIds = new Set(allPOs.flatMap((po) => po.purchaseOrderItems.map((item) => item.requisitionId)));
@@ -55,7 +55,7 @@ router.get("/", async (req, res) => {
             lowStockItems,
             outOfStockItems,
             totalSuppliers,
-            totalProducts,
+            totalMaterials,
             totalPRs,
         });
     }

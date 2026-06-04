@@ -3,22 +3,22 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "../../lib/api";
-import { Product } from "../../lib/types";
+import { Material } from "../../lib/types";
 
-export default function ProductDetailPage() {
-  const { productId } = useParams<{ productId: string }>();
+export default function MaterialDetailPage() {
+  const { materialId } = useParams<{ materialId: string }>();
   const router = useRouter();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [material, setMaterial] = useState<Material | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     api
-      .getProduct(productId)
-      .then(setProduct)
-      .catch(() => setError("Failed to load product"))
+      .getMaterial(materialId)
+      .then(setMaterial)
+      .catch(() => setError("Failed to load material"))
       .finally(() => setLoading(false));
-  }, [productId]);
+  }, [materialId]);
 
   const fmt = (n: number) =>
     Number(n).toLocaleString("vi-VN", { minimumFractionDigits: 0 });
@@ -26,15 +26,15 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50  flex items-center justify-center">
-        <p className="text-gray-400  text-sm">Loading product...</p>
+        <p className="text-gray-400  text-sm">Loading material...</p>
       </div>
     );
   }
 
-  if (error || !product) {
+  if (error || !material) {
     return (
       <div className="min-h-screen bg-gray-50  flex items-center justify-center">
-        <p className="text-red-500 text-sm">{error || "Product not found"}</p>
+        <p className="text-red-500 text-sm">{error || "Material not found"}</p>
       </div>
     );
   }
@@ -44,18 +44,18 @@ export default function ProductDetailPage() {
       {/* ── Top bar ── */}
       <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
-          <h1 className="text-xl font-bold text-gray-800  ">Product Detail</h1>
-          <p className="text-sm text-gray-500  font-mono">{product.productId}</p>
+          <h1 className="text-xl font-bold text-gray-800  ">Material Detail</h1>
+          <p className="text-sm text-gray-500  font-mono">{material.materialId}</p>
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => router.push("/products")}
+            onClick={() => router.push("/materials")}
             className="text-sm text-gray-500  hover:text-gray-700 px-4 py-2 border border-gray-200  rounded-lg"
           >
             ← Back
           </button>
           <button
-            onClick={() => router.push(`/products/${productId}/edit`)}
+            onClick={() => router.push(`/materials/${materialId}/edit`)}
             className="text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg"
           >
             Edit
@@ -67,40 +67,40 @@ export default function ProductDetailPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Product Information
+              Material Information
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-6">
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Product ID</p>
+              <p className="text-xs text-gray-400  mb-0.5">Material ID</p>
               <p className="text-sm font-mono font-semibold text-gray-800  ">
-                {product.productId}
+                {material.materialId}
               </p>
             </div>
             <div>
               <p className="text-xs text-gray-400  mb-0.5">Name</p>
               <p className="text-sm font-semibold text-gray-800  ">
-                {product.name}
+                {material.name}
               </p>
             </div>
             <div>
               <p className="text-xs text-gray-400  mb-0.5">Specification</p>
-              <p className="text-sm text-gray-800  ">{product.specification}</p>
+              <p className="text-sm text-gray-800  ">{material.specification}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400  mb-0.5">Unit</p>
-              <p className="text-sm text-gray-800  ">{product.unit}</p>
+              <p className="text-sm text-gray-800  ">{material.unit}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400  mb-0.5">Price</p>
               <p className="text-sm font-mono font-semibold text-gray-800  ">
-                {fmt(product.price)} {product.currency ?? "VND"}
+                {fmt(material.price)} {material.currency ?? "VND"}
               </p>
             </div>
             <div>
               <p className="text-xs text-gray-400  mb-0.5">Last Purchase Date</p>
               <p className="text-sm text-gray-800  ">
-                {new Date(product.lastPurchaseDate).toLocaleDateString("vi-VN")}
+                {new Date(material.lastPurchaseDate).toLocaleDateString("vi-VN")}
               </p>
             </div>
           </div>
@@ -116,13 +116,13 @@ export default function ProductDetailPage() {
             <div>
               <p className="text-xs text-gray-400  mb-0.5">Supplier ID</p>
               <p className="text-sm font-mono font-semibold text-brand-green-dark">
-                {product.supplierId}
+                {material.supplierId}
               </p>
             </div>
             <div>
               <p className="text-xs text-gray-400  mb-0.5">Supplier Name</p>
               <p className="text-sm font-semibold text-gray-800  ">
-                {product.supplierName}
+                {material.supplierName}
               </p>
             </div>
           </div>

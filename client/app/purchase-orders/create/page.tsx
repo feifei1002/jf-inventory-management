@@ -9,12 +9,12 @@ const UNITS = ["tấm", "cái", "kg", "m", "m2", "cuộn", "bộ", "hộp", "th�
 const DELIVERY_PLACES = ["J&F Factory", "J&F Office", "J&F Warehouse"];
 
 const emptyItem = (): Omit<POItem, "totalPrice"> & { selectedPRId: string } => ({
-  productId: "",
-  productName: "",
-  productSpecification: "",
+  materialId: "",
+  materialName: "",
+  materialSpecification: "",
   quantity: 1,
-  productUnit: "tấm",
-  productPrice: 0,
+  materialUnit: "tấm",
+  materialPrice: 0,
   VAT: 0,
   currency: "VND",
   deliveryDate: "",
@@ -40,7 +40,7 @@ export default function CreatePurchaseOrderPage() {
     new Date().toISOString().split("T")[0]
   );
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
+  const [materials, setMaterials] = useState<any[]>([]);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [supplierId, setSupplierId] = useState("");
   const [contactPerson, setContactPerson] = useState("");
@@ -61,7 +61,7 @@ export default function CreatePurchaseOrderPage() {
   // ── Load suppliers and requisitions ──
   useEffect(() => {
     api.getSuppliers().then(setSuppliers).catch(console.error);
-    api.getProducts().then(setProducts).catch(console.error);
+    api.getMaterials().then(setMaterials).catch(console.error);
     api.getPurchaseRequisitions().then(setRequisitions).catch(console.error);
   }, []);
 
@@ -94,34 +94,34 @@ export default function CreatePurchaseOrderPage() {
   }
 
   // If requisition has items, show them as options
-  // For now just set the requisitionId and let user pick product manually
+  // For now just set the requisitionId and let user pick material manually
   updateItem(index, "selectedPRId", reqId);
   updateItem(index, "requisitionId", reqId);
 };
 
-  const handleItemProductSelect = (index: number, reqId: string, productId: string) => {
+  const handleItemMaterialSelect = (index: number, reqId: string, materialId: string) => {
     const requisition = requisitions.find((r) => r.requisitionId === reqId);
     if (!requisition || !requisition.purchaseRequisitionItems) return;
 
     const prItem = requisition.purchaseRequisitionItems.find(
-      (i) => i.productId === productId
+      (i) => i.materialId === materialId
     );
     if (!prItem) return;
 
-    const product = products.find((p) => p.productId === productId);
+    const material = materials.find((p) => p.materialId === materialId);
 
     setItems((prev) =>
       prev.map((item, i) =>
         i === index
           ? {
               ...item,
-              productId: prItem.productId,
-              productName: prItem.productName,
-              productSpecification: prItem.productSpecification,
+              materialId: prItem.materialId,
+              materialName: prItem.materialName,
+              materialSpecification: prItem.materialSpecification,
               quantity: prItem.quantity,
-              productUnit: product?.unit ?? "tấm",
-              productPrice: product?.price ? Number(product.price) : 0,
-              currency: product?.currency ?? currency,
+              materialUnit: material?.unit ?? "tấm",
+              materialPrice: material?.price ? Number(material.price) : 0,
+              currency: material?.currency ?? currency,
               deliveryDate: prItem.requiredDate
                 ? new Date(prItem.requiredDate).toISOString().split("T")[0]
                 : "",
@@ -141,12 +141,12 @@ export default function CreatePurchaseOrderPage() {
 
   // ── Calculated totals ──
   const subtotal = items.reduce(
-    (sum, item) => sum + item.quantity * item.productPrice,
+    (sum, item) => sum + item.quantity * item.materialPrice,
     0
   );
   const vatAmount = items.reduce(
     (sum, item: any) =>
-      sum + item.quantity * item.productPrice * (item.VAT / 100),
+      sum + item.quantity * item.materialPrice * (item.VAT / 100),
     0
   );
   const finalTotal = subtotal + vatAmount;
@@ -162,8 +162,8 @@ export default function CreatePurchaseOrderPage() {
       setError("Please select a supplier");
       return;
     }
-    if (items.some((i) => !i.productName || !i.deliveryDate)) {
-      setError("Please fill in all product names and delivery dates");
+    if (items.some((i) => !i.materialName || !i.deliveryDate)) {
+      setError("Please fill in all material names and delivery dates");
       return;
     }
     if (items.some((i) => !i.requisitionId)) {
@@ -361,8 +361,8 @@ export default function CreatePurchaseOrderPage() {
                   {[
                     "#",
                     "PR No.",
-                    "Product",
-                    "Product Name",
+                    "Material",
+                    "Material Name",
                     "Specification",
                     "Qty",
                     "Unit",
@@ -384,11 +384,11 @@ export default function CreatePurchaseOrderPage() {
               </thead>
               <tbody>
                 {items.map((item: any, index: number) => {
-                  // Get products available in the selected PR for this row
+                  // Get materials available in the selected PR for this row
                   const selectedReq = requisitions.find(
                     (r) => r.requisitionId === item.selectedPRId
                   );
-                  const prProducts = selectedReq?.purchaseRequisitionItems ?? [];
+                  const prMaterials = selectedReq?.purchaseRequisitionItems ?? [];
 
                   return (
                     <tr
@@ -413,13 +413,13 @@ export default function CreatePurchaseOrderPage() {
                         </select>
                       </td>
 
-                      {/* Product selector — shows products from selected PR */}
+                      {/* Material selector — shows materials from selected PR */}
                       <td className="px-2 py-1">
-                        {item.selectedPRId && prProducts.length > 0 ? (
+                        {item.selectedPRId && prMaterials.length > 0 ? (
                           <select
-                            value={item.productId}
+                            value={item.materialId}
                             onChange={(e) =>
-                              handleItemProductSelect(
+                              handleItemMaterialSelect(
                                 index,
                                 item.selectedPRId,
                                 e.target.value
@@ -427,41 +427,41 @@ export default function CreatePurchaseOrderPage() {
                             }
                             className="w-40 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                           >
-                            <option value="">-- Product --</option>
-                            {prProducts.map((p) => (
-                              <option key={p.productId} value={p.productId}>
-                                {p.productId}
+                            <option value="">-- Material --</option>
+                            {prMaterials.map((m) => (
+                              <option key={m.materialId} value={m.materialId}>
+                                {m.materialName}
                               </option>
                             ))}
                           </select>
                         ) : (
                           <input
-                            value={item.productId}
+                            value={item.materialId}
                             onChange={(e) =>
-                              updateItem(index, "productId", e.target.value)
+                              updateItem(index, "materialId", e.target.value)
                             }
                             className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
-                            placeholder="Product code"
+                            placeholder="Material code"
                           />
                         )}
                       </td>
 
                       <td className="px-2 py-1">
                         <input
-                          value={item.productName}
+                          value={item.materialName}
                           onChange={(e) =>
-                            updateItem(index, "productName", e.target.value)
+                            updateItem(index, "materialName", e.target.value)
                           }
                           className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
-                          placeholder="Product name"
+                          placeholder="Material name"
                         />
                       </td>
 
                       <td className="px-2 py-1">
                         <input
-                          value={item.productSpecification}
+                          value={item.materialSpecification}
                           onChange={(e) =>
-                            updateItem(index, "productSpecification", e.target.value)
+                            updateItem(index, "materialSpecification", e.target.value)
                           }
                           className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
                           placeholder="e.g. 1.0t*1220W*1695L"
@@ -482,9 +482,9 @@ export default function CreatePurchaseOrderPage() {
 
                       <td className="px-2 py-1">
                         <select
-                          value={item.productUnit}
+                          value={item.materialUnit}
                           onChange={(e) =>
-                            updateItem(index, "productUnit", e.target.value)
+                            updateItem(index, "materialUnit", e.target.value)
                           }
                           className="w-20 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                         >
@@ -498,16 +498,16 @@ export default function CreatePurchaseOrderPage() {
                         <input
                           type="number"
                           min={0}
-                          value={item.productPrice}
+                          value={item.materialPrice}
                           onChange={(e) =>
-                            updateItem(index, "productPrice", Number(e.target.value))
+                            updateItem(index, "materialPrice", Number(e.target.value))
                           }
                           className="w-24 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       text-right"
                         />
                       </td>
 
                       <td className="px-3 py-2 text-xs font-semibold text-gray-700 whitespace-nowrap">
-                        {fmt(item.quantity * item.productPrice)}
+                        {fmt(item.quantity * item.materialPrice)}
                       </td>
 
                       <td className="px-2 py-1">

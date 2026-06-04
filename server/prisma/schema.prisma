@@ -29,13 +29,13 @@ model Suppliers {
   @@index([supplierId])
   @@index([name])
   @@index([type])
-  supplierProducts Supplier_Products[]
+  supplierMaterials Supplier_Materials[]
   purchasingOrders Purchasing_Orders[]
   materialWarehousingForms Material_Warehousing_Forms[]
 }
 
-model Products {
-  productId String @id
+model Materials {
+  materialId String @id
   name String
   specification String
   unit String
@@ -44,21 +44,21 @@ model Products {
   lastPurchaseDate DateTime
   supplierId String
   supplierName String
-  @@index([productId])
+  @@index([materialId])
   @@index([name])
-  supplierProducts Supplier_Products[]
+  supplierMaterials Supplier_Materials[]
   purchaseRequisitionItems Purchase_Requisition_Items[]
   purchaseOrderItems Purchase_Order_Items[]
   materialWarehousingItems Material_Warehousing_Items[]
   inventory Inventory?
 }
 
-model Supplier_Products {
+model Supplier_Materials {
   supplierId String
-  productId String
+  materialId String
   supplier Suppliers @relation(fields: [supplierId], references: [supplierId])
-  product Products @relation(fields: [productId], references: [productId])
-  @@id([supplierId, productId])
+  material Materials @relation(fields: [materialId], references: [materialId])
+  @@id([supplierId, materialId])
 }
 
 model Purchasing_Requisitions {
@@ -77,16 +77,16 @@ model Purchasing_Requisitions {
 model Purchase_Requisition_Items {
   id Int @id @default(autoincrement())
   requisitionId String
-  productId String
-  productName String
-  productSpecification String
+  materialId String
+  materialName String
+  materialSpecification String
   quantity Int
   weight Float?
   requiredDate DateTime
   purpose String?
   deliveryPlace String
   requisition Purchasing_Requisitions @relation(fields: [requisitionId], references: [requisitionId])
-  product Products @relation(fields: [productId], references: [productId])
+  material Materials @relation(fields: [materialId], references: [materialId])
 }
 
 model Purchasing_Orders {
@@ -110,13 +110,13 @@ model Purchasing_Orders {
 model Purchase_Order_Items {
   id Int @id @default(autoincrement())
   purchaseId String
-  productId String
-  productName String
-  productSpecification String
+  materialId String
+  materialName String
+  materialSpecification String
   quantity Int
-  productUnit String
+  materialUnit String
   // weight Float?
-  productPrice Decimal @db.Decimal(20, 2)
+  materialPrice Decimal @db.Decimal(20, 2)
   totalPrice Decimal @db.Decimal(20, 2)
   VAT Int?
   currency String @default("VND")
@@ -124,7 +124,7 @@ model Purchase_Order_Items {
   requisitionId String
   deliveryPlace String
   purchase Purchasing_Orders @relation(fields: [purchaseId], references: [purchaseId])
-  product Products @relation(fields: [productId], references: [productId])
+  material Materials @relation(fields: [materialId], references: [materialId])
   requisition Purchasing_Requisitions @relation(fields: [requisitionId], references: [requisitionId])
 }
 
@@ -150,29 +150,29 @@ model Material_Warehousing_Forms {
 model Material_Warehousing_Items {
   id Int @id @default(autoincrement())
   formId String
-  productId String
-  productName String
-  productSpecification String
+  materialId String
+  materialName String
+  materialSpecification String
   quantity Int
-  productUnit String
+  materialUnit String
   deliveryDate DateTime
   requisitionId String
   deliveryPlace String
   warehousingForm Material_Warehousing_Forms @relation(fields: [formId], references: [formId])
-  product Products @relation(fields: [productId], references: [productId])
+  material Materials @relation(fields: [materialId], references: [materialId])
   requisition Purchasing_Requisitions @relation(fields: [requisitionId], references: [requisitionId])
 }
 
 model Inventory {
   inventoryId String @id @default(cuid())
-  productId String @unique
-  productName String
-  productSpecification String
+  materialId String @unique
+  materialName String
+  materialSpecification String
   unit String
   currentStock Float @default(0)
   lastUpdated DateTime @default(now())
   supplierId String?
   supplierName String?
-  product Products @relation(fields: [productId], references: [productId])
-  @@index([productName])
+  material Materials @relation(fields: [materialId], references: [materialId])
+  @@index([materialName])
 }

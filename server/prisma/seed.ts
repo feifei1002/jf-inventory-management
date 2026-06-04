@@ -27,8 +27,8 @@ async function main() {
 
   const orderedFileNames = [
     "Suppliers.json",
-    "Products.json",
-    "Supplier_Products.json",
+    "Materials.json",
+    "Supplier_Materials.json",
     "Purchasing_Requisitions.json",
     "Purchase_Requisition_Items.json",
     "Purchasing_Orders.json",

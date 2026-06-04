@@ -14,7 +14,7 @@ router.get("/pr/:requisitionId", async (req, res) => {
     try {
         const pr = await prisma.purchasing_Requisitions.findUnique({
             where: { requisitionId: req.params.requisitionId },
-            include: { purchaseRequisitionItems: { include: { product: true } } },
+            include: { purchaseRequisitionItems: { include: { material: true } } },
         });
         if (!pr) {
             res.status(404).json({ message: "Purchase Requisition not found" });
@@ -172,9 +172,9 @@ router.get("/pr/:requisitionId", async (req, res) => {
                 border(cell);
             };
             setCell(1, i + 1);
-            setCell(2, item.productId, "left");
-            setCell(3, item.productName, "left");
-            setCell(4, item.productSpecification, "left");
+            setCell(2, item.materialId, "left");
+            setCell(3, item.materialName, "left");
+            setCell(4, item.materialSpecification, "left");
             setCell(5, item.quantity);
             setCell(6, item.weight ?? "");
             setCell(7, "");
@@ -440,14 +440,14 @@ router.get("/po/:purchaseId", async (req, res) => {
                 border(cell);
             };
             setCell(1, i + 1);
-            setCell(2, item.productId, "left");
-            setCell(3, item.productName, "left");
-            setCell(4, item.productSpecification, "left");
+            setCell(2, item.materialId, "left");
+            setCell(3, item.materialName, "left");
+            setCell(4, item.materialSpecification, "left");
             setCell(5, item.quantity);
-            setCell(6, item.productUnit);
+            setCell(6, item.materialUnit);
             setCell(7, ""); // weight (not in schema, leave blank)
             setCell(8, "kg");
-            setCell(9, Number(item.productPrice));
+            setCell(9, Number(item.materialPrice));
             setCell(10, Number(item.totalPrice));
             setCell(11, item.VAT != null ? `${item.VAT}` : "");
             setCell(12, new Date(item.deliveryDate).toLocaleDateString("vi-VN"));
@@ -555,7 +555,7 @@ router.get("/warehousing/:formId", async (req, res) => {
             include: {
                 supplier: true,
                 purchase: true,
-                materialWarehousingItems: { include: { product: true } },
+                materialWarehousingItems: { include: { material: true } },
             },
         });
         if (!form) {
@@ -708,11 +708,11 @@ router.get("/warehousing/:formId", async (req, res) => {
                 border(cell);
             };
             setCell(1, i + 1);
-            setCell(2, item.productId, "left");
-            setCell(3, item.productName, "left");
-            setCell(4, item.productSpecification, "left");
+            setCell(2, item.materialId, "left");
+            setCell(3, item.materialName, "left");
+            setCell(4, item.materialSpecification, "left");
             setCell(5, item.quantity);
-            setCell(6, item.productUnit);
+            setCell(6, item.materialUnit);
             setCell(7, new Date(item.deliveryDate).toLocaleDateString("vi-VN"));
             setCell(8, item.requisitionId, "left");
             setCell(9, item.deliveryPlace, "left");
@@ -789,7 +789,7 @@ router.put("/:formId", async (req, res) => {
             // Reverse old inventory
             for (const item of oldForm.materialWarehousingItems) {
                 await tx.inventory.update({
-                    where: { productId: item.productId },
+                    where: { materialId: item.materialId },
                     data: {
                         currentStock: { decrement: item.quantity },
                         lastUpdated: new Date(),
@@ -822,11 +822,11 @@ router.put("/:formId", async (req, res) => {
                 await tx.material_Warehousing_Items.create({
                     data: {
                         formId: updated.formId,
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
                         quantity: item.quantity,
-                        productUnit: item.productUnit,
+                        materialUnit: item.materialUnit,
                         deliveryDate: new Date(item.deliveryDate),
                         requisitionId: item.requisitionId,
                         deliveryPlace: item.deliveryPlace,
@@ -834,16 +834,16 @@ router.put("/:formId", async (req, res) => {
                 });
                 // Add new quantities to inventory
                 await tx.inventory.upsert({
-                    where: { productId: item.productId },
+                    where: { materialId: item.materialId },
                     update: {
                         currentStock: { increment: item.quantity },
                         lastUpdated: new Date(),
                     },
                     create: {
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
-                        unit: item.productUnit,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
+                        unit: item.materialUnit,
                         currentStock: item.quantity,
                         lastUpdated: new Date(),
                         supplierId: supplierId,

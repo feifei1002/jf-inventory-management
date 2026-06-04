@@ -30,7 +30,7 @@ router.get("/:formId", async (req, res) => {
                 supplier: true,
                 purchase: true,
                 materialWarehousingItems: {
-                    include: { product: true },
+                    include: { material: true },
                 },
             },
         });
@@ -74,11 +74,11 @@ router.post("/", async (req, res) => {
                 await tx.material_Warehousing_Items.create({
                     data: {
                         formId: newForm.formId,
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
                         quantity: item.quantity,
-                        productUnit: item.productUnit,
+                        materialUnit: item.materialUnit,
                         deliveryDate: new Date(item.deliveryDate),
                         requisitionId: item.requisitionId,
                         deliveryPlace: item.deliveryPlace,
@@ -86,16 +86,16 @@ router.post("/", async (req, res) => {
                 });
                 // Update inventory — upsert so it creates if doesn't exist
                 await tx.inventory.upsert({
-                    where: { productId: item.productId },
+                    where: { materialId: item.materialId },
                     update: {
                         currentStock: { increment: item.quantity },
                         lastUpdated: new Date(),
                     },
                     create: {
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
-                        unit: item.productUnit,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
+                        unit: item.materialUnit,
                         currentStock: item.quantity,
                         lastUpdated: new Date(),
                         supplierId: supplierId,
@@ -131,16 +131,16 @@ router.put("/:formId", async (req, res) => {
             // Reverse old inventory
             for (const item of oldForm.materialWarehousingItems) {
                 await tx.inventory.upsert({
-                    where: { productId: item.productId },
+                    where: { materialId: item.materialId },
                     update: {
                         currentStock: { decrement: item.quantity },
                         lastUpdated: new Date(),
                     },
                     create: {
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
-                        unit: item.productUnit,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
+                        unit: item.materialUnit,
                         currentStock: 0,
                         lastUpdated: new Date(),
                     },
@@ -172,11 +172,11 @@ router.put("/:formId", async (req, res) => {
                 await tx.material_Warehousing_Items.create({
                     data: {
                         formId: updated.formId,
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
                         quantity: item.quantity,
-                        productUnit: item.productUnit,
+                        materialUnit: item.materialUnit,
                         deliveryDate: new Date(item.deliveryDate),
                         requisitionId: item.requisitionId,
                         deliveryPlace: item.deliveryPlace,
@@ -184,16 +184,16 @@ router.put("/:formId", async (req, res) => {
                 });
                 // Add new quantities to inventory
                 await tx.inventory.upsert({
-                    where: { productId: item.productId },
+                    where: { materialId: item.materialId },
                     update: {
                         currentStock: { increment: item.quantity },
                         lastUpdated: new Date(),
                     },
                     create: {
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
-                        unit: item.productUnit,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
+                        unit: item.materialUnit,
                         currentStock: item.quantity,
                         lastUpdated: new Date(),
                         supplierId: supplierId,
@@ -228,16 +228,16 @@ router.delete("/:formId", async (req, res) => {
             // Reverse inventory for each item
             for (const item of form.materialWarehousingItems) {
                 await tx.inventory.upsert({
-                    where: { productId: item.productId },
+                    where: { materialId: item.materialId },
                     update: {
                         currentStock: { decrement: item.quantity },
                         lastUpdated: new Date(),
                     },
                     create: {
-                        productId: item.productId,
-                        productName: item.productName,
-                        productSpecification: item.productSpecification,
-                        unit: item.productUnit,
+                        materialId: item.materialId,
+                        materialName: item.materialName,
+                        materialSpecification: item.materialSpecification,
+                        unit: item.materialUnit,
                         currentStock: 0,
                         lastUpdated: new Date(),
                     },

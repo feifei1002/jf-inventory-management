@@ -21,7 +21,7 @@ router.get("/:supplierId", async (req: Request, res: Response): Promise<void> =>
   try {
     const supplier = await prisma.suppliers.findUnique({
       where: { supplierId: req.params.supplierId as string },
-      include: { supplierProducts: { include: { product: true } } },
+      include: { supplierMaterials: { include: { material: true } } },
     });
     if (!supplier) {
       res.status(404).json({ message: "Supplier not found" });
@@ -140,7 +140,7 @@ router.delete("/:supplierId", async (req: Request, res: Response): Promise<void>
       return;
     }
     if (error.code === "P2003") {
-      res.status(400).json({ message: "Cannot delete supplier with existing purchase orders or products" });
+      res.status(400).json({ message: "Cannot delete supplier with existing purchase orders or materials" });
       return;
     }
     res.status(500).json({ message: "Error deleting supplier" });

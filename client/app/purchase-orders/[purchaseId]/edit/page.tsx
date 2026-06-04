@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { api } from "../../../lib/api";
-import { Supplier, PurchaseRequisition, Product } from "../../../lib/types";
+import { Supplier, PurchaseRequisition, Material } from "../../../lib/types";
 
 const UNITS = ["tấm", "cái", "kg", "m", "m2", "cuộn", "bộ", "hộp", "thùng"];
 const DELIVERY_PLACES = ["J&F Factory", "J&F Office", "J&F Warehouse"];
@@ -23,7 +23,7 @@ export default function EditPurchaseOrderPage() {
   // ── Data state ──
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [requisitions, setRequisitions] = useState<PurchaseRequisition[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [items, setItems] = useState<any[]>([]);
 
   // ── UI state ──
@@ -36,9 +36,9 @@ export default function EditPurchaseOrderPage() {
       api.getPurchaseOrder(purchaseId),
       api.getSuppliers(),
       api.getPurchaseRequisitions(),
-      api.getProducts(),
+      api.getMaterials(),
     ])
-      .then(([po, supplierList, requisitionList, productList]) => {
+      .then(([po, supplierList, requisitionList, materialList]) => {
         setPurchaseDate(
           new Date(po.purchaseDate).toISOString().split("T")[0]
         );
@@ -49,15 +49,15 @@ export default function EditPurchaseOrderPage() {
         setCurrency(po.currency ?? "VND");
         setSuppliers(supplierList);
         setRequisitions(requisitionList);
-        setProducts(productList);
+        setMaterials(materialList);
         setItems(
           po.purchaseOrderItems?.map((item: any) => ({
-            productId: item.productId,
-            productName: item.productName,
-            productSpecification: item.productSpecification,
+            materialId: item.materialId,
+            materialName: item.materialName,
+            materialSpecification: item.materialSpecification,
             quantity: item.quantity,
-            productUnit: item.productUnit,
-            productPrice: Number(item.productPrice),
+            materialUnit: item.materialUnit,
+            materialPrice: Number(item.materialPrice),
             VAT: item.VAT ?? 0,
             currency: item.currency ?? po.currency ?? "VND",
             deliveryDate: new Date(item.deliveryDate)
@@ -98,29 +98,29 @@ export default function EditPurchaseOrderPage() {
     updateItem(index, "requisitionId", reqId);
   };
 
-  const handleItemProductSelect = (
+  const handleItemMaterialSelect = (
     index: number,
     reqId: string,
-    productId: string
+    materialId: string
   ) => {
     const requisition = requisitions.find((r) => r.requisitionId === reqId);
     const prItem = requisition?.purchaseRequisitionItems?.find(
-      (i) => i.productId === productId
+      (i) => i.materialId === materialId
     );
     if (!prItem) return;
-    const product = products.find((p) => p.productId === productId);
+    const material = materials.find((p) => p.materialId === materialId);
     setItems((prev) =>
       prev.map((item, i) =>
         i === index
           ? {
               ...item,
-              productId: prItem.productId,
-              productName: prItem.productName,
-              productSpecification: prItem.productSpecification,
+              materialId: prItem.materialId,
+              materialName: prItem.materialName,
+              materialSpecification: prItem.materialSpecification,
               quantity: prItem.quantity,
-              productUnit: product?.unit ?? "tấm",
-              productPrice: product?.price ? Number(product.price) : 0,
-              currency: product?.currency ?? currency,
+              materialUnit: material?.unit ?? "tấm",
+              materialPrice: material?.price ? Number(material.price) : 0,
+              currency: material?.currency ?? currency,
               deliveryDate: prItem.requiredDate
                 ? new Date(prItem.requiredDate).toISOString().split("T")[0]
                 : "",
@@ -136,12 +136,12 @@ export default function EditPurchaseOrderPage() {
     setItems((prev) => [
       ...prev,
       {
-        productId: "",
-        productName: "",
-        productSpecification: "",
+        materialId: "",
+        materialName: "",
+        materialSpecification: "",
         quantity: 1,
-        productUnit: "tấm",
-        productPrice: 0,
+        materialUnit: "tấm",
+        materialPrice: 0,
         VAT: 0,
         currency: currency,
         deliveryDate: "",
@@ -156,12 +156,12 @@ export default function EditPurchaseOrderPage() {
 
   // ── Totals ──
   const subtotal = items.reduce(
-    (sum, item) => sum + item.quantity * item.productPrice,
+    (sum, item) => sum + item.quantity * item.materialPrice,
     0
   );
   const vatAmount = items.reduce(
     (sum, item) =>
-      sum + item.quantity * item.productPrice * (item.VAT / 100),
+      sum + item.quantity * item.materialPrice * (item.VAT / 100),
     0
   );
   const finalTotal = subtotal + vatAmount;
@@ -175,8 +175,8 @@ export default function EditPurchaseOrderPage() {
       setError("Please select a supplier");
       return;
     }
-    if (items.some((i) => !i.productName || !i.deliveryDate)) {
-      setError("Please fill in all product names and delivery dates");
+    if (items.some((i) => !i.materialName || !i.deliveryDate)) {
+      setError("Please fill in all material names and delivery dates");
       return;
     }
     if (items.some((i) => !i.requisitionId)) {
@@ -378,8 +378,8 @@ export default function EditPurchaseOrderPage() {
                   {[
                     "#",
                     "PR No.",
-                    "Product",
-                    "Product Name",
+                    "Material",
+                    "Material Name",
                     "Specification",
                     "Qty",
                     "Unit",
@@ -405,7 +405,7 @@ export default function EditPurchaseOrderPage() {
                   const selectedReq = requisitions.find(
                     (r) => r.requisitionId === item.selectedPRId
                   );
-                  const prProducts =
+                  const prMaterials =
                     selectedReq?.purchaseRequisitionItems ?? [];
 
                   return (
@@ -438,11 +438,11 @@ export default function EditPurchaseOrderPage() {
                         </select>
                       </td>
                       <td className="px-2 py-1">
-                        {item.selectedPRId && prProducts.length > 0 ? (
+                        {item.selectedPRId && prMaterials.length > 0 ? (
                           <select
-                            value={item.productId}
+                            value={item.materialId}
                             onChange={(e) =>
-                              handleItemProductSelect(
+                              handleItemMaterialSelect(
                                 index,
                                 item.selectedPRId,
                                 e.target.value
@@ -450,41 +450,41 @@ export default function EditPurchaseOrderPage() {
                             }
                             className="w-40 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                           >
-                            <option value="">-- Product --</option>
-                            {prProducts.map((p) => (
-                              <option key={p.productId} value={p.productId}>
-                                {p.productId}
+                            <option value="">-- Material --</option>
+                            {prMaterials.map((m) => (
+                              <option key={m.materialId} value={m.materialId}>
+                                {m.materialName}
                               </option>
                             ))}
                           </select>
                         ) : (
                           <input
-                            value={item.productId}
+                            value={item.materialId}
                             onChange={(e) =>
-                              updateItem(index, "productId", e.target.value)
+                              updateItem(index, "materialId", e.target.value)
                             }
                             className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
-                            placeholder="Product code"
+                            placeholder="Material code"
                           />
                         )}
                       </td>
                       <td className="px-2 py-1">
                         <input
-                          value={item.productName}
+                          value={item.materialName}
                           onChange={(e) =>
-                            updateItem(index, "productName", e.target.value)
+                            updateItem(index, "materialName", e.target.value)
                           }
                           className="w-36 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green      "
-                          placeholder="Product name"
+                          placeholder="Material name"
                         />
                       </td>
                       <td className="px-2 py-1">
                         <input
-                          value={item.productSpecification}
+                          value={item.materialSpecification}
                           onChange={(e) =>
                             updateItem(
                               index,
-                              "productSpecification",
+                              "materialSpecification",
                               e.target.value
                             )
                           }
@@ -509,9 +509,9 @@ export default function EditPurchaseOrderPage() {
                       </td>
                       <td className="px-2 py-1">
                         <select
-                          value={item.productUnit}
+                          value={item.materialUnit}
                           onChange={(e) =>
-                            updateItem(index, "productUnit", e.target.value)
+                            updateItem(index, "materialUnit", e.target.value)
                           }
                           className="w-20 text-xs px-2 py-1.5 border border-gray-200  rounded focus:outline-none focus:ring-1 focus:ring-brand-green       bg-white"
                         >
@@ -524,11 +524,11 @@ export default function EditPurchaseOrderPage() {
                         <input
                           type="number"
                           min={0}
-                          value={item.productPrice}
+                          value={item.materialPrice}
                           onChange={(e) =>
                             updateItem(
                               index,
-                              "productPrice",
+                              "materialPrice",
                               Number(e.target.value)
                             )
                           }
@@ -536,7 +536,7 @@ export default function EditPurchaseOrderPage() {
                         />
                       </td>
                       <td className="px-3 py-2 text-xs font-semibold text-gray-700 whitespace-nowrap">
-                        {fmt(item.quantity * item.productPrice)}
+                        {fmt(item.quantity * item.materialPrice)}
                       </td>
                       <td className="px-2 py-1">
                         <input

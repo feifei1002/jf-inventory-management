@@ -15,8 +15,8 @@ export type Supplier = {
   MST?: string;
 };
 
-export type Product = {
-  productId: string;
+export type Material = {
+  materialId: string;
   name: string;
   specification: string;
   unit: string;
@@ -30,9 +30,9 @@ export type Product = {
 export type PRItem = {
   id?: number;
   requisitionId: string;
-  productId: string;
-  productName: string;
-  productSpecification: string;
+  materialId: string;
+  materialName: string;
+  materialSpecification: string;
   quantity: number;
   weight?: number;
   requiredDate: string;
@@ -51,13 +51,13 @@ export type PurchaseRequisition = {
 };
 
 export type POItem = {
-  productId: string;
-  productName: string;
-  productSpecification: string;
+  materialId: string;
+  materialName: string;
+  materialSpecification: string;
   quantity: number;
-  productUnit: string;
+  materialUnit: string;
   currency: Currency;
-  productPrice: number;
+  materialPrice: number;
   totalPrice: number;
   VAT: number;
   deliveryDate: string;
@@ -84,11 +84,11 @@ export type PurchaseOrder = {
 export type WarehousingItem = {
   id?: number;
   formId: string;
-  productId: string;
-  productName: string;
-  productSpecification: string;
+  materialId: string;
+  materialName: string;
+  materialSpecification: string;
   quantity: number;
-  productUnit: string;
+  materialUnit: string;
   deliveryDate: string;
   requisitionId: string;
   deliveryPlace: string;
@@ -114,13 +114,13 @@ export type WarehousingForm = {
 
 export type InventoryItem = {
   inventoryId: string;
-  productId: string;
-  productName: string;
-  productSpecification: string;
+  materialId: string;
+  materialName: string;
+  materialSpecification: string;
   unit: string;
   currentStock: number;
   lastUpdated: string;
   supplierId?: string;
   supplierName?: string;
-  product?: Product;
+  material?: Material;
 };

@@ -87,7 +87,7 @@ const Sidebar = () => {
       <div className="grow mt-2 overflow-y-auto">
         <SidebarLink href="/dashboard" icon={Layout} label="Dashboard 首頁" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/suppliers" icon={Building2} label="Suppliers 供應商" isCollapsed={isSidebarCollapsed} />
-        <SidebarLink href="/products" icon={Package} label="Products 材料" isCollapsed={isSidebarCollapsed} />
+        <SidebarLink href="/materials" icon={Package} label="Materials 材料" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/purchase-requisitions" icon={ClipboardList} label="Purchase Requisitions 請購單" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/purchase-orders" icon={ShoppingCart} label="Purchase Orders 採購單" isCollapsed={isSidebarCollapsed} />
         <SidebarLink href="/warehousing" icon={Warehouse} label="Warehousing 入庫單" isCollapsed={isSidebarCollapsed} />

@@ -60,54 +60,54 @@ export const api = {
     return res.json();
   },
 
-  // Products
-  getProducts: async () => {
-    const res = await fetch(`${API_URL}/api/products`);
-    if (!res.ok) throw new Error("Failed to fetch products");
+  // Materials
+  getMaterials: async () => {
+    const res = await fetch(`${API_URL}/api/materials`);
+    if (!res.ok) throw new Error("Failed to fetch materials");
     return res.json();
   },
 
-  getProduct: async (productId: string) => {
-    const res = await fetch(`${API_URL}/api/products/${productId}`);
-    if (!res.ok) throw new Error("Failed to fetch product");
+  getMaterial: async (materialId: string) => {
+    const res = await fetch(`${API_URL}/api/materials/${materialId}`);
+    if (!res.ok) throw new Error("Failed to fetch material");
     return res.json();
   },
 
-  createProduct: async (data: any) => {
-    const res = await fetch(`${API_URL}/api/products`, {
+  createMaterial: async (data: any) => {
+    const res = await fetch(`${API_URL}/api/materials`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.message || "Failed to create product");
+      throw new Error(err.message || "Failed to create material");
     }
     return res.json();
   },
 
-  // Update product
-  updateProduct: async (productId: string, data: any) => {
-    const res = await fetch(`${API_URL}/api/products/${productId}`, {
+  // Update material
+  updateMaterial: async (materialId: string, data: any) => {
+    const res = await fetch(`${API_URL}/api/materials/${materialId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.message || "Failed to update product");
+      throw new Error(err.message || "Failed to update material");
     }
     return res.json();
   },
 
-  // Delete product
-  deleteProduct: async (productId: string) => {
-    const res = await fetch(`${API_URL}/api/products/${productId}`, {
+  // Delete material
+  deleteMaterial: async (materialId: string) => {
+    const res = await fetch(`${API_URL}/api/materials/${materialId}`, {
       method: "DELETE",
     });
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.message || "Failed to delete product");
+      throw new Error(err.message || "Failed to delete material");
     }
     return res.json();
   },
@@ -273,14 +273,14 @@ getInventory: async () => {
   return res.json();
 },
 
-getInventoryItem: async (productId: string) => {
-  const res = await fetch(`${API_URL}/api/inventory/${productId}`);
+getInventoryItem: async (materialId: string) => {
+  const res = await fetch(`${API_URL}/api/inventory/${materialId}`);
   if (!res.ok) throw new Error("Failed to fetch inventory item");
   return res.json();
 },
 
-updateInventory: async (productId: string, data: any) => {
-  const res = await fetch(`${API_URL}/api/inventory/${productId}`, {
+updateInventory: async (materialId: string, data: any) => {
+  const res = await fetch(`${API_URL}/api/inventory/${materialId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
