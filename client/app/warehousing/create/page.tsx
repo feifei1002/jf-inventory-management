@@ -57,11 +57,11 @@ export default function CreateWarehousingFormPage() {
       setSelectedSupplier(supplier);
       // Auto fill items from PO
       const newItems = po.purchaseOrderItems?.map((item) => ({
-        productId: item.productId,
-        productName: item.productName,
-        productSpecification: item.productSpecification,
+        materialId: item.materialId,
+        materialName: item.materialName,
+        materialSpecification: item.materialSpecification,
         quantity: item.quantity,
-        productUnit: item.productUnit,
+        materialUnit: item.materialUnit,
         deliveryDate: new Date(item.deliveryDate).toISOString().split("T")[0],
         requisitionId: item.requisitionId,
         deliveryPlace: item.deliveryPlace,
@@ -82,11 +82,11 @@ export default function CreateWarehousingFormPage() {
     setItems((prev) => [
       ...prev,
       {
-        productId: "",
-        productName: "",
-        productSpecification: "",
+        materialId: "",
+        materialName: "",
+        materialSpecification: "",
         quantity: 1,
-        productUnit: "tấm",
+        materialUnit: "tấm",
         deliveryDate: new Date().toISOString().split("T")[0],
         requisitionId: "",
         deliveryPlace: "J&F Factory",
@@ -106,8 +106,8 @@ export default function CreateWarehousingFormPage() {
       setError("Please add at least one item");
       return;
     }
-    if (items.some((i) => !i.productName || !i.deliveryDate)) {
-      setError("Please fill in all product names and delivery dates");
+    if (items.some((i) => !i.materialName || !i.deliveryDate)) {
+      setError("Please fill in all material names and delivery dates");
       return;
     }
 
@@ -311,8 +311,8 @@ export default function CreateWarehousingFormPage() {
                 <tr className="bg-gray-50 border-b border-gray-200">
                   {[
                     "#",
-                    "Product Code",
-                    "Product Name",
+                    "Material Code",
+                    "Material Name",
                     "Specification",
                     "Qty Received",
                     "Unit",
@@ -341,24 +341,24 @@ export default function CreateWarehousingFormPage() {
                     </td>
                     <td className="px-2 py-1">
                       <input
-                        value={item.productId}
-                        onChange={(e) => updateItem(index, "productId", e.target.value)}
+                        value={item.materialId}
+                        onChange={(e) => updateItem(index, "materialId", e.target.value)}
                         className="w-32 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-brand-green"
-                        placeholder="Product code"
+                        placeholder="Material code"
                       />
                     </td>
                     <td className="px-2 py-1">
                       <input
-                        value={item.productName}
-                        onChange={(e) => updateItem(index, "productName", e.target.value)}
+                        value={item.materialName}
+                        onChange={(e) => updateItem(index, "materialName", e.target.value)}
                         className="w-36 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-brand-green"
-                        placeholder="Product name"
+                        placeholder="Material name"
                       />
                     </td>
                     <td className="px-2 py-1">
                       <input
-                        value={item.productSpecification}
-                        onChange={(e) => updateItem(index, "productSpecification", e.target.value)}
+                        value={item.materialSpecification}
+                        onChange={(e) => updateItem(index, "materialSpecification", e.target.value)}
                         className="w-36 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-brand-green"
                         placeholder="Specification"
                       />
@@ -374,8 +374,8 @@ export default function CreateWarehousingFormPage() {
                     </td>
                     <td className="px-2 py-1">
                       <input
-                        value={item.productUnit}
-                        onChange={(e) => updateItem(index, "productUnit", e.target.value)}
+                        value={item.materialUnit}
+                        onChange={(e) => updateItem(index, "materialUnit", e.target.value)}
                         className="w-16 text-xs px-2 py-1.5 border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-brand-green"
                       />
                     </td>

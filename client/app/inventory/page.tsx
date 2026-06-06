@@ -25,25 +25,25 @@ export default function InventoryPage() {
 
   const filtered = inventory.filter(
     (item) =>
-      item.productName.toLowerCase().includes(search.toLowerCase()) ||
-      item.productId.toLowerCase().includes(search.toLowerCase()) ||
-      item.productSpecification.toLowerCase().includes(search.toLowerCase())
+      item.materialName.toLowerCase().includes(search.toLowerCase()) ||
+      item.materialId.toLowerCase().includes(search.toLowerCase()) ||
+      item.materialSpecification.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleEditStock = (item: InventoryItem) => {
-    setEditingId(item.productId);
+    setEditingId(item.materialId);
     setEditStock(item.currentStock);
   };
 
-  const handleSaveStock = async (productId: string) => {
+  const handleSaveStock = async (materialId: string) => {
     setSaving(true);
     try {
-      const updated = await api.updateInventory(productId, {
+      const updated = await api.updateInventory(materialId, {
         currentStock: editStock,
       });
       setInventory((prev) =>
         prev.map((item) =>
-          item.productId === productId
+          item.materialId === materialId
             ? { ...item, currentStock: updated.currentStock, lastUpdated: updated.lastUpdated }
             : item
         )
@@ -89,7 +89,7 @@ export default function InventoryPage() {
         {/* ── Summary cards ── */}
         <div className="grid grid-cols-4 gap-4">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-            <p className="text-xs text-gray-400 mb-1">Total Products</p>
+            <p className="text-xs text-gray-400 mb-1">Total Materials</p>
             <p className="text-2xl font-bold text-gray-800">{totalItems}</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
@@ -111,7 +111,7 @@ export default function InventoryPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by product ID, name or specification..."
+            placeholder="Search by material ID, name or specification..."
             className="w-full text-sm px-4 py-3 pl-10 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-green shadow-sm"
           />
           <span className="absolute left-3 top-3.5 text-gray-400 text-sm">
@@ -159,8 +159,8 @@ export default function InventoryPage() {
               <thead>
                 <tr className="bg-brand-green">
                   {[
-                    "Product ID",
-                    "Product Name",
+                    "Material ID",
+                    "Material Name",
                     "Specification",
                     "Unit",
                     "Current Stock",
@@ -181,11 +181,11 @@ export default function InventoryPage() {
               <tbody>
                 {filtered.map((item, index) => {
                   const status = getStockStatus(item.currentStock);
-                  const isEditing = editingId === item.productId;
+                  const isEditing = editingId === item.materialId;
 
                   return (
                     <tr
-                      key={item.productId}
+                      key={item.materialId}
                       className={
                         index % 2 === 0
                           ? "bg-white border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
@@ -194,14 +194,14 @@ export default function InventoryPage() {
                     >
                       <td className="px-4 py-3">
                         <span className="font-mono text-xs font-semibold text-brand-green bg-brand-green-50 px-2 py-0.5 rounded">
-                          {item.productId}
+                          {item.materialId}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-xs font-semibold text-gray-800">
-                        {item.productName}
+                        {item.materialName}
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-600">
-                        {item.productSpecification}
+                        {item.materialSpecification}
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-600">
                         {item.unit}
@@ -242,7 +242,7 @@ export default function InventoryPage() {
                         {isEditing ? (
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => handleSaveStock(item.productId)}
+                              onClick={() => handleSaveStock(item.materialId)}
                               disabled={saving}
                               className="text-xs text-white bg-brand-green hover:bg-brand-green-dark px-2 py-1 rounded font-medium disabled:opacity-50"
                             >
@@ -271,7 +271,7 @@ export default function InventoryPage() {
             </table>
             <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
               <p className="text-xs text-gray-400">
-                {filtered.length} product{filtered.length !== 1 ? "s" : ""}
+                {filtered.length} material{filtered.length !== 1 ? "s" : ""}
                 {search && ` matching "${search}"`}
               </p>
             </div>

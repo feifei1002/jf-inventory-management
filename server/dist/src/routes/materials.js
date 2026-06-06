@@ -124,6 +124,10 @@ router.delete("/:materialId", async (req, res) => {
             await tx.material_Warehousing_Items.deleteMany({
                 where: { materialId: req.params.materialId },
             });
+            // Delete inventory if exists
+            await tx.inventory.deleteMany({
+                where: { materialId: req.params.materialId },
+            });
             // Finally delete the material
             await tx.materials.delete({
                 where: { materialId: req.params.materialId },

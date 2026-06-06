@@ -151,6 +151,11 @@ router.put("/:materialId", async (req: Request, res: Response): Promise<void> =>
           where: { materialId: req.params.materialId as string },
         });
 
+        // Delete inventory if exists
+        await tx.inventory.deleteMany({
+          where: { materialId: req.params.materialId as string },
+        });
+
         // Finally delete the material
         await tx.materials.delete({
           where: { materialId: req.params.materialId as string },
