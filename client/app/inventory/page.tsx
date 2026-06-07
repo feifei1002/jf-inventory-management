@@ -157,120 +157,122 @@ export default function InventoryPage() {
         {/* ── Inventory table ── */}
         {!loading && filtered.length > 0 && (
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-brand-green">
-                  {[
-                    "Material ID 料號",
-                    "Material Name 品名",
-                    "Specification 規格",
-                    "Unit 單位",
-                    "Current Stock 庫存",
-                    "Status 狀態",
-                    "Supplier 供應商",
-                    "Last Updated 最後更新",
-                    "Actions",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((item, index) => {
-                  const status = getStockStatus(item.currentStock);
-                  const isEditing = editingId === item.materialId;
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-brand-green">
+                    {[
+                      "Material ID 料號",
+                      "Material Name 品名",
+                      "Specification 規格",
+                      "Unit 單位",
+                      "Current Stock 庫存",
+                      "Status 狀態",
+                      "Supplier 供應商",
+                      "Last Updated 最後更新",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((item, index) => {
+                    const status = getStockStatus(item.currentStock);
+                    const isEditing = editingId === item.materialId;
 
-                  return (
-                    <tr
-                      key={item.materialId}
-                      className={
-                        index % 2 === 0
-                          ? "bg-white border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
-                          : "bg-gray-50/60 border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
-                      }
-                    >
-                      <td className="px-4 py-3">
-                        <span className="font-mono text-xs font-semibold text-brand-green bg-brand-green-50 px-2 py-0.5 rounded">
-                          {item.materialId}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs font-semibold text-gray-800">
-                        {item.materialName}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-gray-600">
-                        {item.materialSpecification}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-gray-600">
-                        {item.unit}
-                      </td>
-                      <td className="px-4 py-3">
-                        {isEditing ? (
-                          <input
-                            type="number"
-                            min={0}
-                            value={editStock}
-                            onChange={(e) => setEditStock(Number(e.target.value))}
-                            className="w-24 text-xs px-2 py-1 border border-brand-green rounded focus:outline-none focus:ring-1 focus:ring-brand-green text-right font-mono"
-                            autoFocus
-                          />
-                        ) : (
-                          <span className="text-xs font-mono font-bold text-gray-800">
-                            {item.currentStock.toLocaleString()}
+                    return (
+                      <tr
+                        key={item.materialId}
+                        className={
+                          index % 2 === 0
+                            ? "bg-white border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
+                            : "bg-gray-50/60 border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
+                        }
+                      >
+                        <td className="px-4 py-3">
+                          <span className="font-mono text-xs font-semibold text-brand-green bg-brand-green-50 px-2 py-0.5 rounded">
+                            {item.materialId}
                           </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${status.class}`}>
-                          {status.label}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <p className="text-xs font-semibold text-gray-800">
-                          {item.supplierName ?? "—"}
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {item.supplierId ?? ""}
-                        </p>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
-                        {new Date(item.lastUpdated).toLocaleDateString("vi-VN")}
-                      </td>
-                      <td className="px-4 py-3">
-                        {isEditing ? (
-                          <div className="flex items-center gap-2">
+                        </td>
+                        <td className="px-4 py-3 text-xs font-semibold text-gray-800">
+                          {item.materialName}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-600">
+                          {item.materialSpecification}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-600">
+                          {item.unit}
+                        </td>
+                        <td className="px-4 py-3">
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              min={0}
+                              value={editStock}
+                              onChange={(e) => setEditStock(Number(e.target.value))}
+                              className="w-24 text-xs px-2 py-1 border border-brand-green rounded focus:outline-none focus:ring-1 focus:ring-brand-green text-right font-mono"
+                              autoFocus
+                            />
+                          ) : (
+                            <span className="text-xs font-mono font-bold text-gray-800">
+                              {item.currentStock.toLocaleString()}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${status.class}`}>
+                            {status.label}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="text-xs font-semibold text-gray-800">
+                            {item.supplierName ?? "—"}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            {item.supplierId ?? ""}
+                          </p>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
+                          {new Date(item.lastUpdated).toLocaleDateString("vi-VN")}
+                        </td>
+                        <td className="px-4 py-3">
+                          {isEditing ? (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleSaveStock(item.materialId)}
+                                disabled={saving}
+                                className="text-xs text-white bg-brand-green hover:bg-brand-green-dark px-2 py-1 rounded font-medium disabled:opacity-50"
+                              >
+                                {saving ? "..." : "Save"}
+                              </button>
+                              <button
+                                onClick={handleCancelEdit}
+                                className="text-xs text-gray-500 hover:text-gray-700 font-medium"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
                             <button
-                              onClick={() => handleSaveStock(item.materialId)}
-                              disabled={saving}
-                              className="text-xs text-white bg-brand-green hover:bg-brand-green-dark px-2 py-1 rounded font-medium disabled:opacity-50"
+                              onClick={() => handleEditStock(item)}
+                              className="text-xs text-amber-600 hover:text-amber-800 font-medium"
                             >
-                              {saving ? "..." : "Save"}
+                              Adjust Stock
                             </button>
-                            <button
-                              onClick={handleCancelEdit}
-                              className="text-xs text-gray-500 hover:text-gray-700 font-medium"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => handleEditStock(item)}
-                            className="text-xs text-amber-600 hover:text-amber-800 font-medium"
-                          >
-                            Adjust Stock
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
             <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
               <p className="text-xs text-gray-400">
                 {filtered.length} material{filtered.length !== 1 ? "s" : ""}

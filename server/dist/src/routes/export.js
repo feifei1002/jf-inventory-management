@@ -23,9 +23,9 @@ router.get("/pr/:requisitionId", async (req, res) => {
         const workbook = new exceljs_1.default.Workbook();
         const sheet = workbook.addWorksheet("請購單");
         // ── Add logo ──
-        const logoPath = path_1.default.join(__dirname, "../../assets/excel_logo.png");
-        console.log("Looking for logo at:", logoPath);
-        console.log("File exists:", fs_1.default.existsSync(logoPath));
+        const logoPath = process.env.NODE_ENV === "production"
+            ? "/app/assets/excel_logo.png"
+            : path_1.default.join(process.cwd(), "assets/excel_logo.png");
         if (fs_1.default.existsSync(logoPath)) {
             const logoId = workbook.addImage({
                 filename: logoPath,
@@ -259,9 +259,9 @@ router.get("/po/:purchaseId", async (req, res) => {
         const workbook = new exceljs_1.default.Workbook();
         const sheet = workbook.addWorksheet("採購單");
         // ── Add logo ──
-        const logoPath = path_1.default.join(__dirname, "../../assets/excel_logo.png");
-        console.log("Looking for logo at:", logoPath);
-        console.log("File exists:", fs_1.default.existsSync(logoPath));
+        const logoPath = process.env.NODE_ENV === "production"
+            ? "/app/assets/excel_logo.png"
+            : path_1.default.join(process.cwd(), "assets/excel_logo.png");
         if (fs_1.default.existsSync(logoPath)) {
             const logoId = workbook.addImage({
                 filename: logoPath,
@@ -565,7 +565,9 @@ router.get("/warehousing/:formId", async (req, res) => {
         const workbook = new exceljs_1.default.Workbook();
         const sheet = workbook.addWorksheet("入庫單");
         // ── Add logo ──
-        const logoPath = path_1.default.join(__dirname, "../../assets/excel_logo.png");
+        const logoPath = process.env.NODE_ENV === "production"
+            ? "/app/assets/excel_logo.png"
+            : path_1.default.join(process.cwd(), "assets/excel_logo.png");
         console.log("Looking for logo at:", logoPath);
         console.log("File exists:", fs_1.default.existsSync(logoPath));
         if (fs_1.default.existsSync(logoPath)) {

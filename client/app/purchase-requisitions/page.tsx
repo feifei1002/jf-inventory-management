@@ -108,97 +108,99 @@ export default function PurchaseRequisitionsPage() {
         {/* ── Requisitions table ── */}
         {!loading && filtered.length > 0 && (
           <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-brand-green">
-                  {[
-                    "PR Number 請購單號",
-                    "Date 日期",
-                    "Department 部門",
-                    "Requester 申請人",
-                    "SO No.",
-                    "Items 項目",
-                    "Note 備註",
-                    "Actions",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((req, index) => (
-                  <tr
-                    key={req.requisitionId}
-                    className={
-                      index % 2 === 0
-                        ? "bg-white border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
-                        : "bg-gray-50/60   border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
-                    }
-                  >
-                    <td className="px-4 py-3">
-                      <span className="font-mono text-xs font-semibold text-brand-green-dark bg-brand-green-50 px-2 py-0.5 rounded">
-                        {req.requisitionId}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
-                      {new Date(req.requisitionDate).toLocaleDateString("vi-VN")}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-800  ">
-                      {req.department}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600">
-                      {req.requester}
-                    </td>
-                    <td className="px-4 py-3 text-xs font-mono text-gray-600">
-                      {req.soNo ?? "—"}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-center text-gray-600">
-                      {req.purchaseRequisitionItems?.length ?? 0}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600 max-w-32 truncate">
-                      {req.note ?? "—"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => router.push(`/purchase-requisitions/${req.requisitionId}`)}
-                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          View
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => router.push(`/purchase-requisitions/${req.requisitionId}/edit`)}
-                          className="text-xs text-amber-600 hover:text-amber-800 font-medium"
-                        >
-                          Edit
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        
-                          <a href={api.getPRExportUrl(req.requisitionId)}
-                          download={`${req.requisitionId}.xlsx`}
-                          className="text-xs text-green-600 hover:text-green-800 font-medium"
-                        >
-                          Excel
-                        </a>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => handleDelete(req.requisitionId)}
-                          className="text-xs text-red-500 hover:text-red-700 font-medium"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-brand-green">
+                    {[
+                      "PR Number 請購單號",
+                      "Date 日期",
+                      "Department 部門",
+                      "Requester 申請人",
+                      "SO No.",
+                      "Items 項目",
+                      "Note 備註",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filtered.map((req, index) => (
+                    <tr
+                      key={req.requisitionId}
+                      className={
+                        index % 2 === 0
+                          ? "bg-white border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
+                          : "bg-gray-50/60   border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
+                      }
+                    >
+                      <td className="px-4 py-3">
+                        <span className="font-mono text-xs font-semibold text-brand-green-dark bg-brand-green-50 px-2 py-0.5 rounded">
+                          {req.requisitionId}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
+                        {new Date(req.requisitionDate).toLocaleDateString("vi-VN")}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-800  ">
+                        {req.department}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600">
+                        {req.requester}
+                      </td>
+                      <td className="px-4 py-3 text-xs font-mono text-gray-600">
+                        {req.soNo ?? "—"}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-center text-gray-600">
+                        {req.purchaseRequisitionItems?.length ?? 0}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600 max-w-32 truncate">
+                        {req.note ?? "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => router.push(`/purchase-requisitions/${req.requisitionId}`)}
+                            className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                          >
+                            View
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => router.push(`/purchase-requisitions/${req.requisitionId}/edit`)}
+                            className="text-xs text-amber-600 hover:text-amber-800 font-medium"
+                          >
+                            Edit
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          
+                            <a href={api.getPRExportUrl(req.requisitionId)}
+                            download={`${req.requisitionId}.xlsx`}
+                            className="text-xs text-green-600 hover:text-green-800 font-medium"
+                          >
+                            Excel
+                          </a>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => handleDelete(req.requisitionId)}
+                            className="text-xs text-red-500 hover:text-red-700 font-medium"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <div className="px-4 py-3 bg-gray-50  border-t border-gray-200  ">
               <p className="text-xs text-gray-400">
                 {filtered.length} requisition{filtered.length !== 1 ? "s" : ""}

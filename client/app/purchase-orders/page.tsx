@@ -108,105 +108,106 @@ export default function PurchaseOrdersPage() {
         {/* ── Orders table ── */}
         {!loading && filtered.length > 0 && (
           <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-brand-green">
-                  {[
-                    "PO Number 採購單號",
-                    "Date 日期",
-                    "Supplier 供應商",
-                    "Contact 聯絡人",
-                    "Items 項目",
-                    "Subtotal 小計",
-                    "VAT 稅額",
-                    "Total 總計",
-                    "Actions",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((order, index) => (
-                  <tr
-                    key={order.purchaseId}
-                    className={
-                      index % 2 === 0
-                        ? "bg-white border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
-                        : "bg-gray-50/60   border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
-                    }
-                  >
-                    <td className="px-4 py-3">
-                      <span className="font-mono text-xs font-semibold text-brand-green-dark bg-brand-green-50 px-2 py-0.5 rounded">
-                        {order.purchaseId}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
-                      {new Date(order.purchaseDate).toLocaleDateString("vi-VN")}
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="text-xs font-semibold text-gray-800  ">
-                        {order.supplierName}
-                      </p>
-                      <p className="text-xs text-gray-400">{order.supplierId}</p>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600">
-                      {order.contactPerson}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-center text-gray-600">
-                      {order.purchaseOrderItems?.length ?? 0}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-right font-mono text-gray-700">
-                      {fmt(order.subtotal)}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-right font-mono text-gray-500 ">
-                      {fmt(order.vat)}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-right font-mono font-bold text-blue-900">
-                      {fmt(order.finalTotal)} {order.currency}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => router.push(`/purchase-orders/${order.purchaseId}`)}
-                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          View
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => router.push(`/purchase-orders/${order.purchaseId}/edit`)}
-                          className="text-xs text-amber-600 hover:text-amber-800 font-medium"
-                        >
-                          Edit
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        
-                          <a href={api.getExportUrl(order.purchaseId)}
-                          download={`${order.purchaseId}.xlsx`}
-                          className="text-xs text-green-600 hover:text-green-800 font-medium"
-                        >
-                          Excel
-                        </a>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => handleDelete(order.purchaseId)}
-                          className="text-xs text-red-500 hover:text-red-700 font-medium"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-brand-green">
+                    {[
+                      "PO Number 採購單號",
+                      "Date 日期",
+                      "Supplier 供應商",
+                      "Contact 聯絡人",
+                      "Items 項目",
+                      "Subtotal 小計",
+                      "VAT 稅額",
+                      "Total 總計",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-
+                </thead>
+                <tbody>
+                  {filtered.map((order, index) => (
+                    <tr
+                      key={order.purchaseId}
+                      className={
+                        index % 2 === 0
+                          ? "bg-white border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
+                          : "bg-gray-50/60   border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
+                      }
+                    >
+                      <td className="px-4 py-3">
+                        <span className="font-mono text-xs font-semibold text-brand-green-dark bg-brand-green-50 px-2 py-0.5 rounded">
+                          {order.purchaseId}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
+                        {new Date(order.purchaseDate).toLocaleDateString("vi-VN")}
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="text-xs font-semibold text-gray-800  ">
+                          {order.supplierName}
+                        </p>
+                        <p className="text-xs text-gray-400">{order.supplierId}</p>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600">
+                        {order.contactPerson}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-center text-gray-600">
+                        {order.purchaseOrderItems?.length ?? 0}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-right font-mono text-gray-700">
+                        {fmt(order.subtotal)}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-right font-mono text-gray-500 ">
+                        {fmt(order.vat)}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-right font-mono font-bold text-blue-900">
+                        {fmt(order.finalTotal)} {order.currency}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => router.push(`/purchase-orders/${order.purchaseId}`)}
+                            className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                          >
+                            View
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => router.push(`/purchase-orders/${order.purchaseId}/edit`)}
+                            className="text-xs text-amber-600 hover:text-amber-800 font-medium"
+                          >
+                            Edit
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          
+                            <a href={api.getExportUrl(order.purchaseId)}
+                            download={`${order.purchaseId}.xlsx`}
+                            className="text-xs text-green-600 hover:text-green-800 font-medium"
+                          >
+                            Excel
+                          </a>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => handleDelete(order.purchaseId)}
+                            className="text-xs text-red-500 hover:text-red-700 font-medium"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             {/* ── Footer count ── */}
             <div className="px-4 py-3 bg-gray-50  border-t border-gray-200  ">
               <p className="text-xs text-gray-400">

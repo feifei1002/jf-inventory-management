@@ -106,96 +106,98 @@ export default function WarehousingPage() {
         {/* ── Table ── */}
         {!loading && filtered.length > 0 && (
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-brand-green">
-                  {[
-                    "Form ID 入庫單號",
-                    "Date 日期",
-                    "Supplier 供應商",
-                    "PO Number 採購單號",
-                    "Invoice No. 發票號碼",
-                    "Items 項目數",
-                    "Actions",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((form, index) => (
-                  <tr
-                    key={form.formId}
-                    className={
-                      index % 2 === 0
-                        ? "bg-white border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
-                        : "bg-gray-50/60 border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
-                    }
-                  >
-                    <td className="px-4 py-3">
-                      <span className="font-mono text-xs font-semibold text-brand-green bg-brand-green-50 px-2 py-0.5 rounded">
-                        {form.formId}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
-                      {new Date(form.date).toLocaleDateString("vi-VN")}
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="text-xs font-semibold text-gray-800">
-                        {form.supplierName}
-                      </p>
-                      <p className="text-xs text-gray-400">{form.supplierId}</p>
-                    </td>
-                    <td className="px-4 py-3 text-xs font-mono text-gray-600">
-                      {form.purchaseId}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600">
-                      {form.invoiceNo}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-center text-gray-600">
-                      {form.materialWarehousingItems?.length ?? 0}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => router.push(`/warehousing/${form.formId}`)}
-                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          View
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => router.push(`/warehousing/${form.formId}/edit`)}
-                          className="text-xs text-amber-600 hover:text-amber-800 font-medium"
-                        >
-                          Edit
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        
-                        <a href={api.getWarehousingExportUrl(form.formId)}
-                          download={`${form.formId}.xlsx`}
-                          className="text-xs text-brand-green hover:text-brand-green-dark font-medium"
-                        >
-                          Excel
-                        </a>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => handleDelete(form.formId)}
-                          className="text-xs text-red-500 hover:text-red-700 font-medium"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-brand-green">
+                    {[
+                      "Form ID 入庫單號",
+                      "Date 日期",
+                      "Supplier 供應商",
+                      "PO Number 採購單號",
+                      "Invoice No. 發票號碼",
+                      "Items 項目數",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filtered.map((form, index) => (
+                    <tr
+                      key={form.formId}
+                      className={
+                        index % 2 === 0
+                          ? "bg-white border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
+                          : "bg-gray-50/60 border-b border-gray-100 hover:bg-brand-green-50/40 transition-colors"
+                      }
+                    >
+                      <td className="px-4 py-3">
+                        <span className="font-mono text-xs font-semibold text-brand-green bg-brand-green-50 px-2 py-0.5 rounded">
+                          {form.formId}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">
+                        {new Date(form.date).toLocaleDateString("vi-VN")}
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="text-xs font-semibold text-gray-800">
+                          {form.supplierName}
+                        </p>
+                        <p className="text-xs text-gray-400">{form.supplierId}</p>
+                      </td>
+                      <td className="px-4 py-3 text-xs font-mono text-gray-600">
+                        {form.purchaseId}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600">
+                        {form.invoiceNo}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-center text-gray-600">
+                        {form.materialWarehousingItems?.length ?? 0}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => router.push(`/warehousing/${form.formId}`)}
+                            className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                          >
+                            View
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => router.push(`/warehousing/${form.formId}/edit`)}
+                            className="text-xs text-amber-600 hover:text-amber-800 font-medium"
+                          >
+                            Edit
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          
+                          <a href={api.getWarehousingExportUrl(form.formId)}
+                            download={`${form.formId}.xlsx`}
+                            className="text-xs text-brand-green hover:text-brand-green-dark font-medium"
+                          >
+                            Excel
+                          </a>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => handleDelete(form.formId)}
+                            className="text-xs text-red-500 hover:text-red-700 font-medium"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
               <p className="text-xs text-gray-400">
                 {filtered.length} form{filtered.length !== 1 ? "s" : ""}

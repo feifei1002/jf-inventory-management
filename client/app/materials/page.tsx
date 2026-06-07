@@ -107,96 +107,98 @@ export default function MaterialsPage() {
         {/* ── Materials table ── */}
         {!loading && filtered.length > 0 && (
           <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-brand-green">
-                  {[
-                    "Material ID 料號",
-                    "Name 品名",
-                    "Specification 規格",
-                    "Unit 單位",
-                    "Price 價格",
-                    "Supplier 供應商",
-                    "Last Purchase 最後購買",
-                    "Actions",
-                  ].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((material, index) => (
-                  <tr
-                    key={material.materialId}
-                    className={
-                      index % 2 === 0
-                        ? "bg-white border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
-                        : "bg-gray-50/60   border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
-                    }
-                  >
-                    <td className="px-4 py-3">
-                      <span className="font-mono text-xs font-semibold text-brand-green-dark bg-brand-green-50 px-2 py-0.5 rounded">
-                        {material.materialId}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-xs font-semibold text-gray-800  ">
-                      {material.name}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600">
-                      {material.specification}
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600">
-                      {material.unit}
-                    </td>
-                    <td className="px-4 py-3 text-xs font-mono text-gray-800  ">
-                      {fmt(material.price)} {material.currency ?? "VND"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <p className="text-xs font-semibold text-gray-800  ">
-                        {material.supplierName}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {material.supplierId}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-gray-600">
-                      {new Date(material.lastPurchaseDate).toLocaleDateString(
-                        "vi-VN"
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => router.push(`/materials/${material.materialId}`)}
-                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          View
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => router.push(`/materials/${material.materialId}/edit`)}
-                          className="text-xs text-amber-600 hover:text-amber-800 font-medium"
-                        >
-                          Edit
-                        </button>
-                        <span className="text-gray-300">/</span>
-                        <button
-                          onClick={() => handleDelete(material.materialId, material.name)}
-                          className="text-xs text-red-500 hover:text-red-700 font-medium"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-brand-green">
+                    {[
+                      "Material ID 料號",
+                      "Name 品名",
+                      "Specification 規格",
+                      "Unit 單位",
+                      "Price 價格",
+                      "Supplier 供應商",
+                      "Last Purchase 最後購買",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-3 text-left text-xs font-semibold text-white whitespace-nowrap"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filtered.map((material, index) => (
+                    <tr
+                      key={material.materialId}
+                      className={
+                        index % 2 === 0
+                          ? "bg-white border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
+                          : "bg-gray-50/60   border-b border-gray-100  hover:bg-brand-green-50/40  transition-colors"
+                      }
+                    >
+                      <td className="px-4 py-3">
+                        <span className="font-mono text-xs font-semibold text-brand-green-dark bg-brand-green-50 px-2 py-0.5 rounded">
+                          {material.materialId}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs font-semibold text-gray-800  ">
+                        {material.name}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600">
+                        {material.specification}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600">
+                        {material.unit}
+                      </td>
+                      <td className="px-4 py-3 text-xs font-mono text-gray-800  ">
+                        {fmt(material.price)} {material.currency ?? "VND"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <p className="text-xs font-semibold text-gray-800  ">
+                          {material.supplierName}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {material.supplierId}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600">
+                        {new Date(material.lastPurchaseDate).toLocaleDateString(
+                          "vi-VN"
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => router.push(`/materials/${material.materialId}`)}
+                            className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                          >
+                            View
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => router.push(`/materials/${material.materialId}/edit`)}
+                            className="text-xs text-amber-600 hover:text-amber-800 font-medium"
+                          >
+                            Edit
+                          </button>
+                          <span className="text-gray-300">/</span>
+                          <button
+                            onClick={() => handleDelete(material.materialId, material.name)}
+                            className="text-xs text-red-500 hover:text-red-700 font-medium"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <div className="px-4 py-3 bg-gray-50  border-t border-gray-200  ">
               <p className="text-xs text-gray-400">
                 {filtered.length} material{filtered.length !== 1 ? "s" : ""}
