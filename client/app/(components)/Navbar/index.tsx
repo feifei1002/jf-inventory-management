@@ -67,7 +67,7 @@ const Navbar = () => {
           </div>
           <div className="hidden md:block">
             <p className="text-sm font-semibold text-gray-800   leading-tight">
-              Fei Liu
+              J&F Admin
             </p>
             <p className="text-xs text-gray-400 leading-tight">Admin</p>
           </div>

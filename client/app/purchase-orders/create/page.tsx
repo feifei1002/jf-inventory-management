@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../../lib/api";
 import { Supplier, POItem, PurchaseRequisition } from "../../lib/types";
+import { Plus } from "lucide-react";
 
 const UNITS = ["tấm", "cái", "kg", "m", "m2", "cuộn", "bộ", "hộp", "thùng"];
 const DELIVERY_PLACES = ["J&F Factory", "J&F Office", "J&F Warehouse"];
@@ -198,10 +199,10 @@ export default function CreatePurchaseOrderPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">New Purchase Order</h1>
-          <p className="text-sm text-gray-500 ">ĐƠN ĐẶT HÀNG / 採購單</p>
+          <p className="text-sm text-gray-500 ">採購單 / Đơn Đặt Hàng</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm font-mono bg-brand-green-50 text-brand-green-dark px-3 py-1 rounded-full border border-blue-200">
@@ -223,7 +224,7 @@ export default function CreatePurchaseOrderPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
             {error}
@@ -234,13 +235,13 @@ export default function CreatePurchaseOrderPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Order Information
+              Order Information 採購單資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                PO Number
+                PO Number 採購單號
               </label>
               <input
                 value={purchaseId}
@@ -250,7 +251,7 @@ export default function CreatePurchaseOrderPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                PO Date
+                PO Date 採購日期
               </label>
               <input
                 type="date"
@@ -261,7 +262,7 @@ export default function CreatePurchaseOrderPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Currency
+                Currency 貨幣
               </label>
               <select
                 value={currency}
@@ -280,13 +281,13 @@ export default function CreatePurchaseOrderPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Supplier / Nhà Cung Cấp
+              Supplier Information 供應商資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Select Supplier <span className="text-red-500">*</span>
+                Supplier 供應商 <span className="text-red-500">*</span>
               </label>
               <select
                 value={supplierId}
@@ -304,7 +305,7 @@ export default function CreatePurchaseOrderPage() {
 
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Contact Person / 聯絡人
+                Contact Person 聯絡人
               </label>
               <input
                 value={contactPerson}
@@ -316,7 +317,7 @@ export default function CreatePurchaseOrderPage() {
 
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Payment Terms / 付款條件
+                Payment Terms 付款條件
               </label>
               <input
                 value={paymentTerm}
@@ -328,7 +329,7 @@ export default function CreatePurchaseOrderPage() {
 
             <div className="col-span-2">
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Supplier Address / 廠商地址
+                Supplier Address 廠商地址
               </label>
               <input
                 value={supplierAddress}
@@ -344,13 +345,14 @@ export default function CreatePurchaseOrderPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Line Items / Mặt Hàng
+              Line Items 採購項目
             </h2>
             <button
               onClick={addItem}
-              className="text-xs font-semibold text-blue-900 bg-white hover:bg-brand-green-50 px-3 py-1 rounded-full"
+              className="text-xs font-semibold text-blue-900 bg-white hover:bg-brand-green-50 px-3 py-1 rounded-full flex items-center gap-2"
             >
-              + Add Item
+              <Plus className="w-4 h-4" />
+              Add Item
             </button>
           </div>
 
@@ -359,18 +361,18 @@ export default function CreatePurchaseOrderPage() {
               <thead>
                 <tr className="bg-gray-50  border-b border-gray-200  ">
                   {[
-                    "#",
-                    "PR No.",
-                    "Material",
-                    "Material Name",
-                    "Specification",
-                    "Qty",
-                    "Unit",
-                    "Unit Price",
-                    "Total",
-                    "VAT %",
-                    "Delivery Date",
-                    "Delivery Place",
+                    "STT",
+                    "PR No. 採購單",
+                    "Material ID 料號",
+                    "Material Name 品名",
+                    "Specification 規格",
+                    "Quantity 數量",
+                    "Unit 單位",
+                    "Unit Price 單價",
+                    "Total 總計",
+                    "VAT 稅別 %",
+                    "Delivery Date 交貨日期",
+                    "Delivery Place 交貨地點",
                     "",
                   ].map((h) => (
                     <th

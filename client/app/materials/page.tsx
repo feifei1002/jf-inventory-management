@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../lib/api";
 import { Material } from "../lib/types";
+import { Plus, Search } from "lucide-react";
 
 export default function MaterialsPage() {
   const router = useRouter();
@@ -44,20 +45,21 @@ export default function MaterialsPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">Materials</h1>
-          <p className="text-sm text-gray-500 ">材料 / 材料</p>
+          <p className="text-sm text-gray-500 ">材料 / Nguyên liệu </p>
         </div>
         <button
           onClick={() => router.push("/materials/create")}
-          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg"
+          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg flex items-center gap-2"
         >
-          + New Material
+          <Plus className="w-4 h-4" />
+          New Material
         </button>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {/* ── Search ── */}
         <div className="relative">
           <input
@@ -67,7 +69,7 @@ export default function MaterialsPage() {
             className="w-full text-sm px-4 py-3 pl-10 border border-gray-200  rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-green       shadow-sm"
           />
           <span className="absolute left-3 top-3.5 text-gray-400  text-sm">
-            🔍
+            <Search className="w-5 h-5" />
           </span>
         </div>
 
@@ -109,13 +111,13 @@ export default function MaterialsPage() {
               <thead>
                 <tr className="bg-brand-green">
                   {[
-                    "Material ID",
-                    "Name",
-                    "Specification",
-                    "Unit",
-                    "Price",
-                    "Supplier",
-                    "Last Purchase",
+                    "Material ID 料號",
+                    "Name 品名",
+                    "Specification 規格",
+                    "Unit 單位",
+                    "Price 價格",
+                    "Supplier 供應商",
+                    "Last Purchase 最後購買",
                     "Actions",
                   ].map((h) => (
                     <th

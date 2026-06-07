@@ -179,7 +179,7 @@ export default function CreateSupplierPage() {
     mobileNo: "",
     address: "",
     email: "",
-    paymentTerm: "月底結帳次月30日轉帳",
+    paymentTerm: "",
     tax: "0.1",
     MST: "",
   });
@@ -210,10 +210,10 @@ export default function CreateSupplierPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">New Supplier</h1>
-          <p className="text-sm text-gray-500 ">Nhà Cung Cấp / 供應商</p>
+          <p className="text-sm text-gray-500 ">Nhà Cung Cấp Mới / 新供應商</p>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -243,11 +243,11 @@ export default function CreateSupplierPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Basic Information
+              Basic Information 基本資料
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
-            <Field label="Supplier ID" required>
+            <Field label="Supplier ID 廠商編號" required>
               <input
                 value={form.supplierId}
                 onChange={(e) => update("supplierId", e.target.value)}
@@ -255,7 +255,7 @@ export default function CreateSupplierPage() {
                 placeholder="e.g. VC01021-1"
               />
             </Field>
-            <Field label="Type">
+            <Field label="Type 供應產品" required>
               <select
                 value={form.type}
                 onChange={(e) => update("type", e.target.value)}
@@ -266,12 +266,12 @@ export default function CreateSupplierPage() {
                 ))}
               </select>
             </Field>
-            <Field label="Supplier Name" required>
+            <Field label="Supplier Name 廠商名稱" required>
               <input
                 value={form.name}
                 onChange={(e) => update("name", e.target.value)}
                 className={inputClass}
-                placeholder="e.g. Công Ty TNHH YBN Việt Nam"
+                placeholder="e.g. Công Ty TNHH Quốc Tết J&F"
               />
             </Field>
             <Field label="MST (Tax ID)">
@@ -282,15 +282,15 @@ export default function CreateSupplierPage() {
                 placeholder="e.g. 3702367484"
               />
             </Field>
-            <Field label="Address">
+            <Field label="Address 地址">
               <input
                 value={form.address}
                 onChange={(e) => update("address", e.target.value)}
                 className={inputClass}
-                placeholder="Full address"
+                placeholder="Lô C2-18, KCN Đại Đăng, Phường Bình Dương, Thành phố Hồ Chí Minh, Việt Nam"
               />
             </Field>
-            <Field label="Email">
+            <Field label="Email 電子郵件">
               <input
                 type="email"
                 value={form.email}
@@ -306,11 +306,11 @@ export default function CreateSupplierPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Contact Information
+              Contact Information 聯絡資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
-            <Field label="Contact Person">
+            <Field label="Contact Person 聯絡人">
               <input
                 value={form.contactPerson}
                 onChange={(e) => update("contactPerson", e.target.value)}
@@ -318,7 +318,7 @@ export default function CreateSupplierPage() {
                 placeholder="Contact name"
               />
             </Field>
-            <Field label="Telephone" required>
+            <Field label="Telephone 電話" required>
               <input
                 value={form.telephone}
                 onChange={(e) => update("telephone", e.target.value)}
@@ -326,7 +326,7 @@ export default function CreateSupplierPage() {
                 placeholder="e.g. 0274-3860610"
               />
             </Field>
-            <Field label="Fax">
+            <Field label="Fax 傳真">
               <input
                 value={form.fax}
                 onChange={(e) => update("fax", e.target.value)}
@@ -334,7 +334,7 @@ export default function CreateSupplierPage() {
                 placeholder="e.g. 0274-3790107"
               />
             </Field>
-            <Field label="Mobile">
+            <Field label="Mobile 行動電話">
               <input
                 value={form.mobileNo}
                 onChange={(e) => update("mobileNo", e.target.value)}
@@ -349,11 +349,11 @@ export default function CreateSupplierPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Payment Information
+              Payment Information 付款資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
-            <Field label="Payment Terms">
+            <Field label="Payment Terms 付款條件">
               <input
                 value={form.paymentTerm}
                 onChange={(e) => update("paymentTerm", e.target.value)}
@@ -361,7 +361,7 @@ export default function CreateSupplierPage() {
                 placeholder="e.g. 月底結帳次月30日轉帳"
               />
             </Field>
-            <Field label="Tax Rate">
+            <Field label="Tax Rate 稅別">
               <select
                 value={form.tax}
                 onChange={(e) => update("tax", e.target.value)}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../lib/api";
 import { InventoryItem } from "../lib/types";
+import { Plus, Search } from "lucide-react";
 
 export default function InventoryPage() {
   const router = useRouter();
@@ -59,9 +60,9 @@ export default function InventoryPage() {
   const handleCancelEdit = () => setEditingId(null);
 
   const getStockStatus = (stock: number) => {
-    if (stock <= 0) return { label: "Out of Stock", class: "bg-red-100 text-red-700" };
-    if (stock <= 10) return { label: "Low Stock", class: "bg-amber-100 text-amber-700" };
-    return { label: "In Stock", class: "bg-brand-green-100 text-brand-green-dark" };
+    if (stock <= 0) return { label: "Out of Stock 無庫存", class: "bg-red-100 text-red-700" };
+    if (stock <= 10) return { label: "Low Stock 低庫存", class: "bg-amber-100 text-amber-700" };
+    return { label: "In Stock 有庫存", class: "bg-brand-green-100 text-brand-green-dark" };
   };
 
   const totalItems = inventory.length;
@@ -75,33 +76,34 @@ export default function InventoryPage() {
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
         <div>
           <h1 className="text-xl font-bold text-gray-800">Inventory</h1>
-          <p className="text-sm text-gray-500">Tồn Kho / 庫存</p>
+          <p className="text-sm text-gray-500">庫存 / Tồn kho</p>
         </div>
         <button
           onClick={() => router.push("/warehousing/create")}
-          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg"
+          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg flex items-center gap-2"
         >
-          + Receive Stock
+          <Plus className="w-4 h-4" />
+          Receive Stock
         </button>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {/* ── Summary cards ── */}
         <div className="grid grid-cols-4 gap-4">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-            <p className="text-xs text-gray-400 mb-1">Total Materials</p>
+            <p className="text-xs text-gray-400 mb-1">Total Materials 總材料數</p>
             <p className="text-2xl font-bold text-gray-800">{totalItems}</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-            <p className="text-xs text-gray-400 mb-1">In Stock</p>
+            <p className="text-xs text-gray-400 mb-1">In Stock 有庫存</p>
             <p className="text-2xl font-bold text-brand-green">{inStock}</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-            <p className="text-xs text-gray-400 mb-1">Low Stock</p>
+            <p className="text-xs text-gray-400 mb-1">Low Stock 低庫存</p>
             <p className="text-2xl font-bold text-amber-600">{lowStock}</p>
           </div>
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-            <p className="text-xs text-gray-400 mb-1">Out of Stock</p>
+            <p className="text-xs text-gray-400 mb-1">Out of Stock 無庫存</p>
             <p className="text-2xl font-bold text-red-600">{outOfStock}</p>
           </div>
         </div>
@@ -115,7 +117,7 @@ export default function InventoryPage() {
             className="w-full text-sm px-4 py-3 pl-10 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-green shadow-sm"
           />
           <span className="absolute left-3 top-3.5 text-gray-400 text-sm">
-            🔍
+            <Search className="w-5 h-5" />
           </span>
         </div>
 
@@ -159,14 +161,14 @@ export default function InventoryPage() {
               <thead>
                 <tr className="bg-brand-green">
                   {[
-                    "Material ID",
-                    "Material Name",
-                    "Specification",
-                    "Unit",
-                    "Current Stock",
-                    "Status",
-                    "Supplier",
-                    "Last Updated",
+                    "Material ID 料號",
+                    "Material Name 品名",
+                    "Specification 規格",
+                    "Unit 單位",
+                    "Current Stock 庫存",
+                    "Status 狀態",
+                    "Supplier 供應商",
+                    "Last Updated 最後更新",
                     "Actions",
                   ].map((h) => (
                     <th

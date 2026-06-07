@@ -81,7 +81,7 @@ export default function CreateMaterialPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">New Material</h1>
           <p className="text-sm text-gray-500 ">Nguyên liệu / 材料</p>
@@ -114,11 +114,11 @@ export default function CreateMaterialPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Material Information
+              Material Information 材料資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
-            <Field label="Material ID" required>
+            <Field label="Material ID 料號" required>
               <input
                 value={materialId}
                 onChange={(e) => setMaterialId(e.target.value)}
@@ -126,7 +126,7 @@ export default function CreateMaterialPage() {
                 placeholder="e.g. 211112-1012201695"
               />
             </Field>
-            <Field label="Unit" required>
+            <Field label="Unit 單位" required>
               <select
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
@@ -137,7 +137,7 @@ export default function CreateMaterialPage() {
                 ))}
               </select>
             </Field>
-            <Field label="Material Name" required>
+            <Field label="Material Name 品名" required>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -145,7 +145,7 @@ export default function CreateMaterialPage() {
                 placeholder="e.g. SPCC光板 Thép Tấm"
               />
             </Field>
-            <Field label="Price (₫)">
+            <Field label="Price (₫) 價格" required>
               <input
                 type="number"
                 min={0}
@@ -155,7 +155,7 @@ export default function CreateMaterialPage() {
                 placeholder="e.g. 19000"
               />
             </Field>
-            <Field label="Currency">
+            <Field label="Currency 貨幣" required>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value as "VND" | "TWD" | "USD")}
@@ -166,7 +166,7 @@ export default function CreateMaterialPage() {
                 <option value="USD">USD — US Dollar</option>
               </select>
             </Field>
-            <Field label="Specification">
+            <Field label="Specification 規格">
               <input
                 value={specification}
                 onChange={(e) => setSpecification(e.target.value)}
@@ -181,7 +181,7 @@ export default function CreateMaterialPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Supplier / Nhà Cung Cấp
+              Supplier / Nhà Cung Cấp 供應商
             </h2>
           </div>
           <div className="p-5 space-y-4">

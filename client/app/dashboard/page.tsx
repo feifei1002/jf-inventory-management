@@ -23,7 +23,7 @@ type DashboardMetrics = {
   lowStockItems: number;
   outOfStockItems: number;
   totalSuppliers: number;
-  totalProducts: number;
+  totalMaterials: number;
   totalPRs: number;
 };
 
@@ -138,9 +138,9 @@ export default function Dashboard() {
       <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>
+            <h1 className="text-xl font-bold text-gray-800">Dashboard 首頁</h1>
             <p className="text-sm text-gray-500">
-              Welcome back — here's what's happening in {monthName}
+              Statistic - {monthName}
             </p>
           </div>
           <button
@@ -168,7 +168,7 @@ export default function Dashboard() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard
-              title="Purchase Orders"
+              title="Purchase Orders 採購單"
               subtitle={`Created in ${monthName}`}
               value={metrics.totalPOsThisMonth}
               icon={ShoppingCart}
@@ -176,7 +176,7 @@ export default function Dashboard() {
               onClick={() => router.push("/purchase-orders")}
             />
             <StatCard
-              title="Pending Requisitions"
+              title="Pending Requisitions  待處理請購單"
               subtitle="PRs not yet converted to PO"
               value={metrics.pendingPRs}
               icon={ClipboardList}
@@ -184,7 +184,7 @@ export default function Dashboard() {
               onClick={() => router.push("/purchase-requisitions")}
             />
             <StatCard
-              title="Total PRs"
+              title="Total PRs 請購單總數"
               subtitle="All time"
               value={metrics.totalPRs}
               icon={FileText}
@@ -192,7 +192,7 @@ export default function Dashboard() {
               onClick={() => router.push("/purchase-requisitions")}
             />
             <StatCard
-              title="Items Received"
+              title="Items Received 收貨數量"
               subtitle={`Units received in ${monthName}`}
               value={metrics.itemsReceivedThisMonth.toLocaleString()}
               icon={Package}
@@ -225,12 +225,12 @@ export default function Dashboard() {
               onClick={() => router.push("/inventory")}
             />
             <StatCard
-              title="Total Products"
-              subtitle="In product catalog"
-              value={metrics.totalProducts}
+              title="Total Materials"
+              subtitle="In material catalog"
+              value={metrics.totalMaterials}
               icon={Tag}
               color="gray"
-              onClick={() => router.push("/products")}
+              onClick={() => router.push("/materials")}
             />
             <StatCard
               title="Active Suppliers"
@@ -246,14 +246,14 @@ export default function Dashboard() {
         {/* ── Quick actions ── */}
         <div>
           <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-            Quick Actions
+            Quick Actions 捷徑
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: "New Requisition", icon: ClipboardList, href: "/purchase-requisitions/create", color: "bg-blue-600" },
-              { label: "New Purchase Order", icon: ShoppingCart, href: "/purchase-orders/create", color: "bg-brand-green" },
-              { label: "Receive Stock", icon: Package, href: "/warehousing/create", color: "bg-amber-500" },
-              { label: "View Inventory", icon: Archive, href: "/inventory", color: "bg-gray-600" },
+              { label: "New Requisition 新請購單", icon: ClipboardList, href: "/purchase-requisitions/create", color: "bg-blue-600" },
+              { label: "New Purchase Order 新採購單", icon: ShoppingCart, href: "/purchase-orders/create", color: "bg-brand-green" },
+              { label: "Receive Stock 入庫", icon: Package, href: "/warehousing/create", color: "bg-amber-500" },
+              { label: "View Inventory 查看庫存", icon: Archive, href: "/inventory", color: "bg-gray-600" },
             ].map((action) => {
               const Icon = action.icon;
               return (

@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../../lib/api";
 import { Material } from "../../lib/types";
+import { Plus } from "lucide-react";
 
 const DEPARTMENTS = [
-  "管理部 AD",
-  "生產部 MD",
-  "業務部 SD",
-  "採購部 PD",
+  "管理部",
+  "生產部",
+  "業務部",
+  "採購部",
 ];
 
 const DELIVERY_PLACES = ["J&F Factory", "J&F Office", "J&F Warehouse"];
@@ -124,7 +125,7 @@ export default function CreatePurchaseRequisitionPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">
             New Purchase Requisition
@@ -151,7 +152,7 @@ export default function CreatePurchaseRequisitionPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
             {error}
@@ -162,13 +163,13 @@ export default function CreatePurchaseRequisitionPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Requisition Information
+              Requisition Information 請購單資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                PR Number
+                PR Number 請購單號
               </label>
               <input
                 value={requisitionId}
@@ -178,18 +179,19 @@ export default function CreatePurchaseRequisitionPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Date
+                Date 日期 <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 value={requisitionDate}
                 onChange={(e) => setRequisitionDate(e.target.value)}
                 className={inputClass}
+                required
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                SO Number
+                SO Number SO單號
               </label>
               <input
                 value={soNo}
@@ -200,7 +202,7 @@ export default function CreatePurchaseRequisitionPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Department <span className="text-red-500">*</span>
+                Department 部門 <span className="text-red-500">*</span>
               </label>
               <select
                 value={department}
@@ -214,7 +216,7 @@ export default function CreatePurchaseRequisitionPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Requester <span className="text-red-500">*</span>
+                Requester 請購人 <span className="text-red-500">*</span>
               </label>
               <input
                 value={requester}
@@ -225,7 +227,7 @@ export default function CreatePurchaseRequisitionPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Note
+                Note 備註
               </label>
               <input
                 value={note}
@@ -241,13 +243,14 @@ export default function CreatePurchaseRequisitionPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Items / Mặt Hàng
+              Items 項目
             </h2>
             <button
               onClick={addItem}
-              className="text-xs font-semibold text-blue-900 bg-white hover:bg-brand-green-50 px-3 py-1 rounded-full"
+              className="text-xs font-semibold text-blue-900 bg-white hover:bg-brand-green-50 px-3 py-1 rounded-full flex items-center gap-2"
             >
-              + Add Item
+              <Plus className="w-4 h-4" />
+              Add Item
             </button>
           </div>
 
@@ -256,16 +259,16 @@ export default function CreatePurchaseRequisitionPage() {
               <thead>
                 <tr className="bg-gray-50  border-b border-gray-200  ">
                   {[
-                    "#",
-                    "Select Material",
-                    "Material Name",
-                    "Specification",
-                    "Qty",
-                    "Unit",
-                    "Weight (kg)",
-                    "Required Date",
-                    "Purpose",
-                    "Delivery Place",
+                    "STT",
+                    "Material ID 料號",
+                    "Material Name 品名",
+                    "Specification 規格",
+                    "Qty 數量",
+                    "Unit 單位",
+                    "Weight 重量 (kg)",
+                    "Required Date 需求日期",
+                    "Purpose 使用說明",
+                    "Delivery Place 交貨地點",
                     "",
                   ].map((h) => (
                     <th

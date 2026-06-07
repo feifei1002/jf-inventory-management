@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../lib/api";
 import { PurchaseOrder } from "../lib/types";
+import { Plus, Search } from "lucide-react";
 
 export default function PurchaseOrdersPage() {
   const router = useRouter();
@@ -43,20 +44,21 @@ export default function PurchaseOrdersPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">Purchase Orders</h1>
-          <p className="text-sm text-gray-500 ">ĐƠN ĐẶT HÀNG / 採購單</p>
+          <p className="text-sm text-gray-500 ">採購單 / Đơn Đặt Hàng</p>
         </div>
         <button
           onClick={() => router.push("/purchase-orders/create")}
-          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg"
+          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg flex items-center gap-2"
         >
-          + New Purchase Order
+          <Plus className="w-4 h-4" />
+          New Purchase Order
         </button>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {/* ── Search ── */}
         <div className="relative">
           <input
@@ -66,7 +68,7 @@ export default function PurchaseOrdersPage() {
             className="w-full text-sm px-4 py-3 pl-10 border border-gray-200  rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-green       shadow-sm"
           />
           <span className="absolute left-3 top-3.5 text-gray-400  text-sm">
-            🔍
+            <Search className="w-5 h-5" />
           </span>
         </div>
 
@@ -110,14 +112,14 @@ export default function PurchaseOrdersPage() {
               <thead>
                 <tr className="bg-brand-green">
                   {[
-                    "PO Number",
-                    "Date",
-                    "Supplier",
-                    "Contact",
-                    "Items",
-                    "Subtotal",
-                    "VAT",
-                    "Total",
+                    "PO Number 採購單號",
+                    "Date 日期",
+                    "Supplier 供應商",
+                    "Contact 聯絡人",
+                    "Items 項目",
+                    "Subtotal 小計",
+                    "VAT 稅額",
+                    "Total 總計",
                     "Actions",
                   ].map((h) => (
                     <th

@@ -99,7 +99,7 @@ export default function EditMaterialPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">Edit Material</h1>
           <p className="text-sm text-gray-500  font-mono">{materialId}</p>
@@ -121,7 +121,7 @@ export default function EditMaterialPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
             {error}
@@ -132,13 +132,13 @@ export default function EditMaterialPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Material Information
+              Material Information 材料資料
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Material ID
+                Material ID 料號
               </label>
               <input
                 value={materialId}
@@ -157,21 +157,21 @@ export default function EditMaterialPage() {
                 ))}
               </select>
             </Field>
-            <Field label="Material Name" required>
+            <Field label="Material Name 品名" required>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className={inputClass}
               />
             </Field>
-            <Field label="Specification">
+            <Field label="Specification 規格">
               <input
                 value={specification}
                 onChange={(e) => setSpecification(e.target.value)}
                 className={inputClass}
               />
             </Field>
-            <Field label="Price">
+            <Field label="Price 價格">
               <input
                 type="number"
                 min={0}
@@ -180,7 +180,7 @@ export default function EditMaterialPage() {
                 className={inputClass}
               />
             </Field>
-            <Field label="Currency">
+            <Field label="Currency 貨幣">
               <select
                 value={currency}
                 onChange={(e) =>
@@ -200,11 +200,11 @@ export default function EditMaterialPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Supplier / Nhà Cung Cấp
+              Supplier / Nhà Cung Cấp 供應商
             </h2>
           </div>
           <div className="p-5 space-y-4">
-            <Field label="Select Supplier" required>
+            <Field label="Select Supplier 選擇供應商" required>
               <select
                 value={supplierId}
                 onChange={(e) => setSupplierId(e.target.value)}
@@ -221,25 +221,25 @@ export default function EditMaterialPage() {
             {selectedSupplier && (
               <div className="bg-brand-green-50 rounded-lg p-4 grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-xs text-gray-400">Contact</p>
+                  <p className="text-xs text-gray-400">Contact Person 聯絡人</p>
                   <p className="text-xs font-semibold text-gray-700">
                     {selectedSupplier.contactPerson ?? "—"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Telephone</p>
+                  <p className="text-xs text-gray-400">Telephone 電話</p>
                   <p className="text-xs font-semibold text-gray-700">
                     {selectedSupplier.telephone}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Payment Term</p>
+                  <p className="text-xs text-gray-400">Payment Term 付款條件</p>
                   <p className="text-xs font-semibold text-gray-700">
                     {selectedSupplier.paymentTerm ?? "—"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Address</p>
+                  <p className="text-xs text-gray-400">Address 地址</p>
                   <p className="text-xs font-semibold text-gray-700">
                     {selectedSupplier.address ?? "—"}
                   </p>

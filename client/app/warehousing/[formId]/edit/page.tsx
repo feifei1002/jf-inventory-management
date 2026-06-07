@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { api } from "../../../lib/api";
 import { PurchaseOrder, Supplier } from "../../../lib/types";
+import { Plus } from "lucide-react";
 
 const DELIVERY_PLACES = ["J&F Factory", "J&F Office", "J&F Warehouse"];
 
@@ -74,11 +75,11 @@ export default function EditWarehousingFormPage() {
       const supplier = suppliers.find((s) => s.supplierId === po.supplierId) ?? null;
       setSelectedSupplier(supplier);
       const newItems = po.purchaseOrderItems?.map((item) => ({
-        productId: item.productId,
-        productName: item.productName,
-        productSpecification: item.productSpecification,
+        productId: item.materialId,
+        productName: item.materialName,
+        productSpecification: item.materialSpecification,
         quantity: item.quantity,
-        productUnit: item.productUnit,
+        productUnit: item.materialUnit,
         deliveryDate: new Date(item.deliveryDate).toISOString().split("T")[0],
         requisitionId: item.requisitionId,
         deliveryPlace: item.deliveryPlace,
@@ -185,7 +186,7 @@ export default function EditWarehousingFormPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
             {error}
@@ -196,12 +197,12 @@ export default function EditWarehousingFormPage() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Form Information
+              Form Information 入庫單資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Form ID</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Form ID 入庫單號</label>
               <input
                 value={formId}
                 readOnly
@@ -209,7 +210,7 @@ export default function EditWarehousingFormPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Date</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Date 日期</label>
               <input
                 type="date"
                 value={date}
@@ -219,7 +220,7 @@ export default function EditWarehousingFormPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">
-                Invoice No. <span className="text-red-500">*</span>
+                Invoice No. 發票號碼 
               </label>
               <input
                 value={invoiceNo}
@@ -229,7 +230,7 @@ export default function EditWarehousingFormPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Delivery Note</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Delivery Note 送貨單</label>
               <input
                 value={deliveryNote}
                 onChange={(e) => setDeliveryNote(e.target.value)}
@@ -244,13 +245,13 @@ export default function EditWarehousingFormPage() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Link to Purchase Order
+              Purchase Order Information 採購單資訊
             </h2>
           </div>
           <div className="p-5 space-y-4">
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">
-                Select Purchase Order <span className="text-red-500">*</span>
+                Purchase Order 採購單 <span className="text-red-500">*</span>
               </label>
               <select
                 value={purchaseId}
@@ -269,15 +270,15 @@ export default function EditWarehousingFormPage() {
             {selectedPO && (
               <div className="bg-brand-green-50 rounded-lg p-4 grid grid-cols-3 gap-3">
                 <div>
-                  <p className="text-xs text-gray-400">Supplier</p>
+                  <p className="text-xs text-gray-400">Supplier 供應商</p>
                   <p className="text-xs font-semibold text-gray-700">{selectedPO.supplierName}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Contact</p>
+                  <p className="text-xs text-gray-400">Contact 聯絡人</p>
                   <p className="text-xs font-semibold text-gray-700">{selectedPO.contactPerson}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400">Payment Term</p>
+                  <p className="text-xs text-gray-400">Payment Term 付款條件</p>
                   <p className="text-xs font-semibold text-gray-700">{selectedPO.paymentTerm}</p>
                 </div>
               </div>
@@ -289,13 +290,14 @@ export default function EditWarehousingFormPage() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="bg-brand-green px-5 py-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Received Items / Hàng Nhập Kho
+              Received Items 入庫項目
             </h2>
             <button
               onClick={addItem}
-              className="text-xs font-semibold text-brand-green bg-white hover:bg-brand-green-50 px-3 py-1 rounded-full"
+              className="text-xs font-semibold text-brand-green bg-white hover:bg-brand-green-50 px-3 py-1 rounded-full flex items-center gap-2"
             >
-              + Add Item
+              <Plus className="w-4 h-4" />
+              Add Item
             </button>
           </div>
 
@@ -304,9 +306,15 @@ export default function EditWarehousingFormPage() {
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   {[
-                    "#", "Product Code", "Product Name", "Specification",
-                    "Qty Received", "Unit", "Delivery Date", "PR No.",
-                    "Delivery Place", "",
+                    "STT",
+                    "Material ID 料號",
+                    "Material Name 品名",
+                    "Specification 規格",
+                    "Quantity Received 入庫數量",
+                    "Unit 單位",
+                    "Delivery Date 交貨日期",
+                    "PR No. 採購單號",
+                    "Delivery Place 交貨地點", "",
                   ].map((h) => (
                     <th
                       key={h}

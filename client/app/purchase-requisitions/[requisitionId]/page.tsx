@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "../../lib/api";
 import { PurchaseRequisition } from "../../lib/types";
+import { ArrowLeft } from "lucide-react";
 
 export default function PurchaseRequisitionDetailPage() {
   const { requisitionId } = useParams<{ requisitionId: string }>();
@@ -41,7 +42,7 @@ export default function PurchaseRequisitionDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">
             Purchase Requisition
@@ -54,9 +55,10 @@ export default function PurchaseRequisitionDetailPage() {
           </span>
           <button
             onClick={() => router.push("/purchase-requisitions")}
-            className="text-sm text-gray-500  hover:text-gray-700 px-4 py-2 border border-gray-200  rounded-lg"
+            className="text-sm text-gray-500  hover:text-gray-700 px-4 py-2 border border-gray-200  rounded-lg hover:border-brand-green transition-colors flex items-center gap-2"
           >
-            ← Back
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </button>
           <button
             onClick={() =>
@@ -76,43 +78,43 @@ export default function PurchaseRequisitionDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {/* ── Requisition Info ── */}
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Requisition Information
+              Requisition Information 請購單資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-3 gap-6">
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">PR Number</p>
+              <p className="text-xs text-gray-400  mb-0.5">PR Number 請購單號</p>
               <p className="text-sm font-mono font-semibold text-brand-green-dark">
                 {pr.requisitionId}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Date</p>
+              <p className="text-xs text-gray-400  mb-0.5">Date 日期</p>
               <p className="text-sm text-gray-800  ">
                 {new Date(pr.requisitionDate).toLocaleDateString("vi-VN")}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">SO Number</p>
+              <p className="text-xs text-gray-400  mb-0.5">SO Number SO單號</p>
               <p className="text-sm font-mono text-gray-800  ">
                 {pr.soNo ?? "—"}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Department</p>
+              <p className="text-xs text-gray-400  mb-0.5">Department 部門</p>
               <p className="text-sm text-gray-800  ">{pr.department}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Requester</p>
+              <p className="text-xs text-gray-400  mb-0.5">Requester 請購人</p>
               <p className="text-sm text-gray-800  ">{pr.requester}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Note</p>
+              <p className="text-xs text-gray-400  mb-0.5">Note 備註</p>
               <p className="text-sm text-gray-800  ">{pr.note ?? "—"}</p>
             </div>
           </div>
@@ -122,7 +124,7 @@ export default function PurchaseRequisitionDetailPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Items / Mặt Hàng
+              Items 項目
             </h2>
           </div>
           <div className="overflow-x-auto">
@@ -130,15 +132,15 @@ export default function PurchaseRequisitionDetailPage() {
               <thead>
                 <tr className="bg-gray-50  border-b border-gray-200  ">
                   {[
-                    "#",
-                    "Product ID",
-                    "Product Name",
-                    "Specification",
-                    "Qty",
-                    "Weight",
-                    "Required Date",
-                    "Purpose",
-                    "Delivery Place",
+                    "STT",
+                    "Material ID 料號",
+                    "Material Name 品名",
+                    "Specification 規格",
+                    "Quantity 數量",
+                    "Weight 重量",
+                    "Required Date 需求日期",
+                    "Purpose 使用說明",
+                    "Delivery Place 交貨地點",
                   ].map((h) => (
                     <th
                       key={h}
@@ -163,13 +165,13 @@ export default function PurchaseRequisitionDetailPage() {
                       {index + 1}
                     </td>
                     <td className="px-4 py-2 text-xs font-mono text-brand-green-dark">
-                      {item.productId}
+                      {item.materialId}
                     </td>
                     <td className="px-4 py-2 text-xs font-semibold text-gray-800  ">
-                      {item.productName}
+                      {item.materialName}
                     </td>
                     <td className="px-4 py-2 text-xs text-gray-600">
-                      {item.productSpecification}
+                      {item.materialSpecification}
                     </td>
                     <td className="px-4 py-2 text-xs text-center text-gray-800  ">
                       {item.quantity}

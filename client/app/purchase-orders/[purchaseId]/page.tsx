@@ -63,10 +63,10 @@ export default function PurchaseOrderDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">Purchase Order</h1>
-          <p className="text-sm text-gray-500 ">ĐƠN ĐẶT HÀNG / 採購單</p>
+          <p className="text-sm text-gray-500 ">採購單 / Đơn Đặt Hàng</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm font-mono bg-brand-green-50 text-brand-green-dark px-3 py-1 rounded-full border border-blue-200">
@@ -100,23 +100,23 @@ export default function PurchaseOrderDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {/* ── Order Info ── */}
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Order Information
+              Order Information 採購單資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">PO Number</p>
+              <p className="text-xs text-gray-400  mb-0.5">PO Number 採購單號</p>
               <p className="text-sm font-mono font-semibold text-gray-800  ">
                 {po.purchaseId}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">PO Date</p>
+              <p className="text-xs text-gray-400  mb-0.5">PO Date 日期</p>
               <p className="text-sm text-gray-800  ">
                 {new Date(po.purchaseDate).toLocaleDateString("vi-VN")}
               </p>
@@ -128,26 +128,26 @@ export default function PurchaseOrderDetailPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Supplier / Nhà Cung Cấp
+              Supplier 供應商資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Supplier</p>
+              <p className="text-xs text-gray-400  mb-0.5">Supplier 供應商</p>
               <p className="text-sm font-semibold text-gray-800  ">
                 {po.supplierId} — {po.supplierName}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Contact Person</p>
+              <p className="text-xs text-gray-400  mb-0.5">Contact Person 聯絡人</p>
               <p className="text-sm text-gray-800  ">{po.contactPerson}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Payment Terms</p>
+              <p className="text-xs text-gray-400  mb-0.5">Payment Terms 付款條件</p>
               <p className="text-sm text-gray-800  ">{po.paymentTerm}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400  mb-0.5">Address</p>
+              <p className="text-xs text-gray-400  mb-0.5">Address 地址</p>
               <p className="text-sm text-gray-800  ">{po.supplierAddress}</p>
             </div>
           </div>
@@ -157,7 +157,7 @@ export default function PurchaseOrderDetailPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Line Items / Mặt Hàng
+              Line Items 採購項目
             </h2>
           </div>
           <div className="overflow-x-auto">
@@ -165,9 +165,18 @@ export default function PurchaseOrderDetailPage() {
               <thead>
                 <tr className="bg-gray-50  border-b border-gray-200  ">
                   {[
-                    "#", "Product Code", "Product Name", "Specification",
-                    "Qty", "Unit", "Unit Price", "Total", "VAT",
-                    "Delivery Date", "PR No.", "Delivery Place",
+                    "STT", 
+                    "Material ID 料號", 
+                    "Material Name 品名",
+                    "Specification 規格",
+                    "Quantity 數量", 
+                    "Unit 單位", 
+                    "Unit Price 單價", 
+                    "Total 總計", 
+                    "VAT 稅額",
+                    "Delivery Date 交貨日期", 
+                    "PR No. 請購單號",
+                    "Delivery Place 交貨地點",
                   ].map((h) => (
                     <th
                       key={h}
@@ -192,22 +201,22 @@ export default function PurchaseOrderDetailPage() {
                       {index + 1}
                     </td>
                     <td className="px-3 py-2 text-xs font-mono text-gray-600">
-                      {item.productId}
+                      {item.materialId}
                     </td>
                     <td className="px-3 py-2 text-xs text-gray-800  ">
-                      {item.productName}
+                      {item.materialName}
                     </td>
                     <td className="px-3 py-2 text-xs text-gray-600">
-                      {item.productSpecification}
+                      {item.materialSpecification}
                     </td>
                     <td className="px-3 py-2 text-xs text-right">
                       {item.quantity}
                     </td>
                     <td className="px-3 py-2 text-xs text-gray-600">
-                      {item.productUnit}
+                      {item.materialUnit}
                     </td>
                     <td className="px-3 py-2 text-xs text-right font-mono">
-                      {fmt(item.productPrice)}
+                      {fmt(item.materialPrice)}
                     </td>
                     <td className="px-3 py-2 text-xs text-right font-mono font-semibold">
                       {fmt(item.totalPrice)}

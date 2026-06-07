@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "../lib/api";
 import { WarehousingForm } from "../lib/types";
+import { Plus, Search } from "lucide-react";
 
 export default function WarehousingPage() {
   const router = useRouter();
@@ -50,13 +51,14 @@ export default function WarehousingPage() {
         </div>
         <button
           onClick={() => router.push("/warehousing/create")}
-          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg"
+          className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg flex items-center gap-2"
         >
-          + New Warehousing Form
+          <Plus className="w-4 h-4" />
+          New Warehousing Form
         </button>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-8xl mx-auto px-6 py-8 space-y-6">
         {/* ── Search ── */}
         <div className="relative">
           <input
@@ -66,7 +68,7 @@ export default function WarehousingPage() {
             className="w-full text-sm px-4 py-3 pl-10 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-green shadow-sm"
           />
           <span className="absolute left-3 top-3.5 text-gray-400 text-sm">
-            🔍
+            <Search className="w-5 h-5" />
           </span>
         </div>
 
@@ -108,12 +110,12 @@ export default function WarehousingPage() {
               <thead>
                 <tr className="bg-brand-green">
                   {[
-                    "Form ID",
-                    "Date",
-                    "Supplier",
-                    "PO Number",
-                    "Invoice No.",
-                    "Items",
+                    "Form ID 入庫單號",
+                    "Date 日期",
+                    "Supplier 供應商",
+                    "PO Number 採購單號",
+                    "Invoice No. 發票號碼",
+                    "Items 項目數",
                     "Actions",
                   ].map((h) => (
                     <th

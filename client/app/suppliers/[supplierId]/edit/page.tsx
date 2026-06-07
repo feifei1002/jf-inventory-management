@@ -113,7 +113,7 @@ export default function EditSupplierPage() {
   return (
     <div className="min-h-screen bg-gray-50  pb-20 ">
       {/* ── Top bar ── */}
-      <div className="bg-white border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
+      <div className="border-b border-gray-200  px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm bg-white">
         <div>
           <h1 className="text-xl font-bold text-gray-800  ">Edit Supplier</h1>
           <p className="text-sm text-gray-500 ">{supplierId}</p>
@@ -135,7 +135,7 @@ export default function EditSupplierPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
             {error}
@@ -146,13 +146,13 @@ export default function EditSupplierPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Basic Information
+              Basic Information 基本資料
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-500  mb-1">
-                Supplier ID
+                Supplier ID 廠商編號
               </label>
               <input
                 value={supplierId}
@@ -160,7 +160,7 @@ export default function EditSupplierPage() {
                 className="w-full text-sm px-3 py-2 border border-gray-200  rounded-lg bg-gray-50 text-gray-400 font-mono"
               />
             </div>
-            <Field label="Type">
+            <Field label="Type 供應產品">
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
@@ -171,7 +171,7 @@ export default function EditSupplierPage() {
                 ))}
               </select>
             </Field>
-            <Field label="Supplier Name" required>
+            <Field label="Supplier Name 廠商名稱" required>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -185,14 +185,14 @@ export default function EditSupplierPage() {
                 className={inputClass}
               />
             </Field>
-            <Field label="Address">
+            <Field label="Address 地址">
               <input
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 className={inputClass}
               />
             </Field>
-            <Field label="Email">
+            <Field label="Email 電子郵件">
               <input
                 type="email"
                 value={email}
@@ -207,32 +207,32 @@ export default function EditSupplierPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Contact Information
+              Contact Information 聯絡資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
-            <Field label="Contact Person">
+            <Field label="Contact Person 聯絡人">
               <input
                 value={contactPerson}
                 onChange={(e) => setContactPerson(e.target.value)}
                 className={inputClass}
               />
             </Field>
-            <Field label="Telephone" required>
+            <Field label="Telephone 電話" required>
               <input
                 value={telephone}
                 onChange={(e) => setTelephone(e.target.value)}
                 className={inputClass}
               />
             </Field>
-            <Field label="Fax">
+            <Field label="Fax 傳真">
               <input
                 value={fax}
                 onChange={(e) => setFax(e.target.value)}
                 className={inputClass}
               />
             </Field>
-            <Field label="Mobile">
+            <Field label="Mobile 手機">
               <input
                 value={mobileNo}
                 onChange={(e) => setMobileNo(e.target.value)}
@@ -246,18 +246,18 @@ export default function EditSupplierPage() {
         <div className="bg-white rounded-xl border border-gray-200  shadow-sm overflow-hidden ">
           <div className="bg-brand-green px-5 py-3">
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-              Payment Information
+              Payment Information 付款資訊
             </h2>
           </div>
           <div className="p-5 grid grid-cols-2 gap-4">
-            <Field label="Payment Terms">
+            <Field label="Payment Terms 付款條件">
               <input
                 value={paymentTerm}
                 onChange={(e) => setPaymentTerm(e.target.value)}
                 className={inputClass}
               />
             </Field>
-            <Field label="Tax Rate">
+            <Field label="Tax Rate 稅別">
               <select
                 value={tax}
                 onChange={(e) => setTax(e.target.value)}
