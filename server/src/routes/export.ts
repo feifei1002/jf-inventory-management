@@ -23,7 +23,7 @@ router.get("/pr/:requisitionId", async (req: Request, res: Response): Promise<vo
     const sheet = workbook.addWorksheet("請購單");
 
     // ── Add logo ──
-    const logoPath = path.join(__dirname, "../../assets/excel_logo.png");
+    const logoPath = path.join(__dirname, "../../../assets/excel_logo.png");
     console.log("Looking for logo at:", logoPath);
     console.log("File exists:", fs.existsSync(logoPath));
     if (fs.existsSync(logoPath)) {
