@@ -5,6 +5,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 /* ROUTE IMPORTS */
+import { PrismaClient } from "@prisma/client";
 import exportRoutes from "./routes/export";
 import dashboardRoutes from "./routes/dashboard";
 import supplierRoutes from "./routes/suppliers";
@@ -49,3 +50,17 @@ app.use(cors({
   origin: "*",
   credentials: false,
 }));
+
+const prisma = new PrismaClient();
+app.get("/test-db", async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ message: "Database connected successfully" });
+  } catch (error: any) {
+    res.json({ 
+      message: "Database connection failed",
+      error: error.message,
+      DATABASE_URL: process.env.DATABASE_URL ? "Set" : "Not set"
+    });
+  }
+});
