@@ -308,9 +308,9 @@ router.get("/po/:purchaseId", async (req: Request, res: Response): Promise<void>
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("採購單");
     // ── Add logo ──
-    const logoPath = path.join(__dirname, "../../assets/excel_logo.png");
-    console.log("Looking for logo at:", logoPath);
-    console.log("File exists:", fs.existsSync(logoPath));
+    const logoPath = process.env.NODE_ENV === "production" 
+    ? "/app/assets/excel_logo.png"
+    : path.join(process.cwd(), "assets/excel_logo.png");
     if (fs.existsSync(logoPath)) {
       const logoId = workbook.addImage({
         filename: logoPath,
@@ -654,7 +654,9 @@ router.get("/warehousing/:formId", async (req: Request, res: Response): Promise<
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("入庫單");
     // ── Add logo ──
-    const logoPath = path.join(__dirname, "../../assets/excel_logo.png");
+    const logoPath = process.env.NODE_ENV === "production" 
+  ? "/app/assets/excel_logo.png"
+  : path.join(process.cwd(), "assets/excel_logo.png");
     console.log("Looking for logo at:", logoPath);
     console.log("File exists:", fs.existsSync(logoPath));
     if (fs.existsSync(logoPath)) {
