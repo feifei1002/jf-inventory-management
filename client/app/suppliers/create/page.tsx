@@ -271,7 +271,7 @@ export default function CreateSupplierPage() {
                 value={form.name}
                 onChange={(e) => update("name", e.target.value)}
                 className={inputClass}
-                placeholder="e.g. Công Ty TNHH Quốc Tết J&F"
+                placeholder="e.g. Công Ty TNHH Quốc Tế J&F"
               />
             </Field>
             <Field label="MST (Tax ID)">

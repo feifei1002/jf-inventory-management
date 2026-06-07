@@ -97,7 +97,7 @@ export default function PurchaseRequisitionsPage() {
             {!search && (
               <button
                 onClick={() => router.push("/purchase-requisitions/create")}
-                className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg flex items-center gap-2"
+                className="text-sm font-semibold text-white bg-brand-green hover:bg-brand-green-dark px-5 py-2 rounded-lg"
               >
                 Create your first requisition
               </button>
