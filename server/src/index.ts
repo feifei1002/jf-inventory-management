@@ -64,3 +64,21 @@ app.get("/test-db", async (req, res) => {
     });
   }
 });
+
+app.get("/run-migrations", async (req, res) => {
+  try {
+    const { execSync } = require("child_process");
+    const output = execSync("npx prisma migrate deploy", { 
+      cwd: "/app",
+      encoding: "utf8" 
+    });
+    res.json({ message: "Migrations completed", output });
+  } catch (error: any) {
+    res.json({ 
+      message: "Migration failed",
+      error: error.message,
+      stdout: error.stdout,
+      stderr: error.stderr,
+    });
+  }
+});
