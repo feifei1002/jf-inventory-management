@@ -46,10 +46,6 @@ app.listen(PORT, () => {
 });
 
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://your-vercel-app.vercel.app",
-    process.env.FRONTEND_URL || "",
-  ],
-  credentials: true,
+  origin: "*",
+  credentials: false,
 }));
