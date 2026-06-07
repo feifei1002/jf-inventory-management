@@ -23,9 +23,9 @@ router.get("/pr/:requisitionId", async (req: Request, res: Response): Promise<vo
     const sheet = workbook.addWorksheet("請購單");
 
     // ── Add logo ──
-    const logoPath = "/app/assets/excel_logo.png";
-    console.log("Looking for logo at:", logoPath);
-    console.log("File exists:", fs.existsSync(logoPath));
+    const logoPath = process.env.NODE_ENV === "production" 
+  ? "/app/assets/excel_logo.png"
+  : path.join(process.cwd(), "assets/excel_logo.png");
     if (fs.existsSync(logoPath)) {
       const logoId = workbook.addImage({
         filename: logoPath,
