@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "ts-node prisma/seed.ts",
     "build": "rimraf dist && npx tsc",
-    "start": "ls /app/dist && ls /app/dist/src || echo 'src missing' && node dist/src/index.js",
+    "start": "node dist/index.js",
     "migrate": "npx prisma migrate deploy",
     "postinstall": "npx prisma generate",
     "dev": "npm run build && concurrently \"npx tsc -w\" \"nodemon --exec ts-node src/index.ts\""
